@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Custom Order Flow — Christy Sung</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="description" content="A phone-based order flow that lets customers personalize jewelry on their own, so I can serve 3–5 customers at once.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --black:#08090b; --cream:#f5f3ee; --cta:#ffd800; --laser:#ff9d2e; --mono:"JetBrains Mono",ui-monospace,monospace; --gutter:clamp(24px,5vw,72px); --wrap:max(var(--gutter),calc((100% - 1776px) / 2)); }
+  * { box-sizing:border-box; margin:0; }
+  html { background:var(--black); }
+  body { background:var(--black); color:#f2f2ee; font-family:"DM Sans",system-ui,sans-serif; overflow-x:clip; }
+  .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+  img, video { display:block; }
+
+  nav { position:fixed; z-index:30; top:12px; left:max(12px,calc(var(--gutter) - 14px)); right:max(12px,calc(var(--gutter) - 14px)); display:flex; justify-content:space-between; align-items:center; padding:8px 16px; color:#fff; background:rgba(16,17,21,.55); -webkit-backdrop-filter:blur(16px) saturate(160%); backdrop-filter:blur(16px) saturate(160%); border:1px solid rgba(255,255,255,.16); border-radius:14px; }
+  nav a { color:inherit; text-decoration:none; font-size:.92rem; font-weight:500; }
+  nav .links { display:flex; gap:24px; }
+  nav .links a { transition:color .2s; }
+  nav .links a[href]:hover { color:var(--cta); }
+  nav a:not([href]) { cursor:default; }
+  nav .name { display:block; line-height:0; }
+  nav .name svg { display:block; transform-origin:50% 50%; animation:csBlink 4s linear infinite; }
+  @keyframes csBlink {
+    0%, 12%, 25%, 37%, 100% { transform:scaleY(1); opacity:1; }
+    1%, 26% { transform:scaleY(.98); opacity:.94; }
+    2%, 27% { transform:scaleY(.59); opacity:.52; }
+    3%, 9%, 28%, 34% { transform:scaleY(0); opacity:0; }
+    10%, 35% { transform:scaleY(.31); opacity:.29; }
+    11%, 36% { transform:scaleY(.97); opacity:.94; }
+  }
+  #beam { position:fixed; z-index:31; left:0; top:0; height:2px; width:100%; transform:scaleX(0); transform-origin:0 50%; background:linear-gradient(90deg,rgba(255,157,46,.15),var(--laser)); }
+  #tip { position:fixed; z-index:31; top:-3px; left:0; width:8px; height:8px; margin-left:-4px; border-radius:50%; background:#fff; box-shadow:0 0 10px 3px var(--laser),0 0 26px 8px rgba(255,157,46,.55); opacity:0; }
+  #toTop { position:fixed; z-index:30; right:max(16px,calc(var(--gutter) - 14px)); bottom:64px; width:46px; height:46px; display:grid; place-items:center; padding:0; color:#fff; cursor:pointer; background:rgba(16,17,21,.62); -webkit-backdrop-filter:blur(16px) saturate(160%); backdrop-filter:blur(16px) saturate(160%); border:1px solid rgba(255,255,255,.18); border-radius:50%; opacity:0; visibility:hidden; transform:translate3d(0,10px,0); transition:opacity .3s, transform .3s, visibility 0s .3s, color .2s; }
+  #toTop.on { opacity:1; visibility:visible; transform:none; transition:opacity .3s, transform .3s, color .2s; }
+  #toTop:hover, #toTop:focus-visible { color:var(--cta); }
+
+  .sec { position:relative; isolation:isolate; margin-top:-34px; border-radius:34px 34px 0 0; overflow:clip; background:var(--bg,var(--black)); color:var(--fg,#f2f2ee); }
+  .sec::after { content:""; position:absolute; inset:0; background:#000; opacity:var(--dim,0); pointer-events:none; z-index:8; }
+  .cream { --bg:var(--cream); --fg:#111; --muted:#55575c; }
+  .dark { --bg:var(--black); --fg:#f2f2ee; --muted:#a9abb1; }
+  .pad { padding:clamp(80px,10vh,110px) var(--wrap) clamp(96px,12vh,130px); }
+  .eyebrow { font-family:var(--mono); font-size:.74rem; letter-spacing:.08em; color:var(--muted); }
+  h2 { font-size:clamp(2rem,4.6vw,4.4rem); line-height:1.04; font-weight:500; letter-spacing:-.035em; margin-top:14px; text-wrap:balance; }
+  h2 .w { display:inline-block; opacity:.14; transform:translate3d(0,.2em,0); transition:opacity .28s linear,transform .38s cubic-bezier(.2,.7,.2,1); }
+  h2 .w.on { opacity:1; transform:none; }
+  .lede { font-size:clamp(1.08rem,1.5vw,1.36rem); line-height:1.42; letter-spacing:-.01em; text-wrap:pretty; }
+  .lede + .lede { margin-top:.9em; }
+  .fade { opacity:0; transform:translate3d(0,26px,0); transition:opacity .7s ease,transform .8s cubic-bezier(.2,.7,.2,1); transition-delay:var(--d,0s); }
+  .fade.in { opacity:1; transform:none; }
+  .link { display:inline-block; padding:12px 22px; border-radius:6px; background:var(--cta); color:#111; text-decoration:none; font-weight:600; transition:transform .2s; }
+  .link:hover { transform:translateY(-2px); }
+
+  .phone { position:relative; width:min(100%,290px); aspect-ratio:1206/2622; padding:7px; border-radius:38px; background:#17181c; box-shadow:0 26px 56px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.16); }
+  .phone video { width:100%; height:100%; object-fit:cover; border-radius:31px; background:#fff; }
+
+  /* Hero */
+  #hero { position:relative; min-height:100vh; min-height:100svh; background:var(--black); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:clamp(24px,4vw,64px); align-items:center; padding:96px var(--wrap) clamp(70px,10vh,100px); --muted:#a9abb1; overflow:clip; }
+  #hero h1 { font-size:clamp(3rem,7.6vw,7.6rem); line-height:.96; letter-spacing:-.045em; font-weight:500; margin-top:14px; }
+  .cut { display:block; position:relative; width:max-content; max-width:100%; clip-path:inset(0 100% 0 0); animation:cut 1.25s cubic-bezier(.6,0,.2,1) .25s forwards; }
+  .cut + .cut { animation-delay:.75s; }
+  @keyframes cut { to { clip-path:inset(0 -4% -8% 0); } }
+  .hero-sub { margin-top:18px; font-size:clamp(1.3rem,2.1vw,1.9rem); line-height:1.12; letter-spacing:-.025em; font-weight:500; }
+  #hero .lede { margin-top:12px; max-width:560px; color:#d5d6da; }
+  .meta { display:grid; grid-template-columns:auto 1fr; gap:4px 14px; margin-top:18px; font-size:.84rem; line-height:1.35; color:#c3c5ca; }
+  .meta b { font-family:var(--mono); font-weight:400; font-size:.68rem; letter-spacing:.06em; color:#85878e; padding-top:2px; }
+  .hero-cta { margin-top:22px; }
+  .hero-phones { position:relative; display:flex; justify-content:center; align-items:center; min-width:0; }
+  .hero-phones .phone { flex:0 1 39%; width:auto; min-width:0; padding:5px; border-radius:clamp(24px,3vw,36px); opacity:0; animation:rise 1s cubic-bezier(.2,.7,.2,1) forwards; }
+  .hero-phones .phone img { width:100%; height:100%; object-fit:cover; object-position:top; border-radius:clamp(19px,2.6vw,31px); background:#fff; }
+  .hero-phones .phone:nth-child(1) { --from:translate3d(0,60px,0) rotate(-5deg); --to:translate3d(12%,5%,0) rotate(-5deg); animation-delay:1.05s; }
+  .hero-phones .phone:nth-child(2) { --from:translate3d(0,60px,0); --to:translate3d(0,-4%,0); z-index:2; animation-delay:1.25s; box-shadow:0 34px 70px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.16); }
+  .hero-phones .phone:nth-child(3) { --from:translate3d(0,60px,0) rotate(5deg); --to:translate3d(-12%,5%,0) rotate(5deg); animation-delay:1.45s; }
+  @keyframes rise { from { transform:var(--from); opacity:0; } to { transform:var(--to); opacity:1; } }
+
+  #stats { position:relative; z-index:2; background:var(--black); padding:0 var(--wrap) clamp(96px,14vh,140px); display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .num { border-top:1px solid rgba(255,255,255,.18); padding-top:14px; }
+  .num b { display:block; font-size:clamp(2.4rem,6vw,5.6rem); line-height:1; font-weight:500; letter-spacing:-.045em; font-variant-numeric:tabular-nums; }
+  .num span { display:block; margin-top:8px; font-size:.9rem; color:#a9abb1; }
+
+  /* 兩欄章節 */
+  .two { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(24px,5vw,80px); align-items:center; }
+  .two .lede { margin-top:14px; }
+  .fig { border-radius:18px; overflow:hidden; background:#e7e3da; }
+  .fig img, .fig video { width:100%; height:100%; object-fit:cover; }
+
+  /* 01 問題標記 */
+  .paper { position:relative; aspect-ratio:1; border-radius:18px; overflow:hidden; background:#ddd; }
+  .paper img { width:100%; height:100%; object-fit:cover; }
+  .pin-note { position:absolute; left:var(--x); top:var(--y); max-width:58%; padding:6px 10px; border-radius:8px; background:#111; color:#fff; font-size:.84rem; line-height:1.2; box-shadow:0 8px 18px rgba(0,0,0,.28); opacity:0; transform:translate3d(0,12px,0) scale(.96); transition:opacity .45s, transform .55s cubic-bezier(.2,.7,.2,1); transition-delay:calc(.4s + var(--i) * .35s); }
+  .paper.in .pin-note { opacity:1; transform:none; }
+
+  /* 03 兩版對比 */
+  .versions { display:flex; justify-content:center; gap:clamp(14px,3vw,36px); }
+  .versions figure { flex:0 1 260px; min-width:0; }
+  .versions .phone { width:100%; }
+  .versions figcaption { margin-top:12px; font-family:var(--mono); font-size:.72rem; line-height:1.4; color:var(--muted); text-align:center; }
+
+  /* 05 五步 */
+  .flow { position:relative; list-style:none; padding:26px 0 0; margin-top:clamp(24px,4vh,36px); display:grid; grid-template-columns:repeat(5,1fr); gap:clamp(12px,2vw,28px); }
+  .flow::before { content:""; position:absolute; left:0; right:0; top:6px; height:2px; background:rgba(255,255,255,.16); }
+  .flow::after { content:""; position:absolute; left:0; right:0; top:6px; height:2px; background:var(--laser); box-shadow:0 0 8px var(--laser); transform:scaleX(0); transform-origin:0 50%; transition:transform 2s cubic-bezier(.4,0,.3,1); }
+  .flow.in::after { transform:none; }
+  .flow li { position:relative; font-size:.95rem; line-height:1.32; color:#a9abb1; opacity:.25; transform:translate3d(0,14px,0); transition:opacity .5s calc(var(--i) * .36s + .1s), transform .6s cubic-bezier(.2,.7,.2,1) calc(var(--i) * .36s + .1s); }
+  .flow.in li { opacity:1; transform:none; }
+  .flow li::before { content:""; position:absolute; left:0; top:-25px; width:12px; height:12px; border-radius:50%; background:#fff; box-shadow:0 0 0 3px var(--black); }
+  .flow b { display:block; margin-bottom:4px; color:#f2f2ee; font-weight:600; font-size:1.02rem; }
+  .sys { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2.4fr); gap:clamp(12px,1.6vw,22px); margin-top:clamp(30px,5vh,48px); align-items:start; }
+  .qr { border-radius:18px; overflow:hidden; aspect-ratio:1; background:#1a1b20; }
+  .qr img { width:100%; height:100%; object-fit:cover; object-position:40% 50%; }
+  .studio { border-radius:18px; overflow:hidden; background:#f3f3f3; }
+  .studio img { width:100%; height:auto; }
+  .cap { margin-top:10px; font-family:var(--mono); font-size:.72rem; color:var(--muted); }
+
+  /* 05 五步：捲到哪一步，該張圖片變清楚 */
+  #system { height:240vh; }
+  .stick5 { position:sticky; top:0; height:100vh; height:100svh; overflow:hidden; display:flex; align-items:center; }
+  .pad5 { width:100%; padding:84px var(--wrap) 40px; --muted:#a9abb1; }
+  .pad5 h2 { font-size:clamp(1.8rem,3.6vw,3.2rem); }
+  .steps5 { --p:0; position:relative; list-style:none; padding:26px 0 0; margin-top:clamp(20px,3.5vh,34px); display:grid; grid-template-columns:repeat(5,1fr); gap:clamp(12px,1.6vw,22px); }
+  .steps5::before, .steps5::after { content:""; position:absolute; left:0; right:0; top:6px; height:2px; }
+  .steps5::before { background:rgba(255,255,255,.16); }
+  .steps5::after { background:var(--laser); box-shadow:0 0 8px var(--laser); transform:scaleX(var(--p)); transform-origin:0 50%; }
+  .steps5 { --fh:clamp(200px,40vh,430px); padding-bottom:calc(var(--fh) + 22px) !important; }
+  .steps5 li { display:flex; flex-direction:column; min-width:0; }
+  .steps5 b { position:relative; }
+  .steps5 b::before { content:""; position:absolute; left:0; top:-25px; width:12px; height:12px; border-radius:50%; background:#55575c; box-shadow:0 0 0 3px var(--black); transition:background .3s, box-shadow .3s; }
+  .steps5 li.on b::before { background:#fff; box-shadow:0 0 0 3px var(--black), 0 0 12px 3px var(--laser); }
+  .steps5 b { display:block; font-weight:600; font-size:1.02rem; color:#f2f2ee; }
+  .steps5 i { font-style:normal; font-family:var(--mono); font-weight:400; font-size:.7rem; color:#85878e; margin-right:8px; }
+  .steps5 p { margin-top:4px; font-size:.92rem; line-height:1.32; color:#a9abb1; min-height:3.9em; }
+  .steps5 figure { position:absolute; bottom:0; left:var(--x,0); width:var(--w,18%); height:var(--fh); border-radius:16px; overflow:hidden; background:#1a1b20; opacity:.3; transition:left .7s cubic-bezier(.2,.7,.2,1), width .7s cubic-bezier(.2,.7,.2,1), opacity .45s, box-shadow .45s; }
+  .steps5 figure::after { content:attr(data-n); position:absolute; left:10px; top:10px; padding:3px 7px; border-radius:99px; background:rgba(8,9,11,.72); color:#f2f2ee; font-family:var(--mono); font-size:.66rem; }
+  .steps5 li.on figure { opacity:1; box-shadow:0 0 0 2px var(--laser), 0 18px 40px rgba(0,0,0,.45); }
+  .steps5 figure img { width:100%; height:100%; object-fit:cover; }
+  .steps5 figure.fit { background:#232323; }
+  .steps5 figure.sheet { background:#fff; }
+  .steps5 figure.studio { background:#e8e9ed; }
+  .steps5 figure.fit img { object-position:0 50%; }
+  .steps5 li.on figure.fit img { object-fit:contain; object-position:50% 50%; padding:10px; }
+
+  /* 01 問題列點 */
+  .prob-head { padding-bottom:clamp(36px,6vh,56px) !important; }
+  .prob-head .lede { max-width:640px; }
+  .prob-pair { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1fr) minmax(0,1.5fr); gap:clamp(24px,3vw,52px); align-items:start; padding-bottom:0 !important; }
+  .ph .lede { margin-top:18px; }
+  @media (max-width:1100px) { .prob-pair { grid-template-columns:minmax(0,1fr) minmax(0,1.5fr); } .ph { grid-column:1/-1; } }
+  .pc-top { min-height:44px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .pc-top .cat-nav { margin-top:0; gap:8px; }
+  .pc-top .cat-btn { width:38px; height:38px; }
+  .pc-top .cat-count { min-width:76px; }
+  .pc .cat-hint { margin-top:10px; }
+  .pc .paper { aspect-ratio:1; width:100%; }
+  .pc .paper img { transform:scale(1.45); transform-origin:58% 88%; }
+  .pc .book { width:100%; margin:0; }
+  .pc .probs { margin-top:14px; max-width:none; }
+  .pc .probs li { font-size:.98rem; padding:9px 0 9px 22px; }
+  .pc .probs li::before { top:calc(9px + .7em - 3px); }
+  .cat-row { display:flex; align-items:center; gap:16px; margin-top:12px; flex-wrap:wrap; }
+  .cat-row .cat-nav { margin-top:0; }
+  .cat-row .cat-hint { margin-top:0; }
+  .prob-end { padding-top:clamp(56px,9vh,96px) !important; }
+  .prob-end .closing { margin-top:0; }
+  .probs { list-style:none; padding:0; margin-top:clamp(18px,3vh,28px); max-width:560px; }
+  .probs li { position:relative; padding:12px 0 12px 22px; border-top:1px solid rgba(8,9,11,.12); font-size:clamp(1rem,1.25vw,1.12rem); line-height:1.4; }
+  .probs li:last-child { border-bottom:1px solid rgba(8,9,11,.12); }
+  .probs li::before { content:""; position:absolute; left:2px; top:calc(12px + .7em - 3px); width:7px; height:7px; border-radius:50%; background:var(--laser); }
+
+  /* 01 目錄翻頁書 */
+  .cat { padding-top:0 !important; display:grid; grid-template-columns:minmax(0,.75fr) minmax(0,2fr); gap:clamp(24px,5vw,80px); align-items:center; }
+  .cat-nav { margin-top:22px; display:flex; align-items:center; gap:14px; }
+  .cat-btn { width:44px; height:44px; border-radius:50%; border:1px solid rgba(8,9,11,.18); background:transparent; color:inherit; font-size:1.1rem; cursor:pointer; transition:background .2s, opacity .2s; }
+  .cat-btn:hover { background:rgba(8,9,11,.06); }
+  .cat-btn:disabled { opacity:.3; cursor:default; background:transparent; }
+  .cat-count { min-width:96px; text-align:center; font-family:var(--mono); font-size:.78rem; }
+  .cat-hint { margin-top:12px; }
+  .book { position:relative; width:min(100%, calc(78vh * 1.506)); aspect-ratio:2000/1328; margin:0 auto; perspective:2600px; }
+  .book-in { position:absolute; inset:0; transform-style:preserve-3d; transition:transform .8s cubic-bezier(.3,.7,.2,1); }
+  .leaf { position:absolute; left:50%; top:0; width:50%; height:100%; transform-origin:0 50%; transform-style:preserve-3d; transition:transform .9s cubic-bezier(.3,.7,.2,1); cursor:pointer; }
+  .leaf.flipped { transform:rotateY(-180deg); }
+  .face { position:absolute; inset:0; overflow:hidden; background:#fff; backface-visibility:hidden; -webkit-backface-visibility:hidden; box-shadow:0 14px 34px rgba(8,9,11,.16); }
+  .face img { width:100%; height:100%; object-fit:cover; }
+  .face.front { border-radius:0 6px 6px 0; }
+  .face.back { transform:rotateY(180deg); border-radius:6px 0 0 6px; }
+  .face::after { content:""; position:absolute; top:0; bottom:0; width:7%; pointer-events:none; }
+  .face.front::after { left:0; background:linear-gradient(90deg, rgba(0,0,0,.14), transparent); }
+  .face.back::after { right:0; background:linear-gradient(270deg, rgba(0,0,0,.14), transparent); }
+  .cat-strip { display:none; }
+  .hint-phone { display:none; }
+
+  /* 02 掃 QR code → 手機填表 */
+  #scan { height:280vh; --a:0; --b:0; --c:0; }
+  .stick2 { position:sticky; top:0; height:100vh; height:100svh; display:flex; align-items:center; overflow:hidden; }
+  .scan-grid { width:100%; padding-top:72px !important; padding-bottom:40px !important; }
+  .stage { position:relative; height:min(80vh,80svh,760px); }
+  .booth { position:absolute; left:50%; top:50%; height:100%; aspect-ratio:3/4; border-radius:20px; overflow:hidden; transform:translate(-50%,-50%) scale(calc(1 + var(--c) * .06)); opacity:calc(1 - var(--c) * 1.25); }
+  .booth img { width:100%; height:100%; object-fit:cover; }
+  .rig { position:absolute; left:50%; top:50%; height:92%; aspect-ratio:1206/2622; transform:translate(-50%,-50%) translateY(calc((1 - var(--a)) * 125%)) scale(calc(.78 + var(--c) * .22)); }
+  .scan-phone { position:absolute; inset:0; width:100%; height:100%; padding:6px; }
+  .hand { position:absolute; left:0; top:0; width:100%; height:100%; overflow:visible; pointer-events:none; opacity:calc(1 - var(--c) * 1.8); transform:translateY(calc(var(--c) * 40%)); }
+  .hand-front { z-index:2; filter:drop-shadow(-1px 2px 3px rgba(0,0,0,.3)); }
+  .hand-back { filter:drop-shadow(0 10px 18px rgba(0,0,0,.3)); }
+  .screen { position:relative; width:100%; height:100%; border-radius:31px; overflow:hidden; background:#000; }
+  .cam { position:absolute; inset:0; overflow:hidden; opacity:calc(1 - var(--c) * 1.6); }
+  .cam img { position:absolute; width:525%; max-width:none; left:-200.7%; top:-68.3%; transform-origin:47.75% 36.75%; transform:scale(calc(.5 + var(--a) * .5)); }
+  .scanbox { --sc:#fff; position:absolute; left:50%; top:50%; width:64%; aspect-ratio:1; transform:translate(-50%,-50%) scale(calc(1.3 - var(--b) * .3)); opacity:calc((var(--a) - .6) * 2.5 - var(--c) * 3); background:
+    linear-gradient(var(--sc),var(--sc)) 0 0/22% 3px, linear-gradient(var(--sc),var(--sc)) 0 0/3px 22%,
+    linear-gradient(var(--sc),var(--sc)) 100% 0/22% 3px, linear-gradient(var(--sc),var(--sc)) 100% 0/3px 22%,
+    linear-gradient(var(--sc),var(--sc)) 0 100%/22% 3px, linear-gradient(var(--sc),var(--sc)) 0 100%/3px 22%,
+    linear-gradient(var(--sc),var(--sc)) 100% 100%/22% 3px, linear-gradient(var(--sc),var(--sc)) 100% 100%/3px 22%; background-repeat:no-repeat; transition:filter .3s; }
+  .scanbox i { position:absolute; left:6%; right:6%; top:0; height:2px; background:var(--laser); box-shadow:0 0 10px 2px var(--laser); animation:scanline 1.6s ease-in-out infinite alternate; }
+  @keyframes scanline { to { top:100%; } }
+  .scanbox .pill { position:absolute; left:50%; top:-26%; transform:translate(-50%,6px); padding:5px 12px; border-radius:99px; background:var(--cta); color:#111; font-size:.78rem; font-weight:600; white-space:nowrap; opacity:0; transition:opacity .3s, transform .3s; }
+  #scan.hit .scanbox { --sc:var(--laser); filter:drop-shadow(0 0 6px var(--laser)); }
+  #scan.hit .scanbox i { opacity:0; }
+  #scan.hit .scanbox .pill { opacity:1; transform:translate(-50%,0); }
+  .screen video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#fff; opacity:calc(var(--c) * 2 - .5); }
+
+  /* 03 停住比較 V1 / V2 */
+  #fonts { height:230vh; }
+  .stick3 { position:sticky; top:0; height:100vh; height:100svh; display:flex; align-items:center; overflow:hidden; }
+  .stick3 > .pad { width:100%; padding-top:72px; padding-bottom:40px; }
+  .stick3 .versions .phone { width:min(100%, calc((100svh - 220px) * .46)); margin:0 auto; }
+  .vnotes { display:grid; margin-top:clamp(18px,3vh,28px); }
+  .vnote { grid-area:1/1; opacity:0; transform:translate3d(0,14px,0); transition:opacity .45s, transform .55s cubic-bezier(.2,.7,.2,1); pointer-events:none; }
+  .vnote.on { opacity:1; transform:none; pointer-events:auto; }
+  .vnote .probs { margin-top:12px; }
+  .versions figure { opacity:.35; transform:scale(.96); transition:opacity .45s, transform .55s cubic-bezier(.2,.7,.2,1); }
+  .versions figure.on { opacity:1; transform:none; }
+  .versions figure.on figcaption { color:var(--fg,#08090b); }
+
+  /* 06 三個心得 */
+  .moves { margin-top:clamp(26px,5vh,44px); display:grid; gap:12px; }
+  .lessons { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .lesson { padding:clamp(18px,2.4vw,28px); border-radius:14px; background:#fff; opacity:0; transform:translate3d(0,14px,0); transition:opacity .5s calc(.2s + var(--d)), transform .6s cubic-bezier(.2,.7,.2,1) calc(.2s + var(--d)); }
+  .moves.in .lesson { opacity:1; transform:none; }
+  .lesson i { display:block; font-style:normal; font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; color:var(--muted); }
+  .lesson b { display:block; margin-top:clamp(18px,3vh,30px); font-size:clamp(1.15rem,1.8vw,1.55rem); font-weight:500; letter-spacing:-.02em; line-height:1.15; }
+  .lesson p { margin-top:10px; color:#55575e; line-height:1.5; }
+  .closing { margin-top:clamp(36px,6vh,60px); max-width:860px; font-size:clamp(1.5rem,3vw,2.7rem); line-height:1.1; letter-spacing:-.03em; font-weight:500; text-wrap:balance; }
+  .closing span { color:var(--muted); }
+
+  .more { padding:clamp(48px,8vh,76px) var(--wrap) clamp(56px,9vh,88px); }
+  .more h2 { font-size:clamp(1.6rem,2.8vw,2.6rem); margin:0 0 clamp(18px,3vh,28px); }
+  .more-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(12px,1.6vw,22px); max-width:1120px; }
+  .more-card { color:#f2f2ee; text-decoration:none; }
+  .more-pic { display:block; aspect-ratio:586/473; border-radius:18px; overflow:hidden; background:#e7e3da; }
+  .more-pic img, .more-pic video { width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.2,.7,.2,1); }
+  @media (hover:hover) { .more-card:hover img, .more-card:hover video { transform:scale(1.04); } }
+  .more-card b { display:block; margin-top:10px; font-size:clamp(.95rem,1.15vw,1.08rem); font-weight:500; letter-spacing:-.015em; transition:color .2s; }
+  .more-card:hover b { color:var(--cta); }
+  footer { padding:0 var(--wrap) 28px; display:flex; justify-content:space-between; gap:12px 24px; flex-wrap:wrap; font-size:.9rem; color:#a5a7ad; }
+  footer a { color:#f2f2ee; text-decoration:none; font-weight:500; }
+  footer a:hover { color:var(--cta); }
+
+  @media (max-width:1024px) and (orientation:portrait) {
+    #hero { grid-template-columns:1fr; }
+    .hero-phones { max-width:560px; width:100%; justify-self:center; }
+  }
+  @media (max-width:700px) {
+    nav { padding:7px 12px; }
+    nav .links { gap:18px; }
+    nav .links a { padding:6px 0; font-size:.88rem; }
+    .sec { border-radius:26px 26px 0 0; margin-top:-26px; }
+    .pad { padding:76px 16px 96px; }
+    #hero { grid-template-columns:1fr; padding:84px 16px 46px; }
+    .hero-phones { margin-top:6px; }
+    #stats { grid-template-columns:1fr 1fr; padding:0 16px 80px; }
+    #stats .num:first-child { grid-column:span 2; }
+    .two { grid-template-columns:1fr; }
+    #fonts { height:auto; }
+    .stick3 { position:relative; height:auto; display:block; overflow:visible; }
+    .stick3 > .pad { padding:76px 16px 96px; }
+    .stick3 .versions .phone { width:100%; }
+    .vnotes { gap:22px; }
+    .vnote { grid-area:auto; opacity:1; transform:none; }
+    .versions figure { opacity:1; transform:none; }
+    .scan-grid { display:flex; flex-direction:column; gap:18px; padding:64px 16px 24px !important; }
+    .stage { height:58vh; height:58svh; }
+    .prob-pair { grid-template-columns:1fr; gap:44px; }
+    .book { display:none; }
+    .hint-desk { display:none; }
+    .hint-phone { display:inline; }
+    .cat-strip { display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; margin:0 -16px; padding:0 16px 6px; scrollbar-width:none; }
+    .cat-strip::-webkit-scrollbar { display:none; }
+    .cat-pg { flex:0 0 82%; scroll-snap-align:center; border-radius:6px; overflow:hidden; background:#fff; box-shadow:0 10px 26px rgba(8,9,11,.14); }
+    .cat-pg img { width:100%; aspect-ratio:1000/1328; object-fit:cover; }
+    .two > .phone-wrap { display:grid; place-items:center; }
+    .sys { grid-template-columns:1fr; }
+    .qr { aspect-ratio:2; }
+    .flow { grid-template-columns:1fr; gap:18px; padding:0 0 0 24px; }
+    #system { height:auto; }
+    .stick5 { position:relative; height:auto; overflow:visible; display:block; }
+    .pad5 { padding:76px 16px 96px; }
+    .steps5 { grid-template-columns:1fr; gap:26px; padding:0 0 0 24px; }
+    .steps5::before, .steps5::after { left:5px; right:auto; top:0; bottom:0; width:2px; height:auto; }
+    .steps5::after { transform:scaleY(var(--p)); transform-origin:50% 0; }
+    .steps5 { padding-bottom:0 !important; }
+    .steps5 b::before { left:-24px; top:3px; }
+    .steps5 p { min-height:0; }
+    .steps5 figure { position:relative; left:auto; width:auto; height:auto; margin-top:14px; aspect-ratio:1; }
+    .steps5 figure.sheet { aspect-ratio:3.6; }
+    .steps5 figure.studio { aspect-ratio:2.8; }
+    .steps5 figure.sheet img, .steps5 figure.studio img { object-fit:contain; padding:8px; }
+    .flow::before, .flow::after { left:5px; right:auto; top:0; bottom:0; width:2px; height:auto; }
+    .flow::after { transform:scaleY(0); transform-origin:50% 0; }
+    .flow li::before { left:-24px; top:3px; }
+    .lessons { grid-template-columns:1fr; }
+    .lesson b { margin-top:12px; }
+    .more { padding:48px 16px 56px; }
+    .more-grid { grid-template-columns:repeat(3,62vw); overflow-x:auto; scroll-snap-type:x mandatory; margin-right:-16px; padding-right:16px; scrollbar-width:none; max-width:none; }
+    .more-grid::-webkit-scrollbar { display:none; }
+    .more-card { scroll-snap-align:start; }
+    footer { padding:0 16px 24px; flex-direction:column; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    nav .name svg, .cut, .hero-phones .phone { animation:none; clip-path:none; opacity:1; }
+    .hero-phones .phone { transform:var(--to); }
+    h2 .w, .fade, .pin-note, .lesson, .flow li { opacity:1; transform:none; transition:none; }
+  }
+</style>
+</head>
+<body>
+<nav aria-label="Main">
+  <a class="name" href="index.html" aria-label="Christy Sung, home"><svg viewBox="-1.02 -0.6 2.04 1.2" width="48" height="28" role="img" aria-label="Christy Sung"><path fill="currentColor" fill-rule="evenodd" d="M0.468,-0.583 0.495,-0.583 0.541,-0.580 0.564,-0.576 0.607,-0.567 0.649,-0.554 0.691,-0.536 0.735,-0.514 0.771,-0.491 0.810,-0.461 0.830,-0.443 0.873,-0.398 0.907,-0.356 0.936,-0.309 0.960,-0.264 0.976,-0.224 0.986,-0.194 1.000,-0.142 1.000,-0.139 0.998,-0.137 0.932,-0.137 0.930,-0.139 0.910,-0.201 0.890,-0.247 0.864,-0.293 0.844,-0.323 0.814,-0.359 0.771,-0.402 0.738,-0.428 0.692,-0.459 0.655,-0.477 0.623,-0.491 0.580,-0.504 0.544,-0.511 0.518,-0.514 0.481,-0.516 0.445,-0.514 0.396,-0.508 0.369,-0.500 0.385,-0.477 0.955,0.273 0.943,0.299 0.930,0.322 0.904,0.361 0.866,0.407 0.830,0.444 0.794,0.474 0.751,0.504 0.718,0.523 0.699,0.533 0.649,0.553 0.610,0.566 0.564,0.576 0.514,0.582 0.465,0.583 0.416,0.579 0.376,0.572 0.337,0.562 0.275,0.539 0.241,0.523 0.192,0.493 0.156,0.467 0.118,0.434 0.083,0.398 0.047,0.351 0.017,0.305 -0.005,0.263 -0.009,0.262 -0.030,0.305 -0.051,0.338 -0.077,0.374 -0.107,0.409 -0.150,0.451 -0.183,0.477 -0.222,0.503 -0.272,0.530 -0.328,0.553 -0.360,0.563 -0.390,0.569 -0.439,0.576 -0.466,0.578 -0.544,0.576 -0.571,0.572 -0.610,0.563 -0.640,0.553 -0.673,0.540 -0.712,0.520 -0.745,0.500 -0.785,0.470 -0.808,0.451 -0.848,0.411 -0.864,0.391 -0.887,0.361 -0.907,0.332 -0.930,0.292 -0.947,0.256 -0.967,0.207 -0.976,0.177 -0.986,0.138 -0.993,0.102 -0.999,0.039 -1.000,-0.010 -0.999,-0.033 -0.993,-0.099 -0.983,-0.148 -0.970,-0.194 -0.950,-0.247 -0.930,-0.290 -0.907,-0.329 -0.881,-0.369 -0.847,-0.410 -0.814,-0.444 -0.775,-0.478 -0.742,-0.501 -0.709,-0.521 -0.669,-0.540 -0.617,-0.560 -0.591,-0.567 -0.558,-0.574 -0.502,-0.580 -0.459,-0.580 -0.403,-0.574 -0.367,-0.567 -0.344,-0.560 -0.295,-0.543 -0.245,-0.520 -0.212,-0.501 -0.179,-0.478 -0.137,-0.442 -0.113,-0.418 -0.090,-0.392 -0.057,-0.349 -0.030,-0.306 -0.009,-0.264 -0.005,-0.259 0.007,-0.283 0.031,-0.323 0.053,-0.356 0.080,-0.388 0.100,-0.411 0.133,-0.443 0.166,-0.471 0.192,-0.490 0.235,-0.517 0.268,-0.534 0.297,-0.547 0.334,-0.560 0.370,-0.570 0.403,-0.576 0.432,-0.580 0.465,-0.581Z M-0.499,-0.510 -0.495,-0.512 -0.469,-0.512 -0.443,-0.511 -0.410,-0.507 -0.380,-0.501 -0.357,-0.494 -0.314,-0.478 -0.275,-0.459 -0.229,-0.429 -0.193,-0.400 -0.152,-0.359 -0.130,-0.333 -0.113,-0.309 -0.084,-0.264 -0.067,-0.231 -0.054,-0.201 -0.033,-0.142 0.423,0.499 0.429,0.509 0.429,0.513 0.406,0.510 0.373,0.503 0.340,0.493 0.324,0.487 0.284,0.470 0.265,0.460 0.248,0.451 0.218,0.430 0.197,0.414 0.165,0.384 0.132,0.348 0.106,0.315 0.082,0.279 0.060,0.240 0.028,0.169 -0.045,0.168 -0.048,0.171 -0.049,0.174 -0.063,0.213 -0.076,0.243 -0.090,0.269 -0.116,0.312 -0.133,0.335 -0.163,0.370 -0.193,0.399 -0.216,0.418 -0.248,0.441 -0.281,0.460 -0.324,0.480 -0.350,0.490 -0.387,0.500 -0.423,0.507 -0.459,0.510 -0.489,0.511 -0.499,0.509 -0.499,-0.507Z"/></svg></a>
+  <div class="links"><a>Work</a><a href="index.html#about">About</a><a>Resume</a></div>
+</nav>
+<div id="beam"></div><div id="tip"></div>
+<button id="toTop" type="button" aria-label="Back to top"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+
+<header id="hero">
+  <div>
+    <p class="eyebrow">UX · SERVICE DESIGN · FABRICATION</p>
+    <h1 aria-label="Custom Order Flow"><span class="cut" aria-hidden="true">Custom Order</span><span class="cut" aria-hidden="true">Flow</span></h1>
+    <p class="hero-sub">Self-service ordering for a live booth.</p>
+    <p class="lede">I designed the ordering system behind BOLISTRA's live engraving, so one person can take orders and engrave at the same time.</p>
+    <div class="meta"><b>ROLE</b><span>Founder &amp; Designer</span><b>TIME</b><span>2026</span><b>TOOLS</b><span>Tally, Google Sheets, xTool Studio, Figma</span></div>
+    <p class="hero-cta"><a class="link" href="https://tally.so/r/68vZ9P" target="_blank" rel="noopener noreferrer">Try the Form</a></p>
+  </div>
+  <div class="hero-phones" aria-label="Order form screens: choose a piece, choose a font, confirm the order">
+    <div class="phone"><img alt="Choose your jewelry piece screen" src="assets/fr/VF6s8CvfA2YqtioXMy8UsIqrxc.png"></div>
+    <div class="phone"><img alt="Choose your font screen" src="assets/fr/Jk0buWtnejc7LiApjuyBaAAE70.png"></div>
+    <div class="phone"><img alt="Confirm your order screen" src="assets/fr/xH53c78a80KBzA6KLg7969CAsis.png"></div>
+  </div>
+</header>
+<div id="stats">
+  <div class="num"><b data-p="~" data-n="90" data-s=" sec">~0 sec</b><span>To complete one order</span></div>
+  <div class="num"><b data-n="3,4">0–0</b><span>Customers served at once</span></div>
+  <div class="num"><b data-p="&lt;" data-n="5" data-s="%">&lt;0%</b><span>Orders needing clarification</span></div>
+</div>
+
+<section class="sec cream"><div class="pad prob-pair">
+  <div class="ph">
+  <p class="eyebrow">01 — THE PROBLEM</p>
+  <h2 data-w>Customers kept stalling.</h2>
+  <p class="lede fade">Every order relied on two printed pieces: a paper form and a 14-page catalog. Both slowed the line down.</p>
+  </div>
+  <div class="pc pc-form">
+    <div class="pc-top"><p class="eyebrow">THE PAPER FORM</p></div>
+    <div class="paper fade"><img loading="lazy" alt="Stack of paper order forms" src="assets/custom-order/paper-form.jpg"></div>
+    <ul class="probs">
+      <li class="fade">Showed every option at once, in text only.</li>
+      <li class="fade" style="--d:.08s">Had no field for a font or icon.</li>
+      <li class="fade" style="--d:.16s">Let customers pick options their piece could not take.</li>
+    </ul>
+  </div>
+  <div class="pc pc-cat">
+    <div class="pc-top"><p class="eyebrow">THE PRINTED CATALOG · 14 PAGES</p><div class="cat-nav"><button class="cat-btn" data-go="-1" aria-label="Previous page">&larr;</button><span class="cat-count" aria-live="polite">Cover</span><button class="cat-btn" data-go="1" aria-label="Next page">&rarr;</button></div></div>
+    <div class="book fade" role="group" aria-label="BOLISTRA printed catalog"><div class="book-in"><div class="leaf" data-i="0"><div class="face front"><img loading="lazy" alt="BOLISTRA printed catalog, page 1" src="assets/custom-order/catalog-01.jpg"></div><div class="face back"><img loading="lazy" alt="BOLISTRA printed catalog, page 2" src="assets/custom-order/catalog-02.jpg"></div></div><div class="leaf" data-i="1"><div class="face front"><img loading="lazy" alt="BOLISTRA printed catalog, page 3" src="assets/custom-order/catalog-03.jpg"></div><div class="face back"><img loading="lazy" alt="BOLISTRA printed catalog, page 4" src="assets/custom-order/catalog-04.jpg"></div></div><div class="leaf" data-i="2"><div class="face front"><img loading="lazy" alt="BOLISTRA printed catalog, page 5" src="assets/custom-order/catalog-05.jpg"></div><div class="face back"><img loading="lazy" alt="BOLISTRA printed catalog, page 6" src="assets/custom-order/catalog-06.jpg"></div></div><div class="leaf" data-i="3"><div class="face front"><img loading="lazy" alt="BOLISTRA printed catalog, page 7" src="assets/custom-order/catalog-07.jpg"></div><div class="face back"><img loading="lazy" alt="BOLISTRA printed catalog, page 8" src="assets/custom-order/catalog-08.jpg"></div></div><div class="leaf" data-i="4"><div class="face front"><img loading="lazy" alt="BOLISTRA printed catalog, page 9" src="assets/custom-order/catalog-09.jpg"></div><div class="face back"><img loading="lazy" alt="BOLISTRA printed catalog, page 10" src="assets/custom-order/catalog-10.jpg"></div></div><div class="leaf" data-i="5"><div class="face front"><img loading="lazy" alt="BOLISTRA printed catalog, page 11" src="assets/custom-order/catalog-11.jpg"></div><div class="face back"><img loading="lazy" alt="BOLISTRA printed catalog, page 12" src="assets/custom-order/catalog-12.jpg"></div></div><div class="leaf" data-i="6"><div class="face front"><img loading="lazy" alt="BOLISTRA printed catalog, page 13" src="assets/custom-order/catalog-13.jpg"></div><div class="face back"><img loading="lazy" alt="BOLISTRA printed catalog, page 14" src="assets/custom-order/catalog-14.jpg"></div></div></div></div>
+    <div class="cat-strip" role="group" aria-label="BOLISTRA printed catalog"><div class="cat-pg"><img loading="lazy" alt="BOLISTRA printed catalog, page 1" src="assets/custom-order/catalog-01.jpg"></div><div class="cat-pg"><img loading="lazy" alt="BOLISTRA printed catalog, page 2" src="assets/custom-order/catalog-02.jpg"></div><div class="cat-pg"><img loading="lazy" alt="BOLISTRA printed catalog, page 3" src="assets/custom-order/catalog-03.jpg"></div><div class="cat-pg"><img loading="lazy" alt="BOLISTRA printed catalog, page 4" src="assets/custom-order/catalog-04.jpg"></div><div class="cat-pg"><img loading="lazy" alt="BOLISTRA printed catalog, page 5" src="assets/custom-order/catalog-05.jpg"></div><div class="cat-pg"><img loading="lazy" alt="BOLISTRA printed catalog, page 6" src="assets/custom-order/catalog-06.jpg"></div><div class="cat-pg"><img loading="lazy" alt="BOLISTRA printed catalog, page 7" src="assets/custom-order/catalog-07.jpg"></div><div class="cat-pg"><img loading="lazy" alt="BOLISTRA printed catalog, page 8" src="assets/custom-order/catalog-08.jpg"></div><div class="cat-pg"><img loading="lazy" alt="BOLISTRA printed catalog, page 9" src="assets/custom-order/catalog-09.jpg"></div><div class="cat-pg"><img loading="lazy" alt="BOLISTRA printed catalog, page 10" src="assets/custom-order/catalog-10.jpg"></div><div class="cat-pg"><img loading="lazy" alt="BOLISTRA printed catalog, page 11" src="assets/custom-order/catalog-11.jpg"></div><div class="cat-pg"><img loading="lazy" alt="BOLISTRA printed catalog, page 12" src="assets/custom-order/catalog-12.jpg"></div><div class="cat-pg"><img loading="lazy" alt="BOLISTRA printed catalog, page 13" src="assets/custom-order/catalog-13.jpg"></div><div class="cat-pg"><img loading="lazy" alt="BOLISTRA printed catalog, page 14" src="assets/custom-order/catalog-14.jpg"></div></div>
+    
+    <ul class="probs">
+      <li class="fade">Customers flipped back and forth to compare pieces.</li>
+      <li class="fade" style="--d:.08s">Too many pages to remember what each piece offered.</li>
+      <li class="fade" style="--d:.16s">One copy meant one reader. Everyone else waited.</li>
+    </ul>
+    <p class="cap cat-hint"><span class="hint-desk">Click a page to flip through the catalog.</span><span class="hint-phone">Swipe to flip through the catalog.</span></p>
+  </div>
+</div>
+<div class="pad prob-end">
+  <p class="closing fade">I answered the same questions face to face, <span>while the line kept growing.</span></p>
+</div></section>
+
+<section class="sec dark" id="scan"><div class="stick2"><div class="pad two scan-grid">
+  <div class="stage">
+    <div class="booth"><img loading="lazy" alt="BOLISTRA booth with the Scan Here QR sign" src="assets/custom-order/order-qr.jpg"></div>
+    <div class="rig">
+    <svg class="hand hand-back" viewBox="0 0 100 217" preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="skinB" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f3cdb2"/><stop offset=".55" stop-color="#eab896"/><stop offset="1" stop-color="#d99c7a"/></linearGradient>
+    <linearGradient id="thumbB" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e9b493"/><stop offset=".45" stop-color="#f6d6c0"/><stop offset="1" stop-color="#e4aa88"/></linearGradient>
+    <linearGradient id="cuff" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c8323a"/><stop offset="1" stop-color="#9e1f28"/></linearGradient>
+  </defs>
+  <path fill="url(#skinB)" d="M-6 246 C-22 226 -30 196 -30 164 C-30 140 -24 122 -16 110 L20 120 L64 200 C66 222 62 240 52 252 C30 262 8 258 -6 246 Z"/>
+  <path fill="url(#thumbB)" d="M-17 132 C-19 112 -17 90 -13 76 C-11 68 -5 64 0 67 C3 69 3 76 3 86 L3 138 Z"/>
+  <path fill="none" stroke="#cf9273" stroke-width=".6" stroke-linecap="round" opacity=".7" d="M-14 118 C-11 120 -6 120 -3 117"/>
+  <path fill="url(#cuff)" d="M-60 300 L-26 222 C-8 236 14 248 40 254 L20 320 Z"/>
+  <path fill="none" stroke="#7d141b" stroke-width=".8" opacity=".5" d="M-26 222 C-8 236 14 248 40 254"/>
+</svg>
+    <div class="phone scan-phone">
+      <div class="screen">
+        <div class="cam"><img loading="lazy" alt="" src="assets/custom-order/order-qr.jpg"></div>
+        <div class="scanbox"><i></i><span class="pill">tally.so</span></div>
+        <video muted loop playsinline preload="metadata" aria-label="Version 1 form flow" src="assets/custom-order/clip-v1-flow.mp4"></video>
+      </div>
+    </div>
+    <svg class="hand hand-front" viewBox="0 0 100 217" preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="tipF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e0a585"/><stop offset=".5" stop-color="#f1c6aa"/><stop offset="1" stop-color="#e2aa8b"/></linearGradient>
+  </defs>
+  <path fill="url(#tipF)" d="M96 86 C103 81 115 83 117 92 C119 101 113 108 103 108 L96 108 Z"/>
+  <path fill="url(#tipF)" d="M95 112 C103 108 113 112 114 122 C115 132 108 137 98 136 L95 135 Z"/>
+  <path fill="url(#tipF)" d="M95 140 C103 137 113 141 113 150 C113 159 106 164 97 163 L95 162 Z"/>
+  <path fill="url(#tipF)" d="M95 167 C102 165 111 168 111 176 C111 184 105 188 97 187 L95 186 Z"/>
+  <g fill="none" stroke="#c98a6b" stroke-width=".7" stroke-linecap="round" opacity=".75">
+    <path d="M102 99 C104 101 107 101 109 99"/><path d="M101 126 C103 128 106 128 108 126"/><path d="M101 154 C103 156 106 156 108 154"/><path d="M100 179 C102 181 105 181 107 179"/>
+  </g>
+</svg>
+    </div>
+  </div>
+  <div>
+    <p class="eyebrow">02 — VERSION 1</p>
+    <h2 data-w>Put the rules in the flow.</h2>
+    <p class="lede fade">Version 1 moved the order to the customer's phone. It asks one question at a time and shows only the options each piece can take.</p>
+  </div>
+</div></div></section>
+
+<section class="sec cream" id="fonts"><div class="stick3"><div class="pad two">
+  <div>
+    <p class="eyebrow">03 — VERSION 2</p>
+    <h2 data-w>Put the answer in the option.</h2>
+    <div class="vnotes">
+      <div class="vnote on">
+        <p class="eyebrow">VERSION 1 · SHARED SAMPLE</p>
+        <ul class="probs">
+          <li>The font names came first, with one sample image below them.</li>
+          <li>Customers scrolled down to the sample, then back up to choose.</li>
+          <li>On a phone screen, the sample was too small to read.</li>
+        </ul>
+      </div>
+      <div class="vnote">
+        <p class="eyebrow">VERSION 2 · SAMPLE IN EACH OPTION</p>
+        <ul class="probs">
+          <li>Every option shows its own full alphabet.</li>
+          <li>Customers choose by looking, not by remembering a name.</li>
+          <li>Older relatives used it without any explanation.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="versions fade">
+    <figure class="on"><div class="phone"><video muted playsinline preload="auto" data-still="3.8" aria-label="Version 1 font step: font names with one shared sample image below" src="assets/custom-order/clip-v1-font.mp4#t=3.8"></video></div><figcaption>VERSION 1<br>Shared sample</figcaption></figure>
+    <figure><div class="phone"><video muted playsinline preload="metadata" data-from="2.4" data-to="7.2" aria-label="Version 2 font step: scrolling through font options with full alphabets" src="assets/custom-order/clip-v2-font.mp4#t=2.4"></video></div><figcaption>VERSION 2<br>Sample in each option</figcaption></figure>
+  </div>
+</div></div></section>
+
+<section class="sec dark"><div class="pad two">
+  <div class="fig fade" style="aspect-ratio:1"><video muted loop playsinline preload="metadata" aria-label="Laser engraving on a jig" src="assets/fr/VqbyrNdR5tZw83iUo94k7ojlg.mp4"></video></div>
+  <div>
+    <p class="eyebrow">04 — THE PHYSICAL SIDE</p>
+    <h2 data-w>Put the position in the jig.</h2>
+    <p class="lede fade">The F1 cannot show exact placement on its platform, and its guide beam disappears in direct sun. I laser-cut a jig for each piece, so it drops into position without long calibration.</p>
+  </div>
+</div></section>
+
+<section class="sec dark" id="system" style="margin-top:0;border-radius:0"><div class="stick5"><div class="pad5">
+  <p class="eyebrow">05 — THE FULL SYSTEM</p>
+  <h2 data-w>From order to engraving in five steps.</h2>
+  <ol class="steps5">
+    <li class="on"><b><i>01</i>Order form</b><p>Customers scan the booth QR sign, then pick the piece, finish, font, and text.</p><figure data-n="01" data-r="1.05"><img loading="lazy" alt="BOLISTRA booth with the Scan Here QR sign above the necklace displays" src="assets/custom-order/order-qr.jpg" style="object-position:50% 30%"></figure></li>
+    <li><b><i>02</i>Google Sheet</b><p>Every order detail arrives in one place.</p><figure data-n="02" class="fit sheet"><img loading="lazy" alt="Google Sheet rows listing each order's finish, piece, and font" src="assets/custom-order/order-sheet-names.png"></figure></li>
+    <li><b><i>03</i>xTool Studio</b><p>I apply the matching prebuilt template.</p><figure data-n="03" class="fit studio"><img loading="lazy" alt="Prebuilt font and icon templates in xTool Studio" src="assets/custom-order/xtool-templates.jpg"></figure></li>
+    <li><b><i>04</i>Laser-cut jig</b><p>The jewelry drops into its exact position.</p><figure data-n="04" data-r="1.05" class="fit"><img loading="lazy" alt="Six laser-cut jigs, each shaped to hold one pendant style" src="assets/custom-order/laser-cut-jig.jpg"></figure></li>
+    <li><b><i>05</i>Engrave</b><p>The piece is finished in front of the customer.</p><figure data-n="05" data-r="1.05"><img loading="lazy" alt="Freshly engraved heart necklace hanging on the xTool engraver at the booth" src="assets/custom-order/engrave.jpg" style="object-position:50% 45%"></figure></li>
+  </ol>
+</div></div></section>
+
+<section class="sec cream"><div class="pad">
+  <p class="eyebrow">06 — WHAT I LEARNED</p>
+  <h2 data-w>Good UI and a solid UX process pay off at the booth.</h2>
+  <p class="lede fade">Watching real customers order at markets showed me how much a clear interface saves. Every fix saved time for the customers, for me, and for the business.</p>
+  <div class="moves lessons">
+    <div class="lesson" style="--d:0s"><i>01 · RECOGNITION OVER RECALL</i><b>Show it, don't explain it.</b><p>Short labels and pictures cut the cognitive load, so customers choose without stopping to think. Each option shows what the finished piece will look like.</p></div>
+    <div class="lesson" style="--d:.15s"><i>02 · SERVICE BLUEPRINT</i><b>Design the back end too.</b><p>I designed the backstage too: every order lands in one sheet and matches a ready-made template. I spend my time engraving, not sorting through notes.</p></div>
+    <div class="lesson" style="--d:.3s"><i>03 · USABILITY TESTING</i><b>Test with the least techy user.</b><p>I ran usability tests with older relatives, timing each task and logging every pause. Each pain point became a change in the next version.</p></div>
+  </div>
+  <p class="closing fade">In the time one paper order used to take, <span>I can now help 3–5 customers fill in the form at once.</span></p>
+</div></section>
+
+<section class="sec dark"><div class="more">
+  <h2>More Projects</h2>
+  <div class="more-grid">
+    <a class="more-card" href="bolistra-2026.html"><span class="more-pic"><img loading="lazy" alt="BOLISTRA booth" src="assets/fr/bLVwkDnCylvk4f6HlB7KCaefw-1024.png"></span><b>BOLISTRA Jewelry</b></a>
+    <a class="more-card" href="https://christycreative.framer.website/logo-collection"><span class="more-pic"><img loading="lazy" alt="Logo Design collection" src="assets/fr/050RPPeJmVLcLOfD0OO6hxzjlvg-1024.png"></span><b>Logo Design — Six Brands, One Designer</b></a>
+    <a class="more-card" href="san-francisco-fleet-week.html"><span class="more-pic"><video muted loop playsinline preload="metadata" aria-label="SF Fleet Week mobile app" src="assets/fr/hSmeyyINGu0QRBigNiCx7vSwo08.mp4"></video></span><b>SF Fleet Week</b></a>
+  </div>
+</div>
+<footer><span>© 2026 Christy Sung · California</span><span><a href="mailto:christysungjob@gmail.com">christysungjob@gmail.com</a></span></footer>
+</section>
+
+<script type="module">
+history.scrollRestoration = 'manual';
+scrollTo(0, 0);
+const $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const reveal = new IntersectionObserver((list) => list.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); reveal.unobserve(e.target); } }), { threshold: .16 });
+$$('.fade, .reveal, .flow, .moves').forEach((el) => reveal.observe(el));
+const playIO = new IntersectionObserver((list) => list.forEach((e) => { if (reduceMotion) return; if (e.isIntersecting) e.target.play().catch(() => {}); else e.target.pause(); }), { threshold: .1 });
+$$('video').filter((v) => !v.closest('#scan') && !v.closest('#fonts')).forEach((v) => playIO.observe(v));
+// 數字從 0 數上來（同 BOLISTRA）
+$$('.num b').forEach((b) => {
+  const ns = b.dataset.n.split(',').map(Number), pre = b.dataset.p || '', suf = b.dataset.s || '';
+  const show = (e) => { b.textContent = pre + ns.map((n) => Math.round(n * e)).join('–') + suf; };
+  new IntersectionObserver((list, io) => {
+    if (!list[0].isIntersecting) return; io.disconnect();
+    if (reduceMotion) { show(1); return; }
+    const t0 = performance.now();
+    const go = (now) => { const t = clamp((now - t0) / 1300, 0, 1); show(1 - (1 - t) ** 3); if (t < 1) requestAnimationFrame(go); };
+    requestAnimationFrame(go);
+  }, { threshold: .4 }).observe(b);
+});
+const heads = $$('h2[data-w]').map((h) => {
+  h.setAttribute('aria-label', h.textContent);
+  h.innerHTML = h.textContent.trim().split(/\s+/).map((w) => `<span class="w" aria-hidden="true">${w}</span>`).join(' ');
+  return { h, words: [...h.querySelectorAll('.w')] };
+});
+
+const secs = $$('.sec'), beam = $('#beam'), tip = $('#tip'), toTop = $('#toTop');
+
+// 01 目錄：桌面版翻頁書，手機版左右滑
+{
+  const leaves = $$('.leaf'), bookIn = $('.book-in'), count = $('.cat-count'), strip = $('.cat-strip');
+  const [prevBtn, nextBtn] = $$('.cat-btn'), total = leaves.length * 2, stripMode = matchMedia('(max-width:700px)');
+  let f = 0, cur = 0;
+  const label = () => {
+    if (stripMode.matches) return `${cur + 1} / ${total}`;
+    if (f === 0) return 'Cover';
+    if (f === leaves.length) return `${total} / ${total}`;
+    return `${2 * f}–${2 * f + 1} / ${total}`;
+  };
+  const sync = () => {
+    count.textContent = label();
+    prevBtn.disabled = stripMode.matches ? cur === 0 : f === 0;
+    nextBtn.disabled = stripMode.matches ? cur === total - 1 : f === leaves.length;
+  };
+  const layout = (turning) => {
+    leaves.forEach((l, i) => {
+      l.classList.toggle('flipped', i < f);
+      l.style.zIndex = i === turning ? total + 1 : (i < f ? i + 1 : total - i);
+    });
+    bookIn.style.transform = f === 0 ? 'translateX(-25%)' : f === leaves.length ? 'translateX(25%)' : 'none';
+    sync();
+  };
+  let settle;
+  const go = (d) => {
+    if (stripMode.matches) {
+      cur = clamp(cur + d, 0, total - 1);
+      strip.children[cur].scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest', inline: 'center' });
+      sync();
+      return;
+    }
+    const nf = clamp(f + d, 0, leaves.length);
+    if (nf === f) return;
+    const turning = d > 0 ? f : nf;
+    f = nf;
+    layout(turning);
+    clearTimeout(settle);
+    settle = setTimeout(() => layout(-1), 900);
+  };
+  prevBtn.addEventListener('click', () => go(-1));
+  nextBtn.addEventListener('click', () => go(1));
+  leaves.forEach((l, i) => l.addEventListener('click', () => go(i < f ? -1 : 1)));
+  strip.addEventListener('scroll', () => {
+    const mid = strip.scrollLeft + strip.clientWidth / 2;
+    cur = [...strip.children].reduce((n, c, i) => (Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid) < Math.abs(strip.children[n].offsetLeft + strip.children[n].offsetWidth / 2 - mid) ? i : n), 0);
+    sync();
+  }, { passive: true });
+  stripMode.addEventListener('change', sync);
+  layout(-1);
+  // 看到目錄停留 2 秒後自動翻一頁，提示可以翻閱；使用者先動手就不再自動翻
+  let touched = false, hintT;
+  [prevBtn, nextBtn, strip, ...leaves].forEach((el) => el.addEventListener('pointerdown', () => { touched = true; clearTimeout(hintT); }, { passive: true }));
+  if (!reduceMotion) {
+    const hintIO = new IntersectionObserver((es) => {
+      const vis = es.some((e) => e.isIntersecting);
+      clearTimeout(hintT);
+      if (!vis || touched) return;
+      hintT = setTimeout(() => {
+        if ((typeof stopped !== 'undefined' && stopped) || touched) return;
+        if (stripMode.matches ? cur === 0 : f === 0) go(1);
+        hintIO.disconnect();
+      }, 2000);
+    }, { threshold: .6 });
+    [$('.book'), strip].forEach((el) => el && hintIO.observe(el));
+  }
+}
+const scan = $('#scan'), scanVid = $('#scan video'), seg = (p, a, b) => clamp((p - a) / (b - a), 0, 1);
+function syncScan() {
+  const r = scan.getBoundingClientRect(), span = r.height - innerHeight;
+  const p = reduceMotion ? 1 : span > 0 ? clamp(-r.top / span, 0, 1) : 0;
+  const a = seg(p, 0, .26), b = seg(p, .26, .42), c = seg(p, .46, .64);
+  scan.style.setProperty('--a', a.toFixed(4));
+  scan.style.setProperty('--b', b.toFixed(4));
+  scan.style.setProperty('--c', c.toFixed(4));
+  scan.classList.toggle('hit', b >= 1);
+  const near = r.top < innerHeight && r.bottom > 0;
+  if (c > .5 && near) { if (scanVid.paused && !reduceMotion) scanVid.play().catch(() => {}); }
+  else { if (!scanVid.paused) scanVid.pause(); if (c === 0 && scanVid.currentTime) scanVid.currentTime = 0; }
+}
+const fonts = $('#fonts'), vnotes = $$('.vnote'), vfigs = $$('.versions figure'), vvids = $$('#fonts video');
+const phone3 = matchMedia('(max-width:700px)');
+vvids.forEach((v) => {
+  if (v.dataset.still) {
+    const hold = () => { if (Math.abs(v.currentTime - v.dataset.still) > .05) v.currentTime = +v.dataset.still; };
+    v.addEventListener('loadedmetadata', hold);
+    if (v.readyState >= 1) hold();
+  }
+  if (v.dataset.to) {
+    v.addEventListener('timeupdate', () => { if (v.currentTime >= +v.dataset.to || v.currentTime < +v.dataset.from - .2) v.currentTime = +v.dataset.from; });
+    v.addEventListener('ended', () => { v.currentTime = +v.dataset.from; v.play().catch(() => {}); });
+  }
+});
+const playV = (v) => { if (v.dataset.still || reduceMotion) return; if (v.paused) v.play().catch(() => {}); };
+function syncFonts() {
+  const r = fonts.getBoundingClientRect(), near = r.top < innerHeight && r.bottom > 0;
+  if (phone3.matches) {
+    vfigs.forEach((f) => f.classList.add('on'));
+    vvids.forEach((v) => { if (near) playV(v); else if (!v.paused) v.pause(); });
+    return;
+  }
+  const span = r.height - innerHeight, p = span > 0 ? clamp(-r.top / span, 0, 1) : 0, at = p < .5 ? 0 : 1;
+  vnotes.forEach((n, i) => n.classList.toggle('on', i === at));
+  vfigs.forEach((f, i) => f.classList.toggle('on', i === at));
+  vvids.forEach((v, i) => {
+    if (near && i === at) playV(v);
+    else if (!v.paused) v.pause();
+  });
+}
+const sys = $('#system'), steps5 = $('.steps5'), items5 = $$('.steps5 li');
+const phone5 = matchMedia('(max-width:700px)'), figs5 = $$('.steps5 figure');
+let laidOut = -1;
+function syncSteps() {
+  let p, at;
+  if (phone5.matches) {
+    const r = steps5.getBoundingClientRect(), mid = innerHeight * .6;
+    p = clamp((mid - r.top) / r.height, 0, 1);
+    at = items5.reduce((n, li, i) => (li.getBoundingClientRect().top < mid ? i : n), 0);
+  } else {
+    const r = sys.getBoundingClientRect(), span = r.height - innerHeight;
+    p = span > 0 ? clamp(-r.top / span, 0, 1) : 0;
+    at = Math.min(items5.length - 1, Math.floor(p * items5.length));
+  }
+  if (reduceMotion) p = 1;
+  steps5.style.setProperty('--p', p.toFixed(4));
+  items5.forEach((li, i) => li.classList.toggle('on', reduceMotion || i === at));
+  if (phone5.matches || at === laidOut) return;
+  laidOut = at;
+  // 照片展開到接近原本比例；截圖展開到最寬，其餘平分剩下的寬度
+  const W = steps5.clientWidth, g = 14, H = figs5[0].offsetHeight, minSlim = Math.max(48, Math.min(110, W * .085));
+  const open = Math.min(W - 4 * minSlim - 4 * g, H * (+figs5[at].dataset.r || 99)), slim = (W - open - 4 * g) / 4;
+  let x = 0;
+  figs5.forEach((f, i) => { const w = i === at ? open : slim; f.style.setProperty('--x', x + 'px'); f.style.setProperty('--w', w + 'px'); x += w + g; });
+}
+addEventListener('resize', () => { laidOut = -1; syncSteps(); });
+function onScroll() {
+  const H = document.documentElement.scrollHeight - innerHeight, p = H > 0 ? clamp(scrollY / H, 0, 1) : 0;
+  beam.style.transform = `scaleX(${p.toFixed(4)})`;
+  tip.style.transform = `translate3d(${(p * innerWidth).toFixed(1)}px,0,0)`;
+  tip.style.opacity = p > .002 ? 1 : 0;
+  toTop.classList.toggle('on', scrollY > innerHeight);
+  syncSteps();
+  syncScan();
+  syncFonts();
+  secs.forEach((s, i) => {
+    const n = secs[i + 1]; if (!n) return;
+    const q = reduceMotion ? 0 : clamp((innerHeight - n.getBoundingClientRect().top) / innerHeight, 0, 1);
+    s.style.setProperty('--dim', (parseFloat(getComputedStyle(n).marginTop) === 0 ? 0 : q * .35).toFixed(3));
+  });
+  heads.forEach(({ h, words }) => {
+    const r = h.getBoundingClientRect(), a = innerHeight * .92, b = innerHeight * .52;
+    const lit = reduceMotion ? words.length : Math.round(clamp((a - r.top) / (a - b), 0, 1) * words.length);
+    words.forEach((w, i) => w.classList.toggle('on', i < lit));
+  });
+}
+addEventListener('scroll', onScroll, { passive: true });
+addEventListener('resize', onScroll);
+onScroll();
+
+let glide = 0;
+const stopGlide = () => { cancelAnimationFrame(glide); glide = 0; };
+['wheel', 'touchstart', 'keydown'].forEach((type) => addEventListener(type, stopGlide, { passive: true }));
+toTop.addEventListener('click', () => {
+  stopGlide();
+  if (reduceMotion) { scrollTo(0, 0); return; }
+  const from = scrollY, time = clamp(650 + from * 0.05, 800, 1600), start = performance.now();
+  const step = (now) => {
+    const t = clamp((now - start) / time, 0, 1), e = t < .5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
+    scrollTo(0, from * (1 - e));
+    glide = t < 1 ? requestAnimationFrame(step) : 0;
+  };
+  glide = requestAnimationFrame(step);
+});
+
+// 滑鼠滾輪的緩動捲動；觸控、鍵盤、捲軸維持原生
+{
+  let target = 0, cur = 0, raf = 0, last = 0;
+  const halt = () => { cancelAnimationFrame(raf); raf = 0; };
+  // 游標下若有自己會捲動的區塊，交給它捲
+  const ownScroll = (el, dy) => {
+    for (; el && el !== document.body && el !== document.documentElement; el = el.parentElement) {
+      if (el.scrollHeight <= el.clientHeight + 1 || !/(auto|scroll)/.test(getComputedStyle(el).overflowY)) continue;
+      if (dy > 0 ? el.scrollTop + el.clientHeight < el.scrollHeight - 1 : el.scrollTop > 0) return true;
+    }
+    return false;
+  };
+  const tick = (now) => {
+    if (typeof stopped !== 'undefined' && stopped) { raf = 0; return; }
+    // 依實際幀時間計算，60Hz 與 120Hz 螢幕手感一致
+    const dt = Math.min(now - last, 50); last = now;
+    cur += (target - cur) * (1 - Math.pow(1 - .12, dt / 16.67));
+    if (Math.abs(target - cur) < .5) cur = target;
+    scrollTo(0, cur);
+    raf = cur === target ? 0 : requestAnimationFrame(tick);
+  };
+  addEventListener('wheel', (e) => {
+    if (reduceMotion || e.ctrlKey || e.defaultPrevented || Math.abs(e.deltaX) > Math.abs(e.deltaY) || ownScroll(e.target, e.deltaY)) { halt(); return; }
+    e.preventDefault();
+    if (!raf) { target = cur = scrollY; last = performance.now(); }
+    const unit = e.deltaMode === 1 ? 36 : e.deltaMode === 2 ? innerHeight : 1;
+    target = clamp(target + e.deltaY * unit, 0, document.documentElement.scrollHeight - innerHeight);
+    if (!raf) raf = requestAnimationFrame(tick);
+  }, { passive: false });
+  ['touchstart', 'keydown', 'mousedown'].forEach((type) => addEventListener(type, halt, { passive: true }));
+  toTop.addEventListener('click', halt);
+}
+</script>
+</body>
+</html>

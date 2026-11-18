@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SF Fleet Week App — Christy Sung</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="description" content="Redesigning the official SF Fleet Week app so visitors find schedules, tickets, and military discounts in a few taps.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --black:#08090b; --cream:#f5f3ee; --cta:#ffd800; --accent:#c32d34; --navy:#00234f; --mono:"JetBrains Mono",ui-monospace,monospace; --gutter:clamp(24px,5vw,72px); --wrap:max(var(--gutter),calc((100% - 1776px) / 2)); }
+  * { box-sizing:border-box; margin:0; }
+  html { background:var(--black); }
+  body { background:var(--black); color:#f2f2ee; font-family:"DM Sans",system-ui,sans-serif; overflow-x:clip; }
+  img, video { display:block; }
+
+  nav { position:fixed; z-index:30; top:12px; left:max(12px,calc(var(--gutter) - 14px)); right:max(12px,calc(var(--gutter) - 14px)); display:flex; justify-content:space-between; align-items:center; padding:8px 16px; color:#fff; background:rgba(16,17,21,.55); -webkit-backdrop-filter:blur(16px) saturate(160%); backdrop-filter:blur(16px) saturate(160%); border:1px solid rgba(255,255,255,.16); border-radius:14px; }
+  nav a { color:inherit; text-decoration:none; font-size:.92rem; font-weight:500; }
+  nav .links { display:flex; gap:24px; }
+  nav .links a { transition:color .2s; }
+  nav .links a[href]:hover { color:var(--cta); }
+  nav a:not([href]) { cursor:default; }
+  nav .name { display:block; line-height:0; }
+  nav .name svg { display:block; transform-origin:50% 50%; animation:csBlink 4s linear infinite; }
+  @keyframes csBlink {
+    0%, 12%, 25%, 37%, 100% { transform:scaleY(1); opacity:1; }
+    1%, 26% { transform:scaleY(.98); opacity:.94; }
+    2%, 27% { transform:scaleY(.59); opacity:.52; }
+    3%, 9%, 28%, 34% { transform:scaleY(0); opacity:0; }
+    10%, 35% { transform:scaleY(.31); opacity:.29; }
+    11%, 36% { transform:scaleY(.97); opacity:.94; }
+  }
+  #beam { position:fixed; z-index:31; left:0; top:0; height:3px; width:100%; transform:scaleX(0); transform-origin:0 50%; background:var(--accent); }
+  #toTop { position:fixed; z-index:30; right:max(16px,calc(var(--gutter) - 14px)); bottom:64px; width:46px; height:46px; display:grid; place-items:center; padding:0; color:#fff; cursor:pointer; background:rgba(16,17,21,.62); -webkit-backdrop-filter:blur(16px) saturate(160%); backdrop-filter:blur(16px) saturate(160%); border:1px solid rgba(255,255,255,.18); border-radius:50%; opacity:0; visibility:hidden; transform:translate3d(0,10px,0); transition:opacity .3s, transform .3s, visibility 0s .3s, color .2s; }
+  #toTop.on { opacity:1; visibility:visible; transform:none; transition:opacity .3s, transform .3s, color .2s; }
+  #toTop:hover, #toTop:focus-visible { color:var(--cta); }
+
+  .sec { position:relative; isolation:isolate; margin-top:-34px; border-radius:34px 34px 0 0; overflow:clip; background:var(--bg,var(--black)); color:var(--fg,#f2f2ee); }
+  .sec::after { content:""; position:absolute; inset:0; background:#000; opacity:var(--dim,0); pointer-events:none; z-index:8; }
+  .cream { --bg:var(--cream); --fg:#111; --muted:#55575c; --line:rgba(8,9,11,.12); }
+  .dark { --bg:var(--black); --fg:#f2f2ee; --muted:#a9abb1; --line:rgba(255,255,255,.14); }
+  .pad { padding:clamp(80px,10vh,110px) var(--wrap) clamp(96px,12vh,130px); }
+  .eyebrow { font-family:var(--mono); font-size:.74rem; letter-spacing:.08em; color:var(--muted); }
+  h2 { font-size:clamp(2rem,4.6vw,4.4rem); line-height:1.04; font-weight:500; letter-spacing:-.035em; margin-top:14px; text-wrap:balance; }
+  h2 .w { display:inline-block; opacity:.14; transform:translate3d(0,.2em,0); transition:opacity .28s linear,transform .38s cubic-bezier(.2,.7,.2,1); }
+  h2 .w.on { opacity:1; transform:none; }
+  .lede { font-size:clamp(1.08rem,1.5vw,1.36rem); line-height:1.42; letter-spacing:-.01em; text-wrap:pretty; }
+  .fade { opacity:0; transform:translate3d(0,26px,0); transition:opacity .7s ease,transform .8s cubic-bezier(.2,.7,.2,1); transition-delay:var(--d,0s); }
+  .fade.in { opacity:1; transform:none; }
+  .cap { margin-top:10px; font-family:var(--mono); font-size:.72rem; line-height:1.45; color:var(--muted); }
+
+  /* Hero */
+  #hero { position:relative; min-height:100vh; min-height:100svh; background:var(--black); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:clamp(24px,4vw,64px); align-items:center; padding:96px var(--wrap) clamp(70px,10vh,100px); --muted:#a9abb1; overflow:clip; }
+  #hero h1 { font-size:clamp(3rem,7.6vw,7.6rem); line-height:.96; letter-spacing:-.045em; font-weight:500; margin-top:14px; }
+  .cut { display:block; position:relative; width:max-content; max-width:100%; clip-path:inset(0 100% 0 0); animation:cut 1.25s cubic-bezier(.6,0,.2,1) .25s forwards; }
+  .cut + .cut { animation-delay:.75s; }
+  @keyframes cut { to { clip-path:inset(0 -4% -8% 0); } }
+  .hero-sub { margin-top:18px; font-size:clamp(1.3rem,2.1vw,1.9rem); line-height:1.12; letter-spacing:-.025em; font-weight:500; }
+  #hero .lede { margin-top:12px; max-width:560px; color:#d5d6da; }
+  .meta { display:grid; grid-template-columns:auto 1fr; gap:4px 14px; margin-top:18px; font-size:.84rem; line-height:1.35; color:#c3c5ca; }
+  .meta b { font-family:var(--mono); font-weight:400; font-size:.68rem; letter-spacing:.06em; color:#85878e; padding-top:2px; }
+  .hero-media { border-radius:24px; overflow:hidden; aspect-ratio:4/3; background:#e9eef7; opacity:0; animation:rise 1s cubic-bezier(.2,.7,.2,1) 1.05s forwards; --from:translate3d(0,60px,0); --to:none; box-shadow:0 34px 70px rgba(0,0,0,.5); }
+  .hero-media video { width:100%; height:100%; object-fit:cover; }
+  @keyframes rise { from { transform:var(--from); opacity:0; } to { transform:var(--to); opacity:1; } }
+
+  #ctx { position:relative; z-index:2; background:var(--black); padding:0 var(--wrap) clamp(96px,14vh,140px); margin-top:calc(-1 * clamp(40px,7vh,70px)); }
+  #stats { position:relative; z-index:2; background:var(--black); padding:0 var(--wrap) clamp(96px,14vh,140px); display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .num { border-top:1px solid rgba(255,255,255,.18); padding-top:14px; }
+  .num b { display:block; font-size:clamp(2.4rem,6vw,5.6rem); line-height:1; font-weight:500; letter-spacing:-.045em; font-variant-numeric:tabular-nums; }
+  .num span { display:block; margin-top:8px; font-size:.9rem; color:#a9abb1; }
+
+  .two { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(24px,5vw,80px); align-items:center; }
+  .two .lede { margin-top:14px; }
+  .wide { grid-template-columns:minmax(0,.8fr) minmax(0,1.5fr); }
+  .fig { border-radius:18px; overflow:hidden; background:#fff; }
+  .fig img, .fig video { width:100%; height:100%; object-fit:cover; }
+  .probs { list-style:none; padding:0; margin-top:clamp(18px,3vh,28px); max-width:560px; }
+  .probs li { position:relative; padding:12px 0 12px 22px; border-top:1px solid var(--line); font-size:clamp(1rem,1.25vw,1.12rem); line-height:1.4; }
+  .probs li:last-child { border-bottom:1px solid var(--line); }
+  .probs li::before { content:""; position:absolute; left:2px; top:calc(12px + .7em - 3px); width:7px; height:7px; border-radius:50%; background:var(--accent); }
+  .band { margin-top:clamp(40px,7vh,72px); }
+  .sm { width:100%; max-width:var(--mw); margin-left:auto; margin-right:auto; }
+
+  /* 釘住的聚光燈：畫面停住，框依捲動移到下一格 */
+  .pin { height:var(--h,300vh); }
+  .stick { position:sticky; top:0; height:100vh; height:100svh; display:flex; align-items:center; overflow:hidden; }
+  .stick > .pad { width:100%; padding-top:84px; padding-bottom:40px; }
+  .stick h2 { font-size:clamp(1.8rem,3.6vw,3.2rem); }
+  .spot { position:relative; border-radius:18px; overflow:hidden; background:#fff; }
+  .spot img { width:100%; height:auto; }
+  .spot .hole { position:absolute; left:var(--l); top:var(--t); width:var(--w); height:var(--hh); border-radius:12px; box-shadow:0 0 0 2px var(--accent), 0 0 0 200vmax rgba(8,9,11,.5); transition:left .55s cubic-bezier(.2,.7,.2,1), top .55s cubic-bezier(.2,.7,.2,1), width .55s cubic-bezier(.2,.7,.2,1), height .55s cubic-bezier(.2,.7,.2,1); pointer-events:none; }
+  .ticks { display:flex; gap:6px; margin-top:12px; }
+  .ticks i { flex:1; height:3px; border-radius:2px; background:var(--line); transition:background .3s; }
+  .ticks i.on { background:var(--accent); }
+  .notes { display:grid; margin-top:clamp(18px,3vh,28px); }
+  .note { grid-area:1/1; opacity:0; transform:translate3d(0,14px,0); transition:opacity .45s, transform .55s cubic-bezier(.2,.7,.2,1); pointer-events:none; }
+  .note.on { opacity:1; transform:none; pointer-events:auto; }
+  .quote { margin-top:10px; font-size:clamp(1.3rem,2.2vw,2rem); line-height:1.15; letter-spacing:-.025em; font-weight:500; }
+  .pair { display:grid; grid-template-columns:auto 1fr; gap:10px 16px; margin-top:18px; padding-top:16px; border-top:1px solid var(--line); font-size:clamp(.98rem,1.2vw,1.08rem); line-height:1.4; }
+  .pair b { font-family:var(--mono); font-weight:400; font-size:.68rem; letter-spacing:.06em; color:var(--muted); padding-top:4px; }
+
+  /* 03 導覽前後：同一個框淡入淡出 */
+  .swap { position:relative; aspect-ratio:1868/1468; border-radius:18px; overflow:hidden; background:#eef2fa; }
+  .swap figure { position:absolute; inset:0; margin:0; opacity:0; transition:opacity .5s; }
+  .swap figure.on { opacity:1; }
+  .swap video { width:100%; height:100%; object-fit:cover; }
+  .swap figcaption { position:absolute; left:12px; top:12px; padding:4px 10px; border-radius:99px; background:rgba(8,9,11,.78); color:#fff; font-family:var(--mono); font-size:.68rem; letter-spacing:.06em; }
+
+  /* 04 兩張補充圖 */
+  .duo { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); gap:clamp(12px,1.6vw,22px); align-items:start; }
+
+  /* 05 前後並排 */
+  .pair2 { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+  .tagged { position:relative; margin:0; aspect-ratio:618/400; border-radius:18px; overflow:hidden; background:#fff; }
+  .tagged img { width:100%; height:100%; object-fit:cover; }
+  .tagged .tag { position:absolute; left:12px; top:12px; padding:4px 10px; border-radius:99px; background:rgba(8,9,11,.78); color:#fff; font-family:var(--mono); font-size:.68rem; letter-spacing:.06em; }
+  .tagged .tag.r { background:var(--accent); }
+  .center { text-align:center; }
+
+  /* 07 三個心得 */
+  .moves { margin-top:clamp(26px,5vh,44px); display:grid; gap:12px; }
+  .lessons { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .lesson { padding:clamp(18px,2.4vw,28px); border-radius:14px; background:#fff; opacity:0; transform:translate3d(0,14px,0); transition:opacity .5s calc(.2s + var(--d)), transform .6s cubic-bezier(.2,.7,.2,1) calc(.2s + var(--d)); }
+  .moves.in .lesson { opacity:1; transform:none; }
+  .lesson i { display:block; font-style:normal; font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; color:var(--muted); }
+  .lesson b { display:block; margin-top:clamp(18px,3vh,30px); font-size:clamp(1.15rem,1.8vw,1.55rem); font-weight:500; letter-spacing:-.02em; line-height:1.15; }
+  .lesson p { margin-top:10px; color:#55575e; line-height:1.5; }
+  .closing { margin-top:clamp(36px,6vh,60px); max-width:860px; font-size:clamp(1.5rem,3vw,2.7rem); line-height:1.1; letter-spacing:-.03em; font-weight:500; text-wrap:balance; }
+  .closing span { color:var(--muted); }
+
+  .more { padding:clamp(48px,8vh,76px) var(--wrap) clamp(56px,9vh,88px); }
+  .more h2 { font-size:clamp(1.6rem,2.8vw,2.6rem); margin:0 0 clamp(18px,3vh,28px); }
+  .more-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(12px,1.6vw,22px); max-width:1120px; }
+  .more-card { color:#f2f2ee; text-decoration:none; }
+  .more-pic { display:block; aspect-ratio:586/473; border-radius:18px; overflow:hidden; background:#e7e3da; }
+  .more-pic img { width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.2,.7,.2,1); }
+  @media (hover:hover) { .more-card:hover img { transform:scale(1.04); } }
+  .more-card b { display:block; margin-top:10px; font-size:clamp(.95rem,1.15vw,1.08rem); font-weight:500; letter-spacing:-.015em; transition:color .2s; }
+  .more-card:hover b { color:var(--cta); }
+  footer { padding:0 var(--wrap) 28px; display:flex; justify-content:space-between; gap:12px 24px; flex-wrap:wrap; font-size:.9rem; color:#a5a7ad; }
+  footer a { color:#f2f2ee; text-decoration:none; font-weight:500; }
+  footer a:hover { color:var(--cta); }
+
+  @media (max-width:1024px) and (orientation:portrait) {
+    #hero { grid-template-columns:1fr; }
+  }
+  @media (max-width:700px) {
+    nav { padding:7px 12px; }
+    nav .links { gap:18px; }
+    nav .links a { padding:6px 0; font-size:.88rem; }
+    .sec { border-radius:26px 26px 0 0; margin-top:-26px; }
+    .pad { padding:76px 16px 96px; }
+    #hero { grid-template-columns:1fr; padding:84px 16px 46px; }
+    #stats { grid-template-columns:1fr 1fr; padding:0 16px 80px; }
+    #ctx { padding:0 16px 80px; margin-top:-40px; }
+    #stats .num:first-child { grid-column:span 2; }
+    .two, .wide, .duo { grid-template-columns:1fr; }
+    .pin { height:auto; }
+    .stick { position:relative; height:auto; display:block; overflow:visible; }
+    .stick > .pad { padding:76px 16px 96px; }
+    .spot .hole, .ticks { display:none; }
+    .notes { gap:22px; }
+    .note { grid-area:auto; opacity:1; transform:none; }
+    .swap { aspect-ratio:auto; display:grid; gap:14px; background:none; overflow:visible; }
+    .swap figure { position:relative; opacity:1; border-radius:16px; overflow:hidden; aspect-ratio:1868/1468; background:#eef2fa; }
+    .lessons { grid-template-columns:1fr; }
+    .lesson b { margin-top:12px; }
+    .more { padding:48px 16px 56px; }
+    .more-grid { grid-template-columns:repeat(3,62vw); overflow-x:auto; scroll-snap-type:x mandatory; margin-right:-16px; padding-right:16px; scrollbar-width:none; max-width:none; }
+    .more-grid::-webkit-scrollbar { display:none; }
+    .more-card { scroll-snap-align:start; }
+    footer { padding:0 16px 24px; flex-direction:column; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    nav .name svg, .cut, .hero-media { animation:none; clip-path:none; opacity:1; }
+    h2 .w, .fade, .note, .lesson { opacity:1; transform:none; transition:none; }
+  }
+</style>
+</head>
+<body>
+<nav aria-label="Main">
+  <a class="name" href="index.html" aria-label="Christy Sung, home"><svg viewBox="-1.02 -0.6 2.04 1.2" width="48" height="28" role="img" aria-label="Christy Sung"><path fill="currentColor" fill-rule="evenodd" d="M0.468,-0.583 0.495,-0.583 0.541,-0.580 0.564,-0.576 0.607,-0.567 0.649,-0.554 0.691,-0.536 0.735,-0.514 0.771,-0.491 0.810,-0.461 0.830,-0.443 0.873,-0.398 0.907,-0.356 0.936,-0.309 0.960,-0.264 0.976,-0.224 0.986,-0.194 1.000,-0.142 1.000,-0.139 0.998,-0.137 0.932,-0.137 0.930,-0.139 0.910,-0.201 0.890,-0.247 0.864,-0.293 0.844,-0.323 0.814,-0.359 0.771,-0.402 0.738,-0.428 0.692,-0.459 0.655,-0.477 0.623,-0.491 0.580,-0.504 0.544,-0.511 0.518,-0.514 0.481,-0.516 0.445,-0.514 0.396,-0.508 0.369,-0.500 0.385,-0.477 0.955,0.273 0.943,0.299 0.930,0.322 0.904,0.361 0.866,0.407 0.830,0.444 0.794,0.474 0.751,0.504 0.718,0.523 0.699,0.533 0.649,0.553 0.610,0.566 0.564,0.576 0.514,0.582 0.465,0.583 0.416,0.579 0.376,0.572 0.337,0.562 0.275,0.539 0.241,0.523 0.192,0.493 0.156,0.467 0.118,0.434 0.083,0.398 0.047,0.351 0.017,0.305 -0.005,0.263 -0.009,0.262 -0.030,0.305 -0.051,0.338 -0.077,0.374 -0.107,0.409 -0.150,0.451 -0.183,0.477 -0.222,0.503 -0.272,0.530 -0.328,0.553 -0.360,0.563 -0.390,0.569 -0.439,0.576 -0.466,0.578 -0.544,0.576 -0.571,0.572 -0.610,0.563 -0.640,0.553 -0.673,0.540 -0.712,0.520 -0.745,0.500 -0.785,0.470 -0.808,0.451 -0.848,0.411 -0.864,0.391 -0.887,0.361 -0.907,0.332 -0.930,0.292 -0.947,0.256 -0.967,0.207 -0.976,0.177 -0.986,0.138 -0.993,0.102 -0.999,0.039 -1.000,-0.010 -0.999,-0.033 -0.993,-0.099 -0.983,-0.148 -0.970,-0.194 -0.950,-0.247 -0.930,-0.290 -0.907,-0.329 -0.881,-0.369 -0.847,-0.410 -0.814,-0.444 -0.775,-0.478 -0.742,-0.501 -0.709,-0.521 -0.669,-0.540 -0.617,-0.560 -0.591,-0.567 -0.558,-0.574 -0.502,-0.580 -0.459,-0.580 -0.403,-0.574 -0.367,-0.567 -0.344,-0.560 -0.295,-0.543 -0.245,-0.520 -0.212,-0.501 -0.179,-0.478 -0.137,-0.442 -0.113,-0.418 -0.090,-0.392 -0.057,-0.349 -0.030,-0.306 -0.009,-0.264 -0.005,-0.259 0.007,-0.283 0.031,-0.323 0.053,-0.356 0.080,-0.388 0.100,-0.411 0.133,-0.443 0.166,-0.471 0.192,-0.490 0.235,-0.517 0.268,-0.534 0.297,-0.547 0.334,-0.560 0.370,-0.570 0.403,-0.576 0.432,-0.580 0.465,-0.581Z M-0.499,-0.510 -0.495,-0.512 -0.469,-0.512 -0.443,-0.511 -0.410,-0.507 -0.380,-0.501 -0.357,-0.494 -0.314,-0.478 -0.275,-0.459 -0.229,-0.429 -0.193,-0.400 -0.152,-0.359 -0.130,-0.333 -0.113,-0.309 -0.084,-0.264 -0.067,-0.231 -0.054,-0.201 -0.033,-0.142 0.423,0.499 0.429,0.509 0.429,0.513 0.406,0.510 0.373,0.503 0.340,0.493 0.324,0.487 0.284,0.470 0.265,0.460 0.248,0.451 0.218,0.430 0.197,0.414 0.165,0.384 0.132,0.348 0.106,0.315 0.082,0.279 0.060,0.240 0.028,0.169 -0.045,0.168 -0.048,0.171 -0.049,0.174 -0.063,0.213 -0.076,0.243 -0.090,0.269 -0.116,0.312 -0.133,0.335 -0.163,0.370 -0.193,0.399 -0.216,0.418 -0.248,0.441 -0.281,0.460 -0.324,0.480 -0.350,0.490 -0.387,0.500 -0.423,0.507 -0.459,0.510 -0.489,0.511 -0.499,0.509 -0.499,-0.507Z"/></svg></a>
+  <div class="links"><a>Work</a><a href="index.html#about">About</a><a>Resume</a></div>
+</nav>
+<div id="beam"></div>
+<button id="toTop" type="button" aria-label="Back to top"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+
+<header id="hero">
+  <div>
+    <p class="eyebrow">UX/UI · MOBILE APP · DEVELOPMENT</p>
+    <h1 aria-label="SF Fleet Week App"><span class="cut" aria-hidden="true">SF Fleet Week</span><span class="cut" aria-hidden="true">App</span></h1>
+    <p class="hero-sub">Navigating the show, not the app.</p>
+    <p class="lede">I redesigned and rebuilt the official app for San Francisco Fleet Week, a week-long event with 1.1M attendees. Visitors now find schedules, tickets, and military discounts in a few taps.</p>
+    <div class="meta"><b>ROLE</b><span>Lead Designer &amp; App Developer (solo)</span><b>TIME</b><span>Oct 2022 – Nov 2023</span><b>PLATFORM</b><span>iOS &amp; Android</span><b>TOOLS</b><span>Figma, AppMachine, HTML/CSS</span><b>TEAM</b><span>Executive Director, Chief of Staff, Senior Engineer, Concert Series and Volunteer Coordinators</span></div>
+  </div>
+  <div class="hero-media"><video muted loop playsinline preload="auto" aria-label="The redesigned SF Fleet Week app" src="assets/fleet-week/app-new.mp4"></video></div>
+</header>
+<div id="stats">
+  <div class="num"><b data-n="15.3" data-dec="1" data-s="K+">0K+</b><span>App downloads</span></div>
+  <div class="num"><b data-n="45" data-s=" sec">0 sec</b><span>To find key info, down from 2 min</span></div>
+  <div class="num"><b data-n="4.1" data-dec="1" data-s="★">0★</b><span>App rating, up from 3.2</span></div>
+</div>
+<div id="ctx"><div class="sm" style="--mw:900px">
+  <div class="fig fade" style="aspect-ratio:1212/370"><img loading="lazy" alt="Fleet Week air show, parachute team, and Blue Angels over San Francisco Bay" src="assets/fleet-week/event-photos-hd.jpg"></div>
+  <p class="cap">Fleet Week brings air shows, ship tours, and concerts to San Francisco every October.</p>
+</div></div>
+
+<section class="sec cream"><div class="pad">
+  <div class="two">
+    <div>
+      <p class="eyebrow">01 — THE PROBLEM</p>
+      <h2 data-w>Visitors opened the app and got lost.</h2>
+      <p class="lede fade">The app had grown one page at a time for years. Key details sat three or four levels deep, under labels that did not match what visitors were looking for.</p>
+      <ul class="probs">
+        <li class="fade">Nine home tiles with no clear starting point.</li>
+        <li class="fade" style="--d:.08s">Mixed icons, colors, and layouts between the app and the website.</li>
+        <li class="fade" style="--d:.16s">Small text and low contrast that were hard to read outdoors.</li>
+      </ul>
+    </div>
+    <div class="sm" style="--mw:440px">
+      <div class="fig fade" style="aspect-ratio:1326/1470"><video muted loop playsinline preload="metadata" aria-label="Tapping through the 2022 app: nine equal home tiles and long pages of small text" src="assets/fleet-week/app-old.mp4"></video></div>
+      <p class="cap">The 2022 app: nine equal tiles and long pages of small text.</p>
+    </div>
+  </div>
+  <div class="band sm" style="--mw:820px">
+    <div class="fig fade" style="aspect-ratio:1212/859"><img loading="lazy" alt="The 2022 app next to the Fleet Week website, with different icons, colors, and layouts" src="assets/fleet-week/old-pages-hd.png"></div>
+    <p class="cap">The app and the website looked like two different events.</p>
+  </div>
+</div></section>
+
+<section class="sec dark"><div class="pad">
+  <div class="two">
+    <div>
+      <p class="eyebrow">02 — RESEARCH</p>
+      <h2 data-w>Find the real problems before fixing them.</h2>
+      <p class="lede fade">I combined usability tests, app store reviews, and feedback from the event team. Then I narrowed many problems down to the few that mattered most.</p>
+    </div>
+    <div>
+      <div class="fig fade" style="aspect-ratio:1271/630"><img loading="lazy" alt="Design process: discovery of problems, framing of solutions, two iterations, and deploying the new version" src="assets/fleet-week/process-hd.png"></div>
+      <p class="cap">Discover, frame, iterate twice, then ship and keep learning.</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="sec cream pin" id="journey" style="--h:320vh"><div class="stick"><div class="pad two wide">
+  <div>
+    <p class="eyebrow">USER JOURNEY · MILITARY VISITOR</p>
+    <h2 data-w>I followed one visitor through one task.</h2>
+    <p class="cap" style="margin-top:12px">Task: find a restaurant discount with a military ID.</p>
+    <div class="ticks" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+    <div class="notes">
+      <div class="note on"><p class="eyebrow">STEP 1 · LAUNCH</p><p class="quote">"Where's the discount?"</p><div class="pair"><b>PAIN</b><span>A crowded home screen with no clear entry for offers.</span><b>FIX</b><span>Give military perks their own entry on the home screen.</span></div></div>
+      <div class="note"><p class="eyebrow">STEP 2 · EXPLORE</p><p class="quote">"Maybe it's here…"</p><div class="pair"><b>PAIN</b><span>Generic categories. Visitors could not tell where discounts lived.</span><b>FIX</b><span>Rename the category to say what is inside.</span></div></div>
+      <div class="note"><p class="eyebrow">STEP 3 · BROWSE</p><p class="quote">"Nothing yet…"</p><div class="pair"><b>PAIN</b><span>Offers were buried under neighborhood filters.</span><b>FIX</b><span>Show offers in every neighborhood list.</span></div></div>
+      <div class="note"><p class="eyebrow">STEP 4 · SCROLL</p><p class="quote">"Ah, I see the offers."</p><div class="pair"><b>PAIN</b><span>Found only after too many taps and scrolls.</span><b>FIX</b><span>Move exclusive offers to the top of the page.</span></div></div>
+      <div class="note"><p class="eyebrow">STEP 5 · REDEEM</p><p class="quote">"Great, but hard to read."</p><div class="pair"><b>PAIN</b><span>Weak hierarchy and low contrast.</span><b>FIX</b><span>Bold headers, larger text, and icons.</span></div></div>
+    </div>
+  </div>
+  <div class="spot fade sm" style="--mw:720px;aspect-ratio:1212/800" data-holes="[[0.15,0.185,0.16,0.79],[0.32,0.185,0.16,0.79],[0.488,0.185,0.16,0.79],[0.657,0.185,0.16,0.79],[0.826,0.185,0.16,0.79]]"><img loading="lazy" alt="User journey map with five steps: launch, explore, browse, scroll, and redeem, each with user action, emotion, pain points, and opportunity" src="assets/fleet-week/journey-map-hd.png"><i class="hole"></i></div>
+</div></div></section>
+
+<section class="sec cream" style="margin-top:0;border-radius:0"><div class="pad two" style="padding-top:clamp(40px,6vh,64px)">
+  <div>
+    <p class="eyebrow">INFORMATION ARCHITECTURE AUDIT</p>
+    <h2 data-w>Then I mapped the whole app.</h2>
+    <p class="lede fade">The sitemap showed the same content in several places, and pages with nothing on them. "Buy Tickets" lived in four spots and "Schedule" in three.</p>
+  </div>
+  <div class="sm" style="--mw:460px">
+    <div class="fig fade" style="aspect-ratio:618/400"><img loading="lazy" alt="Two sitemaps of the old app with duplicate Buy Tickets and Schedule pages, rules, and empty pages circled" src="assets/fleet-week/sitemap-hd.png"></div>
+    <p class="cap">Duplicates and empty pages, circled.</p>
+  </div>
+</div></section>
+
+<section class="sec dark pin" id="navs" style="--h:230vh"><div class="stick"><div class="pad two">
+  <div>
+    <p class="eyebrow">03 — NAVIGATION</p>
+    <h2 data-w>One home screen, clear doors.</h2>
+    <p class="lede fade">I removed duplicate pages and gave every topic one clear entry on the home screen. The most-used tasks now come first.</p>
+    <div class="notes">
+      <div class="note on">
+        <p class="eyebrow">BEFORE · 2022 APP</p>
+        <ul class="probs">
+          <li>Every tile had the same weight on the home screen.</li>
+          <li>Discounts hid inside neighborhood pages, several taps deep.</li>
+          <li>Long pages of centered text.</li>
+        </ul>
+      </div>
+      <div class="note">
+        <p class="eyebrow">AFTER · 2023 APP</p>
+        <ul class="probs">
+          <li>The most-used tasks come first: Tickets, Events, Trips.</li>
+          <li>Liberty Guide opens straight to About, Discounts, and Attractions.</li>
+          <li>Duplicate and empty pages are gone.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="swap fade">
+    <figure class="on"><video muted loop playsinline preload="metadata" aria-label="Finding a discount in the 2022 app" src="assets/fleet-week/nav-before.mp4"></video><figcaption>BEFORE</figcaption></figure>
+    <figure><video muted loop playsinline preload="metadata" aria-label="Finding a discount in the 2023 app" src="assets/fleet-week/nav-after.mp4"></video><figcaption>AFTER</figcaption></figure>
+  </div>
+</div></div></section>
+
+<section class="sec dark" style="margin-top:0;border-radius:0"><div class="pad two" style="padding-top:clamp(40px,6vh,64px)">
+  <div>
+    <p class="eyebrow">CLEAR LABELS</p>
+    <h2 data-w>Every tile says what is inside.</h2>
+    <p class="lede fade">Old tiles used vague icons and labels that were cut off, like "Volunteers &amp; Fundr…". Each tile now has a clear icon and a short, full label.</p>
+  </div>
+  <div class="sm" style="--mw:520px">
+    <div class="fig fade" style="aspect-ratio:618/400"><img loading="lazy" alt="Before and after tiles: Volunteers and Sponsors with clearer icons and full labels" src="assets/fleet-week/icon-compare-hd.png"></div>
+    <p class="cap">"Volunteers &amp; Fundr…" became "Volunteers".</p>
+  </div>
+</div></section>
+
+<section class="sec cream pin" id="icons" style="--h:240vh"><div class="stick"><div class="pad two wide">
+  <div>
+    <p class="eyebrow">04 — VISUAL SYSTEM</p>
+    <h2 data-w>Three years, one visual language.</h2>
+    <div class="ticks" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+    <div class="notes">
+      <div class="note on"><p class="eyebrow">2021</p><p class="quote">Thin line icons in mixed styles.</p><div class="pair"><b>ISSUE</b><span>Labels were cut off, and some icons did not match their meaning.</span></div></div>
+      <div class="note"><p class="eyebrow">2022</p><p class="quote">A cleanup pass, still uneven.</p><div class="pair"><b>ISSUE</b><span>New tiles were added, but icon weights and metaphors still varied.</span></div></div>
+      <div class="note"><p class="eyebrow">2023 · MY REDESIGN</p><p class="quote">Solid icons in brand navy and red.</p><div class="pair"><b>CHANGE</b><span>Each icon has a short, full label and a size that reads outdoors.</span></div></div>
+    </div>
+  </div>
+  <div class="spot fade" style="aspect-ratio:635/400;max-width:520px;justify-self:center;width:100%" data-holes="[[0.025,0.18,0.3,0.5],[0.345,0.18,0.3,0.5],[0.665,0.18,0.3,0.5]]"><img loading="lazy" alt="Home screen icons in the 2021, 2022, and 2023 versions, plus button states and header bar" src="assets/fleet-week/icons-evolution-hd.png"><i class="hole"></i></div>
+</div></div></section>
+
+<section class="sec cream" style="margin-top:0;border-radius:0"><div class="pad two" style="padding-top:clamp(40px,6vh,64px)">
+  <div>
+    <p class="eyebrow">STYLE GUIDE</p>
+    <h2 data-w>One guide for the app and the website.</h2>
+    <p class="lede fade">I took the navy #00234F and red #C32D34 from the Fleet Week logo. The guide sets type, color, and components for both web and mobile.</p>
+  </div>
+  <div class="sm" style="--mw:560px">
+    <div class="fig fade" style="aspect-ratio:618/400"><img loading="lazy" alt="Style guide with fonts, colors, and component code for web and mobile" src="assets/fleet-week/style-guide-hd.png"></div>
+    <p class="cap">Fonts, colors, and component code in one place.</p>
+  </div>
+</div></section>
+
+<section class="sec dark"><div class="pad">
+  <p class="eyebrow">05 — READABILITY</p>
+  <h2 data-w>Event pages you can read at a glance.</h2>
+  <p class="lede fade" style="max-width:760px;margin-top:14px">Old event pages were long blocks of small, centered text. I left-aligned the text, added icons for Date &amp; Time, Location, and Info, and made the ticket button stand out.</p>
+  <div class="duo pair2 band sm" style="--mw:960px">
+    <figure class="tagged fade"><img loading="lazy" alt="Old event pages: Honor Our Fallen and Volunteers pages with long centered text" src="assets/fleet-week/page-before-hd.png"><span class="tag">BEFORE</span></figure>
+    <figure class="tagged fade" style="--d:.12s"><img loading="lazy" alt="New event page: left-aligned text, icons for Date and Time, Location, and Info, and a red ticket information button" src="assets/fleet-week/page-after-hd.png"><span class="tag r">AFTER</span></figure>
+  </div>
+</div></section>
+
+<section class="sec cream"><div class="pad">
+  <div class="two">
+    <div>
+      <p class="eyebrow">06 — LAUNCH</p>
+      <h2 data-w>Designed, built, and shipped by one person.</h2>
+      <p class="lede fade">I built the new version in AppMachine with custom front-end code. It launched on iOS and Android before Fleet Week 2023.</p>
+    </div>
+    <div>
+      <div class="fig fade" style="aspect-ratio:2684/1472"><img loading="lazy" alt="Christy with the Fleet Week team at the 2023 launch party" src="assets/fleet-week/launch-party-hd.jpg"></div>
+      <p class="cap">2023 SFFW launch party, September 11, 2023.</p>
+    </div>
+  </div>
+  <div class="band">
+    <div class="fig fade" style="aspect-ratio:2880/1200"><img loading="lazy" alt="Screens of the redesigned 2023 Fleet Week app: home, Liberty Guide, trips, attractions, and tickets" src="assets/fleet-week/app-collage-hd.jpg"></div>
+  </div>
+</div></section>
+
+<section class="sec dark"><div class="pad">
+  <p class="eyebrow">07 — WHAT I LEARNED</p>
+  <h2 data-w>Good structure beats more features.</h2>
+  <div class="moves lessons">
+    <div class="lesson" style="--d:0s;background:#16171b"><i>01 · INFORMATION ARCHITECTURE</i><b>Organize by task, not by department.</b><p style="color:#a9abb1">Visitors don't know how the event team is organized. They know what they want to do today.</p></div>
+    <div class="lesson" style="--d:.15s;background:#16171b"><i>02 · DESIGN SYSTEM</i><b>Consistency builds trust.</b><p style="color:#a9abb1">Matching the app to the website and the brand made it feel official. Fewer one-off styles also made updates faster.</p></div>
+    <div class="lesson" style="--d:.3s;background:#16171b"><i>03 · ACCESSIBILITY</i><b>Design for where it will be used.</b><p style="color:#a9abb1">People used the app outdoors, in the sun, often on the move. Bigger text, higher contrast, and labeled icons helped everyone.</p></div>
+  </div>
+  <p class="closing fade">Finding a military discount went from about 7 minutes <span>to under 45 seconds.</span></p>
+</div></section>
+
+<section class="sec dark" style="margin-top:0;border-radius:0;border-top:1px solid rgba(255,255,255,.08)"><div class="more">
+  <h2>More Projects</h2>
+  <div class="more-grid">
+    <a class="more-card" href="bolistra-2026.html"><span class="more-pic"><img loading="lazy" alt="BOLISTRA booth" src="assets/fr/bLVwkDnCylvk4f6HlB7KCaefw-1024.png"></span><b>BOLISTRA Jewelry</b></a>
+    <a class="more-card" href="custom-order-flow.html"><span class="more-pic"><img loading="lazy" alt="A phone scanning the QR sign at the BOLISTRA booth" src="assets/fr/CBZapL0f1tpBb0NcYS6yvaGyOsg-1024.jpg"></span><b>Custom Order Flow</b></a>
+    <a class="more-card" href="https://christycreative.framer.website/logo-collection"><span class="more-pic"><img loading="lazy" alt="Logo Design collection" src="assets/fr/050RPPeJmVLcLOfD0OO6hxzjlvg-1024.png"></span><b>Logo Design — Six Brands, One Designer</b></a>
+  </div>
+</div>
+<footer><span>© 2026 Christy Sung · California</span><span><a href="mailto:christysungjob@gmail.com">christysungjob@gmail.com</a></span></footer>
+</section>
+
+<script type="module">
+history.scrollRestoration = 'manual';
+scrollTo(0, 0);
+const $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const phone = matchMedia('(max-width:700px)');
+
+const reveal = new IntersectionObserver((list) => list.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); reveal.unobserve(e.target); } }), { threshold: .16 });
+$$('.fade, .moves').forEach((el) => reveal.observe(el));
+const playIO = new IntersectionObserver((list) => list.forEach((e) => { if (reduceMotion) return; if (e.isIntersecting) e.target.play().catch(() => {}); else e.target.pause(); }), { threshold: .1 });
+$$('video').filter((v) => !v.closest('#navs')).forEach((v) => playIO.observe(v));
+// 數字從 0 數上來
+$$('.num b').forEach((b) => {
+  const n = +b.dataset.n, dec = +(b.dataset.dec || 0), pre = b.dataset.p || '', suf = b.dataset.s || '';
+  const show = (e) => { b.textContent = pre + (n * e).toFixed(dec) + suf; };
+  new IntersectionObserver((list, io) => {
+    if (!list[0].isIntersecting) return; io.disconnect();
+    if (reduceMotion) { show(1); return; }
+    const t0 = performance.now();
+    const go = (now) => { const t = clamp((now - t0) / 1300, 0, 1); show(1 - (1 - t) ** 3); if (t < 1) requestAnimationFrame(go); };
+    requestAnimationFrame(go);
+  }, { threshold: .4 }).observe(b);
+});
+const heads = $$('h2[data-w]').map((h) => {
+  h.setAttribute('aria-label', h.textContent);
+  h.innerHTML = h.textContent.trim().split(/\s+/).map((w) => `<span class="w" aria-hidden="true">${w}</span>`).join(' ');
+  return { h, words: [...h.querySelectorAll('.w')] };
+});
+const secs = $$('.sec'), beam = $('#beam'), toTop = $('#toTop');
+const progress = (el) => { const r = el.getBoundingClientRect(), span = r.height - innerHeight; return span > 0 ? clamp(-r.top / span, 0, 1) : 0; };
+
+// 釘住的聚光燈：用捲動進度決定框在哪一格，左邊說明同步切換
+const pins = $$('.pin').filter((s) => s.querySelector('.spot')).map((s) => {
+  const spot = s.querySelector('.spot'), hole = spot.querySelector('.hole'), holes = JSON.parse(spot.dataset.holes);
+  return { s, hole, holes, notes: [...s.querySelectorAll('.note')], ticks: [...s.querySelectorAll('.ticks i')], at: -1 };
+});
+function syncPins() {
+  pins.forEach((pin) => {
+    if (phone.matches) return;
+    const at = Math.min(pin.holes.length - 1, Math.floor(progress(pin.s) * pin.holes.length));
+    if (at === pin.at) return;
+    pin.at = at;
+    const [l, t, w, h] = pin.holes[at];
+    pin.hole.style.setProperty('--l', l * 100 + '%');
+    pin.hole.style.setProperty('--t', t * 100 + '%');
+    pin.hole.style.setProperty('--w', w * 100 + '%');
+    pin.hole.style.setProperty('--hh', h * 100 + '%');
+    pin.notes.forEach((n, i) => n.classList.toggle('on', i === at));
+    pin.ticks.forEach((k, i) => k.classList.toggle('on', i <= at));
+  });
+}
+// 03 導覽：前半段播 Before，後半段播 After
+const navs = $('#navs'), navFigs = $$('#navs figure'), navVids = $$('#navs video'), navNotes = $$('#navs .note');
+function syncNavs() {
+  const r = navs.getBoundingClientRect(), near = r.top < innerHeight && r.bottom > 0;
+  const at = phone.matches ? -1 : progress(navs) < .5 ? 0 : 1;
+  navNotes.forEach((n, i) => n.classList.toggle('on', phone.matches || i === at));
+  navFigs.forEach((f, i) => f.classList.toggle('on', phone.matches || i === at));
+  navVids.forEach((v, i) => {
+    if (near && !reduceMotion && (phone.matches || i === at)) { if (v.paused) v.play().catch(() => {}); }
+    else if (!v.paused) v.pause();
+  });
+}
+function onScroll() {
+  const H = document.documentElement.scrollHeight - innerHeight, p = H > 0 ? clamp(scrollY / H, 0, 1) : 0;
+  beam.style.transform = `scaleX(${p.toFixed(4)})`;
+  toTop.classList.toggle('on', scrollY > innerHeight);
+  syncPins();
+  syncNavs();
+  secs.forEach((s, i) => {
+    const n = secs[i + 1]; if (!n) return;
+    const q = reduceMotion ? 0 : clamp((innerHeight - n.getBoundingClientRect().top) / innerHeight, 0, 1);
+    s.style.setProperty('--dim', (parseFloat(getComputedStyle(n).marginTop) === 0 ? 0 : q * .35).toFixed(3));
+  });
+  heads.forEach(({ h, words }) => {
+    const r = h.getBoundingClientRect(), a = innerHeight * .92, b = innerHeight * .52;
+    const lit = reduceMotion ? words.length : Math.round(clamp((a - r.top) / (a - b), 0, 1) * words.length);
+    words.forEach((w, i) => w.classList.toggle('on', i < lit));
+  });
+}
+addEventListener('scroll', onScroll, { passive: true });
+addEventListener('resize', () => { pins.forEach((pin) => { pin.at = -1; }); onScroll(); });
+onScroll();
+
+let glide = 0;
+const stopGlide = () => { cancelAnimationFrame(glide); glide = 0; };
+['wheel', 'touchstart', 'keydown'].forEach((type) => addEventListener(type, stopGlide, { passive: true }));
+toTop.addEventListener('click', () => {
+  stopGlide();
+  if (reduceMotion) { scrollTo(0, 0); return; }
+  const from = scrollY, time = clamp(650 + from * 0.05, 800, 1600), start = performance.now();
+  const step = (now) => {
+    const t = clamp((now - start) / time, 0, 1), e = t < .5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
+    scrollTo(0, from * (1 - e));
+    glide = t < 1 ? requestAnimationFrame(step) : 0;
+  };
+  glide = requestAnimationFrame(step);
+});
+
+// 滑鼠滾輪的緩動捲動；觸控、鍵盤、捲軸維持原生
+{
+  let target = 0, cur = 0, raf = 0, last = 0;
+  const halt = () => { cancelAnimationFrame(raf); raf = 0; };
+  // 游標下若有自己會捲動的區塊，交給它捲
+  const ownScroll = (el, dy) => {
+    for (; el && el !== document.body && el !== document.documentElement; el = el.parentElement) {
+      if (el.scrollHeight <= el.clientHeight + 1 || !/(auto|scroll)/.test(getComputedStyle(el).overflowY)) continue;
+      if (dy > 0 ? el.scrollTop + el.clientHeight < el.scrollHeight - 1 : el.scrollTop > 0) return true;
+    }
+    return false;
+  };
+  const tick = (now) => {
+    if (typeof stopped !== 'undefined' && stopped) { raf = 0; return; }
+    // 依實際幀時間計算，60Hz 與 120Hz 螢幕手感一致
+    const dt = Math.min(now - last, 50); last = now;
+    cur += (target - cur) * (1 - Math.pow(1 - .12, dt / 16.67));
+    if (Math.abs(target - cur) < .5) cur = target;
+    scrollTo(0, cur);
+    raf = cur === target ? 0 : requestAnimationFrame(tick);
+  };
+  addEventListener('wheel', (e) => {
+    if (reduceMotion || e.ctrlKey || e.defaultPrevented || Math.abs(e.deltaX) > Math.abs(e.deltaY) || ownScroll(e.target, e.deltaY)) { halt(); return; }
+    e.preventDefault();
+    if (!raf) { target = cur = scrollY; last = performance.now(); }
+    const unit = e.deltaMode === 1 ? 36 : e.deltaMode === 2 ? innerHeight : 1;
+    target = clamp(target + e.deltaY * unit, 0, document.documentElement.scrollHeight - innerHeight);
+    if (!raf) raf = requestAnimationFrame(tick);
+  }, { passive: false });
+  ['touchstart', 'keydown', 'mousedown'].forEach((type) => addEventListener(type, halt, { passive: true }));
+  toTop.addEventListener('click', halt);
+}
+</script>
+</body>
+</html>

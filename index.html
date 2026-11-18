@@ -1,0 +1,1071 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Christy Sung — Designer</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="description" content="Portfolio of Christy Sung, a California designer working across brand, product, and UX.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --black:#08090b; --cta:#ffd800; --mono:"JetBrains Mono",ui-monospace,monospace; --gutter:clamp(24px,5vw,72px); --wrap:max(var(--gutter),calc((100% - 1776px) / 2)); }
+  * { box-sizing:border-box; margin:0; }
+  html { background:var(--black); }
+  body { background:var(--black); color:#f2f2ee; font-family:"DM Sans",system-ui,sans-serif; overflow-x:clip; }
+  .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+
+  nav { position:fixed; z-index:5; top:12px; left:max(12px,calc(var(--gutter) - 14px)); right:max(12px,calc(var(--gutter) - 14px)); display:flex; justify-content:space-between; align-items:center; padding:8px 16px; color:#fff; background:rgba(16,17,21,.55); -webkit-backdrop-filter:blur(16px) saturate(160%); backdrop-filter:blur(16px) saturate(160%); border:1px solid rgba(255,255,255,.16); border-radius:14px; }
+  nav a { color:inherit; text-decoration:none; font-size:.92rem; font-weight:500; }
+  nav .links { display:flex; gap:24px; }
+  nav .links a { transition:color .2s; }
+  nav .links a[href]:hover, nav .links a[href]:focus-visible { color:var(--cta); }
+  nav a:not([href]) { cursor:default; }
+  nav .name { display:block; line-height:0; }
+  /* 原本 CS logo 的眨眼節奏：4 秒內連眨兩下，數值取自原 GIF 每一幀 */
+  nav .name svg { display:block; transform-origin:50% 50%; animation:csBlink 4s linear infinite; }
+  @keyframes csBlink {
+    0%, 12%, 25%, 37%, 100% { transform:scaleY(1); opacity:1; }
+    1%, 26% { transform:scaleY(.98); opacity:.94; }
+    2%, 27% { transform:scaleY(.59); opacity:.52; }
+    3%, 9%, 28%, 34% { transform:scaleY(0); opacity:0; }
+    10%, 35% { transform:scaleY(.31); opacity:.29; }
+    11%, 36% { transform:scaleY(.97); opacity:.94; }
+  }
+  @media (prefers-reduced-motion: reduce) { nav .name svg { animation:none; } }
+
+  #hero { height:160vh; height:160svh; }
+  .sticky { position:sticky; top:0; height:100vh; height:100svh; overflow:hidden; }
+  #stage { position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+  #intro { position:absolute; left:var(--gutter); right:var(--gutter); top:var(--content-top,29vh); bottom:clamp(40px,6vh,60px); display:grid; grid-template-columns:minmax(280px,1.2fr) minmax(0,3fr); gap:14px; will-change:transform; }
+  .value { display:flex; flex-direction:column; justify-content:flex-end; gap:12px; padding-right:clamp(12px,2vw,28px); min-width:0; }
+  .value .btns { margin-top:12px; }
+  .value, .tile { will-change:transform; }
+  .name-slot { width:100%; flex:none; margin-bottom:clamp(14px,2.6vh,28px); }
+  #intro { transition:top .95s cubic-bezier(.65,0,.2,1); }
+  #intro.settled { top:78px; }
+  .value p { font-size:clamp(1.02rem,1.3vw,1.5rem); line-height:1.5; color:#e1e2e5; text-wrap:pretty; }
+  .value .founder { color:#a9abb1; }
+  .tiles { display:flex; flex-direction:column; gap:10px; min-height:0; min-width:0; }
+  .row { flex:1; display:flex; gap:10px; min-height:0; min-width:0; }
+  .tile { position:relative; flex:1 1 0; min-width:0; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; padding:12px 14px; color:var(--c); font-family:var(--mono); font-size:.76rem; font-weight:500; outline:1px solid rgba(255,255,255,.08); outline-offset:-1px; transition:flex .42s cubic-bezier(.2,.7,.2,1); }
+  .tile.wide { flex:0 0 calc((100% - 30px) * .4); }
+  @media (hover:hover) and (min-width:1025px), (hover:hover) and (min-width:701px) and (orientation:landscape) {
+    .row:has(.tile:not(.wide):hover) .tile.wide { flex-basis:calc((100% - 30px) * .3); }
+    .tile:not(.wide):hover { flex-grow:2.4; }
+    .tile.wide:hover { flex-basis:calc((100% - 30px) * .58); }
+    .tile:hover .stat { opacity:1; transform:none; }
+  }
+  .stat { display:block; opacity:0; transform:translateY(10px); transition:opacity .22s, transform .3s; white-space:nowrap; font-size:.74rem; }
+  .stat b { display:block; font-family:"DM Sans",sans-serif; font-size:clamp(1.7rem,3vw,2.8rem); line-height:1; font-weight:500; letter-spacing:-.04em; margin-bottom:6px; }
+  .inline { color:#fff; text-underline-offset:3px; white-space:nowrap; }
+  .inline:hover { color:var(--cta); }
+  .tl { display:flex; justify-content:space-between; gap:8px; }
+  .tile i { font-style:normal; }
+  .btns { display:flex; gap:10px; flex-wrap:wrap; }
+  .btn { display:inline-block; padding:12px 22px; border-radius:6px; border:1px solid var(--cta); background:var(--cta); color:#111; text-decoration:none; font-weight:600; transition:transform .2s; }
+  .btn.ghost { background:transparent; color:inherit; border-color:rgba(255,255,255,.3); }
+  .btn:hover { transform:translateY(-2px); }
+
+  #contact h2 { font-weight:500; font-size:clamp(2.3rem,4.3vw,4.1rem); line-height:1.04; letter-spacing:-.035em; }
+
+
+  nav { z-index:6; }
+  #rack { position:relative; margin-top:-50vh; margin-top:-50svh; padding:clamp(80px,11vh,110px) var(--wrap) clamp(130px,22vh,230px); background:radial-gradient(70% 60% at 50% 34%,#24262c 0,#101115 58%,var(--black) 100%); overflow:hidden; display:flex; flex-direction:column; }
+  #rack header { display:flex; align-items:baseline; justify-content:space-between; gap:18px; flex-wrap:wrap; }
+  #rack header small { font-family:var(--mono); font-size:.74rem; letter-spacing:.08em; color:#a5a7ad; }
+  #rack header h2 { font-size:clamp(1.5rem,2.5vw,2.4rem); font-weight:500; letter-spacing:-.03em; }
+  .rod { height:9px; margin:clamp(18px,3vh,30px) calc(var(--gutter) * -.4) 0; border-radius:9px; background:linear-gradient(180deg,#f7dc8d 0,#c99a33 45%,#7e5d18 100%); box-shadow:0 8px 18px rgba(0,0,0,.55); position:relative; z-index:5; }
+  .ears { position:relative; z-index:1; flex:none; display:flex; justify-content:center; align-items:stretch; gap:clamp(18px,3.4vw,56px); min-height:0; perspective:1400px; clip-path:inset(-4px -100vw -100vh -100vw); }
+  .ear { --tilt:0deg; --yaw:0deg; --drop:-130%; position:relative; flex:1 1 0; max-width:clamp(440px,26vw,620px); min-width:0; display:flex; flex-direction:column; padding-top:clamp(58px,9vh,84px); color:#111; text-decoration:none; transform-origin:50% 0; transform:translate3d(0,var(--drop),0) rotateZ(var(--tilt)) rotateY(var(--yaw)); will-change:transform; }
+  .rack-in { position:relative; will-change:transform; transform-origin:50% 0; }
+  #rack header small, #rack header h2 { opacity:0; transform:translate3d(0,22px,0); transition:opacity .7s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
+  #rack header h2 { transition-delay:.1s; }
+  #rack.live header small, #rack.live header h2 { opacity:1; transform:none; }
+  .rod { transform:scaleX(0); transform-origin:0 50%; transition:transform 1s cubic-bezier(.7,0,.15,1); overflow:hidden; }
+  .rod::after { content:""; position:absolute; inset:0 auto 0 -30%; width:30%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent); }
+  #rack.live .rod { transform:none; }
+  #rack.live .rod::after { animation:rodShine 1.5s .55s ease-out both; }
+  @keyframes rodShine { to { left:110%; } }
+  .ear .sheet { transition:box-shadow .25s; }
+  .ear:hover .sheet { box-shadow:0 44px 80px rgba(0,0,0,.7), 0 0 0 1px rgba(255,216,0,.55); }
+  .hook { position:absolute; left:50%; top:-3px; width:42px; height:clamp(70px,11vh,98px); margin-left:-21px; color:#dcb352; z-index:2; filter:drop-shadow(0 3px 3px rgba(0,0,0,.5)); }
+  .sheet { position:relative; flex:1; display:flex; flex-direction:column; padding:34px 14px 14px; background:#fffdf7; border-radius:12px; box-shadow:0 30px 60px rgba(0,0,0,.55), inset 0 0 0 1px rgba(0,0,0,.05); }
+  .hole { position:absolute; left:50%; top:12px; width:13px; height:13px; margin-left:-6.5px; border-radius:50%; background:#0d0e11; box-shadow:inset 0 1px 2px rgba(0,0,0,.9); }
+  .pic2 { display:block; flex:none; aspect-ratio:586/473; overflow:hidden; border-radius:22px; background:#ece9e2; }
+  .pic2 img, .pic2 video { width:100%; height:100%; object-fit:cover; display:block; }
+  .txt { flex:1; display:flex; flex-direction:column; padding:14px 4px 4px; }
+  .txt b { display:flex; justify-content:space-between; gap:10px; font-size:clamp(1.05rem,1.5vw,1.3rem); font-weight:500; letter-spacing:-.02em; line-height:1.15; }
+  .sub { display:block; margin-top:2px; font-size:clamp(.95rem,1.25vw,1.12rem); font-style:italic; line-height:1.2; }
+  .desc { display:block; margin-top:7px; font-size:clamp(.84rem,1vw,.94rem); line-height:1.25; color:#3a3b40; }
+  .cats { display:flex; flex-wrap:wrap; gap:6px; margin-top:auto; padding-top:9px; }
+  .cats i { font-style:normal; font-size:.74rem; font-weight:500; padding:4px 10px; border-radius:999px; background:#ffe88a; color:#111; }
+  .ear:focus-visible { outline:2px solid var(--cta); outline-offset:6px; border-radius:12px; }
+  .ear-dots { display:none; }
+  .lift-veil { position:fixed; inset:0; z-index:20; background:var(--black); opacity:0; pointer-events:none; }
+  .falling { position:fixed !important; z-index:21; margin:0; flex:none; transform-origin:50% 8%; will-change:transform; }
+  .info small { font-family:var(--mono); font-size:.74rem; letter-spacing:.08em; opacity:.72; }
+  .info .what { font-size:clamp(1.1rem,1.65vw,1.45rem); line-height:1.25; font-weight:500; letter-spacing:-.01em; }
+  .info .meta { margin:0; }
+  .info .kpi { margin:0; gap:22px; }
+  .info .btn { align-self:flex-start; color:#111; }
+  .info .btn.dark { background:#111; color:#fff; border-color:#111; }
+  #about { position:relative; z-index:2; margin-top:-34px; border-radius:34px 34px 0 0; background:#f5f3ee; color:#111; padding:clamp(72px,12vh,128px) var(--wrap); }
+  .about-head { display:grid; grid-template-columns:minmax(200px,1fr) 3fr; gap:24px; align-items:start; margin-bottom:clamp(36px,6vh,64px); }
+  .who { display:flex; align-items:center; gap:12px; }
+  .who img { width:60px; height:60px; border-radius:50%; object-fit:cover; }
+  .who span { font-size:.9rem; color:#55575c; }
+  .who b { display:block; color:#111; font-size:1.02rem; font-weight:600; }
+  #about h2 { font-size:clamp(1.65rem,3.1vw,3rem); line-height:1.12; font-weight:500; letter-spacing:-.03em; text-wrap:balance; }
+  .about-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(20px,3vw,40px); }
+  .ph { aspect-ratio:586/473; border-radius:22px; overflow:hidden; background:#e7e3da; margin-bottom:16px; }
+  .ph img { width:100%; height:100%; object-fit:cover; display:block; }
+  #about h2 .w { display:inline-block; opacity:.14; transform:translate3d(0,.22em,0); transition:opacity .28s linear, transform .38s cubic-bezier(.2,.7,.2,1); }
+  #about h2 .w.on { opacity:1; transform:none; }
+  .who, .about-grid article { opacity:0; transform:translate3d(0,34px,0); transition:opacity .7s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
+  .who.in, .about-grid article.in { opacity:1; transform:none; }
+  .about-grid article:nth-child(2), .about-grid article:nth-child(2) .ph, .about-grid article:nth-child(2) .ph img { transition-delay:.14s; }
+  .about-grid article:nth-child(3), .about-grid article:nth-child(3) .ph, .about-grid article:nth-child(3) .ph img { transition-delay:.28s; }
+  .ph { clip-path:inset(100% 0 0 0 round 22px); transition:clip-path 1s cubic-bezier(.7,0,.15,1); }
+  .ph img { transform:scale(1.2); transition:transform 1.35s cubic-bezier(.2,.7,.2,1); }
+  article.in .ph { clip-path:inset(0 0 0 0 round 22px); }
+  article.in .ph img { transform:scale(1); }
+  @media (prefers-reduced-motion: reduce) { #about h2 .w, .who, .about-grid article, .ph, .ph img { opacity:1; transform:none; clip-path:none; transition:none; } }
+  #about h3 { font-size:1.25rem; font-weight:500; letter-spacing:-.02em; }
+  #about p { margin-top:6px; line-height:1.4; color:#34353a; }
+  #about article small { display:block; margin-top:10px; font-family:var(--mono); font-size:.68rem; line-height:1.55; color:#6a6c72; }
+  #contact { background:var(--black); padding:clamp(90px,16vh,160px) var(--wrap) 28px; }
+  #contact h2 { color:#a5a7ad; font-size:clamp(1.4rem,2.4vw,2.2rem); }
+  .mail { display:inline-block; margin-top:12px; color:#fff; font-size:clamp(1.9rem,6.2vw,6.4rem); font-weight:500; letter-spacing:-.04em; line-height:1.05; text-decoration:none; overflow-wrap:anywhere; transition:color .2s; }
+  .mail:hover { color:var(--cta); }
+  .mail .ch { display:inline-block; transform:translate3d(0,110%,0) rotate(5deg); opacity:0; transition:transform .75s cubic-bezier(.2,.8,.2,1), opacity .4s; transition-delay:calc(var(--i) * 22ms); }
+  .mail { overflow:hidden; padding-bottom:.1em; }
+  #contact.in .mail .ch { transform:none; opacity:1; }
+  #contact h2, .foot { opacity:0; transform:translate3d(0,20px,0); transition:opacity .7s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
+  .foot { transition-delay:.55s; }
+  #contact.in h2, #contact.in .foot { opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce) { .mail .ch, #contact h2, .foot, #rack header small, #rack header h2, .rod { opacity:1; transform:none; transition:none; } }
+  .foot { margin-top:clamp(56px,10vh,96px); padding-top:18px; border-top:1px solid rgba(255,255,255,.14); display:flex; justify-content:space-between; gap:14px 24px; flex-wrap:wrap; font-size:.9rem; color:#a5a7ad; }
+  .foot-links { position:static; display:flex; flex-wrap:wrap; justify-content:flex-start; gap:8px 22px; padding:0; background:none; border:0; border-radius:0; -webkit-backdrop-filter:none; backdrop-filter:none; color:#f2f2ee; z-index:auto; }
+  .foot-links a { color:inherit; text-decoration:none; font-weight:500; transition:color .2s; }
+  .foot-links a[href]:hover { color:var(--cta); }
+
+  #status { position:absolute; right:var(--gutter); bottom:24px; font-family:var(--mono); font-size:.72rem; color:#a5a7ad; white-space:nowrap; }
+
+  /* 沒有滑鼠的裝置：數據直接顯示 */
+  @media (hover:none) {
+    .stat { opacity:1; transform:none; white-space:normal; line-height:1.25; }
+    .stat b { font-size:clamp(1.5rem,2.6vw,2.4rem); }
+  }
+
+  /* 直式平板與手機：Hero 上下排列 */
+  @media (max-width:700px), (max-width:1024px) and (orientation:portrait) {
+    #intro { display:flex; flex-direction:column; justify-content:flex-end; gap:16px; }
+    .value { flex:none; justify-content:flex-start; padding-right:0; }
+    .tiles { flex:1; }
+    .stat { opacity:1; transform:none; white-space:normal; line-height:1.25; }
+    #status { display:none; }
+  }
+
+  /* 直式平板 */
+  @media (min-width:701px) and (max-width:1024px) and (orientation:portrait) {
+    #intro { bottom:28px; }
+    #intro.settled { top:84px; }
+    .value { display:grid; grid-template-columns:minmax(0,32%) minmax(0,1fr); column-gap:clamp(24px,5vw,56px); row-gap:10px; align-content:start; }
+    .name-slot { grid-row:1 / span 2; margin-bottom:0; }
+    .value p { align-self:end; font-size:1.1rem; }
+    .value .founder { align-self:start; }
+    .stat b { font-size:2rem; }
+    .ear { padding-top:64px; }
+    .sheet { padding:32px 10px 10px; }
+    .pic2 { border-radius:14px; }
+    .hook { height:78px; }
+    .cats i { font-size:.68rem; padding:3px 8px; }
+    .about-head { grid-template-columns:1fr; gap:20px; }
+  }
+
+  /* 手機 */
+  @media (max-width:700px) {
+    nav { padding:7px 12px; }
+    nav .links { gap:18px; }
+    nav .links a { padding:6px 0; font-size:.88rem; }
+    #intro { left:16px; right:16px; bottom:16px; gap:14px; }
+    #intro.settled { top:70px; }
+    .name-slot { width:min(60%,30svh); margin-bottom:12px; }
+    .value { gap:8px; }
+    .value p { font-size:1rem; line-height:1.42; }
+    .tiles { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); grid-auto-rows:minmax(0,1fr); gap:7px; }
+    .row { display:contents; }
+    .tile.wide { grid-column:span 2; }
+    .tile { padding:9px 10px; font-size:.66rem; }
+    .stat { font-size:.62rem; }
+    .stat b { font-size:1.45rem; margin-bottom:3px; }
+    #rack { padding:76px 0 104px; }
+    #rack header { padding:0 16px; display:block; }
+    #rack header h2 { margin-top:4px; font-size:1.45rem; }
+    .rod { margin:16px 0 0; }
+    .ears { justify-content:flex-start; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; padding:0 max(8vw,calc((100vw - 400px) / 2)) 36px; scrollbar-width:none; perspective:none; }
+    .ears::-webkit-scrollbar { display:none; }
+    .ear { flex:none; width:min(84vw,400px); max-width:none; scroll-snap-align:center; padding-top:64px; }
+    .hook { height:78px; }
+    .ear-dots { display:flex; justify-content:center; gap:8px; margin-top:-8px; }
+    .ear-dots i { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.28); transition:background .2s, transform .2s; }
+    .ear-dots i.on { background:#fff; transform:scale(1.15); }
+    #about { padding:64px 16px; }
+    .about-head { grid-template-columns:1fr; gap:18px; }
+    .about-grid { display:flex; gap:14px; margin:0 -16px; padding:0 16px 4px; overflow-x:auto; scroll-snap-type:x mandatory; scroll-padding-left:16px; scrollbar-width:none; }
+    .about-grid::-webkit-scrollbar { display:none; }
+    .about-grid article { flex:none; width:min(82vw,360px); scroll-snap-align:start; }
+    #about .ear-dots { margin-top:18px; }
+    #about .ear-dots i { background:rgba(0,0,0,.2); }
+    #about .ear-dots i.on { background:#111; }
+    #contact { padding:72px 16px 24px; }
+    #contact h2 { font-size:1.3rem; }
+    .mail { display:block; font-size:7.6vw; white-space:nowrap; }
+    .foot { flex-direction:column; }
+  }
+
+  /* 較矮的手機：說明文字收起，只留數字 */
+  @media (max-width:700px) and (max-height:720px) {
+    .value p { font-size:.94rem; line-height:1.36; }
+    .value { gap:6px; }
+    .name-slot { margin-bottom:8px; }
+    .stat { font-size:0; }
+    .stat b { font-size:1.2rem; margin:0; }
+  }
+  @media (max-width:380px) {
+    .tile { padding:8px; font-size:.6rem; }
+    nav .links { gap:14px; }
+  }
+
+  /* 橫式手機等矮螢幕 */
+  @media (max-height:500px) and (orientation:landscape) {
+    nav { top:8px; padding:5px 14px; }
+    #intro { grid-template-columns:minmax(210px,1fr) minmax(0,3fr); bottom:12px; gap:10px; }
+    #intro.settled { top:56px; }
+    .name-slot { width:64%; margin-bottom:8px; }
+    .value { gap:4px; padding-right:4px; }
+    .value p { font-size:.84rem; line-height:1.3; }
+    .tiles, .row { gap:6px; }
+    .tile { padding:7px 9px; font-size:.64rem; }
+    .stat { font-size:.6rem; }
+    .stat b { font-size:1.25rem; margin-bottom:2px; }
+    #status { display:none; }
+    #about { padding-top:56px; padding-bottom:56px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .btn { transition:none; } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<nav>
+  <a class="name" href="#hero"><svg viewBox="-1.02 -0.6 2.04 1.2" width="48" height="28" role="img" aria-label="Christy Sung"><path fill="currentColor" fill-rule="evenodd" d="M0.468,-0.583 0.495,-0.583 0.541,-0.580 0.564,-0.576 0.607,-0.567 0.649,-0.554 0.691,-0.536 0.735,-0.514 0.771,-0.491 0.810,-0.461 0.830,-0.443 0.873,-0.398 0.907,-0.356 0.936,-0.309 0.960,-0.264 0.976,-0.224 0.986,-0.194 1.000,-0.142 1.000,-0.139 0.998,-0.137 0.932,-0.137 0.930,-0.139 0.910,-0.201 0.890,-0.247 0.864,-0.293 0.844,-0.323 0.814,-0.359 0.771,-0.402 0.738,-0.428 0.692,-0.459 0.655,-0.477 0.623,-0.491 0.580,-0.504 0.544,-0.511 0.518,-0.514 0.481,-0.516 0.445,-0.514 0.396,-0.508 0.369,-0.500 0.385,-0.477 0.955,0.273 0.943,0.299 0.930,0.322 0.904,0.361 0.866,0.407 0.830,0.444 0.794,0.474 0.751,0.504 0.718,0.523 0.699,0.533 0.649,0.553 0.610,0.566 0.564,0.576 0.514,0.582 0.465,0.583 0.416,0.579 0.376,0.572 0.337,0.562 0.275,0.539 0.241,0.523 0.192,0.493 0.156,0.467 0.118,0.434 0.083,0.398 0.047,0.351 0.017,0.305 -0.005,0.263 -0.009,0.262 -0.030,0.305 -0.051,0.338 -0.077,0.374 -0.107,0.409 -0.150,0.451 -0.183,0.477 -0.222,0.503 -0.272,0.530 -0.328,0.553 -0.360,0.563 -0.390,0.569 -0.439,0.576 -0.466,0.578 -0.544,0.576 -0.571,0.572 -0.610,0.563 -0.640,0.553 -0.673,0.540 -0.712,0.520 -0.745,0.500 -0.785,0.470 -0.808,0.451 -0.848,0.411 -0.864,0.391 -0.887,0.361 -0.907,0.332 -0.930,0.292 -0.947,0.256 -0.967,0.207 -0.976,0.177 -0.986,0.138 -0.993,0.102 -0.999,0.039 -1.000,-0.010 -0.999,-0.033 -0.993,-0.099 -0.983,-0.148 -0.970,-0.194 -0.950,-0.247 -0.930,-0.290 -0.907,-0.329 -0.881,-0.369 -0.847,-0.410 -0.814,-0.444 -0.775,-0.478 -0.742,-0.501 -0.709,-0.521 -0.669,-0.540 -0.617,-0.560 -0.591,-0.567 -0.558,-0.574 -0.502,-0.580 -0.459,-0.580 -0.403,-0.574 -0.367,-0.567 -0.344,-0.560 -0.295,-0.543 -0.245,-0.520 -0.212,-0.501 -0.179,-0.478 -0.137,-0.442 -0.113,-0.418 -0.090,-0.392 -0.057,-0.349 -0.030,-0.306 -0.009,-0.264 -0.005,-0.259 0.007,-0.283 0.031,-0.323 0.053,-0.356 0.080,-0.388 0.100,-0.411 0.133,-0.443 0.166,-0.471 0.192,-0.490 0.235,-0.517 0.268,-0.534 0.297,-0.547 0.334,-0.560 0.370,-0.570 0.403,-0.576 0.432,-0.580 0.465,-0.581Z M-0.499,-0.510 -0.495,-0.512 -0.469,-0.512 -0.443,-0.511 -0.410,-0.507 -0.380,-0.501 -0.357,-0.494 -0.314,-0.478 -0.275,-0.459 -0.229,-0.429 -0.193,-0.400 -0.152,-0.359 -0.130,-0.333 -0.113,-0.309 -0.084,-0.264 -0.067,-0.231 -0.054,-0.201 -0.033,-0.142 0.423,0.499 0.429,0.509 0.429,0.513 0.406,0.510 0.373,0.503 0.340,0.493 0.324,0.487 0.284,0.470 0.265,0.460 0.248,0.451 0.218,0.430 0.197,0.414 0.165,0.384 0.132,0.348 0.106,0.315 0.082,0.279 0.060,0.240 0.028,0.169 -0.045,0.168 -0.048,0.171 -0.049,0.174 -0.063,0.213 -0.076,0.243 -0.090,0.269 -0.116,0.312 -0.133,0.335 -0.163,0.370 -0.193,0.399 -0.216,0.418 -0.248,0.441 -0.281,0.460 -0.324,0.480 -0.350,0.490 -0.387,0.500 -0.423,0.507 -0.459,0.510 -0.489,0.511 -0.499,0.509 -0.499,-0.507Z"/></svg></a>
+  <div class="links">
+    <a>Work</a>
+    <a href="#about">About</a>
+    <a>Resume</a>
+  </div>
+</nav>
+
+<div id="hero">
+  <div class="sticky">
+    <canvas id="stage" aria-hidden="true"></canvas>
+    <h1 class="sr">Christy Sung, designer across brand, packaging, product, and UX/UI</h1>
+
+    <div id="intro">
+      <div class="value">
+        <div class="name-slot"></div>
+        <p>Designer working across brand, packaging, product, and UX/UI, from first sketch to finished object.</p>
+        <p class="founder">Founder and Designer of <a class="inline" href="https://bolistrajewelry.square.site/">Bolistra Jewelry</a>.</p>
+      </div>
+      <div class="tiles">
+        <div class="row">
+          <div class="tile wide" data-t="booth" style="--c:#111"><span class="tl">Market Booth</span><span class="stat"><b>50+</b>Bay Area art &amp; design markets</span></div>
+          <div class="tile " data-t="logo" style="--c:#111"><span class="tl">Logo Design</span><span class="stat"><b>6</b>Brand identities designed</span></div>
+          <div class="tile " data-t="graphic" style="--c:#111"><span class="tl">Graphic Design</span><span class="stat"><b>6</b>Touchpoints in one brand system</span></div>
+          <div class="tile " data-t="pack" style="--c:#111"><span class="tl">Packaging</span><span class="stat"><b>2</b>Packaging card systems</span></div>
+        </div>
+        <div class="row">
+          <div class="tile mid" data-t="laser" style="--c:#f2f2ee"><span class="tl">Laser Cutting</span><span class="stat"><b>160+</b>Acrylic earring designs</span></div>
+          <div class="tile mid" data-t="print" style="--c:#fff"><span class="tl">3D Printing</span><span class="stat"><b>59</b>3D-printed boxes sold in 2026</span></div>
+          <div class="tile wide" data-t="ux" style="--c:#111"><span class="tl">UX/UI</span><span class="stat"><b>5+</b>UX/UI and web projects</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="status" aria-hidden="true"></div>
+  </div>
+</div>
+
+<section id="rack">
+  <div class="rack-in">
+  <header><small>FEATURED WORK</small><h2>Take one off the rack.</h2></header>
+  <div class="rod" aria-hidden="true"></div>
+  <div class="ears">
+    <a class="ear" href="bolistra-2026.html">
+      <svg class="hook" viewBox="0 0 60 104" aria-hidden="true"><path d="M30 104V34C30 18 46 18 46 32 46 42 34 44 30 34 26 20 12 18 12 34" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>
+      <span class="sheet">
+        <span class="hole"></span>
+        <span class="pic2"><img alt="BOLISTRA jewelry display" src="assets/fr/bLVwkDnCylvk4f6HlB7KCaefw-1024.png"></span>
+        <span class="txt"><b>BOLISTRA Jewelry</b><span class="sub">— Building a Jewelry Brand with My Own Hands</span><span class="desc">I founded and designed a California jewelry brand, from identity and products to packaging and live retail.</span><span class="cats"><i>Branding</i><i>Packaging</i><i>Product Design</i></span></span>
+      </span>
+    </a>
+    <a class="ear top" href="custom-order-flow.html">
+      <svg class="hook" viewBox="0 0 60 104" aria-hidden="true"><path d="M30 104V34C30 18 46 18 46 32 46 42 34 44 30 34 26 20 12 18 12 34" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>
+      <span class="sheet">
+        <span class="hole"></span>
+        <span class="pic2"><img alt="A phone scanning the QR sign at the BOLISTRA booth" src="assets/fr/CBZapL0f1tpBb0NcYS6yvaGyOsg-1024.jpg"></span>
+        <span class="txt"><b>Custom Order Flow</b><span class="sub">— Self-Service Ordering for a Live Booth</span><span class="desc">A phone-based order flow that lets customers personalize jewelry on their own, so I can engrave and serve 3–5 customers at once.</span><span class="cats"><i>UX Design</i><i>Service Design</i><i>Fabrication</i></span></span>
+      </span>
+    </a>
+    <a class="ear" href="san-francisco-fleet-week.html">
+      <svg class="hook" viewBox="0 0 60 104" aria-hidden="true"><path d="M30 104V34C30 18 46 18 46 32 46 42 34 44 30 34 26 20 12 18 12 34" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>
+      <span class="sheet">
+        <span class="hole"></span>
+        <span class="pic2"><video muted loop playsinline preload="metadata" aria-label="SF Fleet Week app" src="assets/fr/hSmeyyINGu0QRBigNiCx7vSwo08.mp4"></video></span>
+        <span class="txt"><b>SF Fleet Week</b><span class="sub">— One Designer, One App, 1.1M Attendees</span><span class="desc">Solo redesign and development of the event's mobile app, from UX and visual design to launch on iOS and Android.</span><span class="cats"><i>Mobile App</i><i>UX/UI</i><i>Development</i></span></span>
+      </span>
+    </a>
+  </div>
+  <div class="ear-dots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-head">
+    <div class="who"><img alt="Christy Sung" src="assets/fr/d0icfP4vXxrggdT2s0NQvRd8D7w-256.jpg"><span><b>Christy Sung</b>Designer</span></div>
+    <h2>Starting as a graphic and exhibition designer in Taiwan, I grew into a designer who works across brand, packaging, product, and UX/UI.</h2>
+  </div>
+  <div class="about-grid">
+    <article>
+      <div class="ph"><img loading="lazy" alt="Christy at graduation in San Francisco" src="assets/fr/NI6A3UMwxdAfAFlpCGsw2UGEa0-1024.jpeg"></div>
+      <h3>Design is My DNA</h3>
+      <p>I studied art and design, then earned a master’s in Interaction &amp; UI/UX Design to blend creativity with logic.</p>
+      <small>Academy of Art University, MA Interaction &amp; UI/UX Design<br>Yuan-Ze University, BA Art and Design</small>
+    </article>
+    <article>
+      <div class="ph"><img loading="lazy" alt="Christy talking with customers at a pop-up market" src="assets/fr/uLMLqB267bxEhkDuvp8mXf5PvtA-1024.png"></div>
+      <h3>Designing with My Hands &amp; Ears</h3>
+      <p>I run my own jewelry brand, crafting each piece from scratch and refining it through customer feedback at pop-up markets.</p>
+    </article>
+    <article>
+      <div class="ph"><img loading="lazy" alt="Christy with her volleyball team" src="assets/fr/hEA5p7AGmjv7t8ARwMPPpERGsI-1024.png"></div>
+      <h3>Off the Screen</h3>
+      <p>Over 6 years as an attacker has shaped how I work: team-driven, goal-focused, and ready to dive into challenges.</p>
+      <small>USA International Volleyball League<br>2024 Fall Champion · 2025 Summer Second Place</small>
+    </article>
+  </div>
+  <div class="ear-dots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+</section>
+
+<section id="contact">
+  <h2>Let’s build something.</h2>
+  <a class="mail" href="mailto:christysungjob@gmail.com" aria-label="Email christysungjob@gmail.com">christysungjob@gmail.com</a>
+  <div class="foot">
+    <span>© 2026 Christy Sung · California</span>
+    <nav class="foot-links" aria-label="Footer">
+      <a>All Work</a>
+      <a href="https://www.linkedin.com/in/christy-sung-809867222/">LinkedIn</a>
+      <a>Resume</a>
+      <a href="https://bolistrajewelry.square.site/">Bolistra Jewelry</a>
+    </nav>
+  </div>
+</section>
+
+<script type="module">
+import * as THREE from 'three';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { Line2 } from 'three/addons/lines/Line2.js';
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+import titleFont from './title-font.js';
+
+history.scrollRestoration = 'manual';
+scrollTo(0, 0);
+const $ = (id) => document.getElementById(id);
+const canvas = $('stage'), sticky = canvas.parentElement, hero = $('hero');
+const statusEl = $('status');
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const stackQ = matchMedia('(max-width:700px), (max-width:1024px) and (orientation:portrait)');
+const hoverQ = matchMedia('(hover:hover)');
+const { smoothstep: ss, damp, clamp, lerp } = THREE.MathUtils;
+
+const BLACK = 0x08090b, CTA = 0xffd800;
+
+/* ---------- 舞台 ---------- */
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setClearColor(BLACK);
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+scene.add(new THREE.AmbientLight(0xffffff, 2.3));
+const sun = new THREE.DirectionalLight(0xffffff, 1.7);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -13, right: 13, top: 13, bottom: -13, near: 1, far: 50 });
+sun.shadow.radius = 8;
+sun.shadow.bias = -0.0004;
+scene.add(sun, sun.target);
+
+const shadowCatcher = new THREE.Mesh(new THREE.PlaneGeometry(120, 90), new THREE.ShadowMaterial({ opacity: 0.24 }));
+shadowCatcher.position.z = -1.1;
+shadowCatcher.receiveShadow = true;
+scene.add(shadowCatcher);
+
+/* ---------- 工具 ---------- */
+const matCache = new Map();
+const mat = (color) => {
+  if (!matCache.has(color)) matCache.set(color, new THREE.MeshStandardMaterial({ color, roughness: 0.55, metalness: 0 }));
+  return matCache.get(color);
+};
+function rr(w, h, r = 0.08) {
+  const s = new THREE.Shape(), x = w / 2, y = h / 2;
+  s.moveTo(-x + r, -y);
+  s.lineTo(x - r, -y); s.quadraticCurveTo(x, -y, x, -y + r);
+  s.lineTo(x, y - r); s.quadraticCurveTo(x, y, x - r, y);
+  s.lineTo(-x + r, y); s.quadraticCurveTo(-x, y, -x, y - r);
+  s.lineTo(-x, -y + r); s.quadraticCurveTo(-x, -y, -x + r, -y);
+  return s;
+}
+const disc = (r) => new THREE.Shape().absarc(0, 0, r, 0, Math.PI * 2);
+function solid(shape, color, depth = 0.12) {
+  const g = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 40 });
+  g.translate(0, 0, -depth / 2);
+  const m = new THREE.Mesh(g, mat(color));
+  m.castShadow = m.receiveShadow = true;
+  return m;
+}
+const place = (m, x, y, z = 0, parent) => { m.position.set(x, y, z); parent?.add(m); return m; };
+
+/* ---------- 開場：雷射刻字 ---------- */
+const title = new THREE.Group();
+scene.add(title);
+const burn = new LineMaterial({ color: CTA, linewidth: 1.5 });
+const cuts = [];
+const fills = [];
+let totalLen = 0, ready = false, titleW = 1, titleH = 1, capUnits = 0.72;
+
+function addCut(points) {
+  const pts = points.concat(points[0]);
+  const geo = new LineGeometry();
+  geo.setPositions(pts.flatMap((p) => [p.x, p.y, 0.01]));
+  geo.instanceCount = 0;
+  title.add(new Line2(geo, burn));
+  const dist = [0];
+  let len = 0;
+  for (let i = 1; i < pts.length; i++) { len += pts[i].distanceTo(pts[i - 1]); dist.push(len); }
+  cuts.push({ pts, dist, len, start: totalLen, geo });
+  totalLen += len;
+}
+function setCut(t) {
+  const d = t * totalLen;
+  let tip = null;
+  for (const c of cuts) {
+    const local = clamp(d - c.start, 0, c.len);
+    let i = 1;
+    while (i < c.dist.length - 1 && c.dist[i] < local) i++;
+    c.geo.instanceCount = local >= c.len ? c.pts.length - 1 : local > 0 ? i : 0;
+    if (local > 0 && local < c.len) {
+      const f = (local - c.dist[i - 1]) / (c.dist[i] - c.dist[i - 1] || 1);
+      tip = c.pts[i - 1].clone().lerp(c.pts[i], f);
+    }
+  }
+  fills.forEach((f) => { f.material.opacity = ss(t, f.userData.from, f.userData.to); });
+  return tip;
+}
+
+const glowTex = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const x = c.getContext('2d');
+  const g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+  g.addColorStop(0, 'rgba(255,255,255,1)');
+  g.addColorStop(0.18, 'rgba(255,240,190,.95)');
+  g.addColorStop(0.42, 'rgba(255,120,0,.4)');
+  g.addColorStop(1, 'rgba(255,60,0,0)');
+  x.fillStyle = g; x.fillRect(0, 0, 128, 128);
+  return new THREE.CanvasTexture(c);
+})();
+const flare = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false }));
+flare.visible = false;
+title.add(flare);
+const SPARKS = 160;
+const sparkPos = new Float32Array(SPARKS * 3).fill(-999);
+const sparkVel = Array.from({ length: SPARKS }, () => new THREE.Vector3());
+const sparkLife = new Float32Array(SPARKS);
+const sparkGeo = new THREE.BufferGeometry();
+sparkGeo.setAttribute('position', new THREE.BufferAttribute(sparkPos, 3));
+const sparks = new THREE.Points(sparkGeo, new THREE.PointsMaterial({ color: 0xff7a1a, size: 0.05, depthWrite: false }));
+sparks.frustumCulled = false;
+title.add(sparks);
+let nextSpark = 0;
+function updateSparks(dt, tip) {
+  if (tip) for (let n = 0; n < 3; n++) {
+    const i = nextSpark = (nextSpark + 1) % SPARKS;
+    sparkPos.set([tip.x, tip.y, 0.05], i * 3);
+    sparkVel[i].set((Math.random() - 0.5) * 2.4, (Math.random() - 0.5) * 2.4, 1 + Math.random() * 2);
+    sparkLife[i] = 0.2 + Math.random() * 0.3;
+  }
+  for (let i = 0; i < SPARKS; i++) {
+    if (sparkLife[i] <= 0) { sparkPos[i * 3 + 2] = -999; continue; }
+    sparkLife[i] -= dt;
+    sparkVel[i].z -= 5 * dt;
+    sparkPos[i * 3] += sparkVel[i].x * dt;
+    sparkPos[i * 3 + 1] += sparkVel[i].y * dt;
+    sparkPos[i * 3 + 2] += sparkVel[i].z * dt;
+  }
+  sparkGeo.attributes.position.needsUpdate = true;
+}
+
+function buildTitle(font) {
+  const lines = stackQ.matches ? ['CHRISTY', 'SUNG'] : ['CHRISTY SUNG'];
+  const LINE = 1.16;
+  const groups = lines.map((text, row) => font.generateShapes(text, 1).map((shape) => ({ shape, row })));
+  const letters = groups.flat();
+  letters.forEach(({ row, shape }) => {
+    const y = -row * LINE;
+    const shift = (p) => new THREE.Vector2(p.x, p.y + y);
+    const outer = shape.getPoints(10).map(shift);
+    outer.forEach((p) => { titleW = Math.max(titleW, p.x); if (row === 0) capUnits = Math.max(capUnits, p.y); });
+    addCut(outer);
+    shape.holes.forEach((h) => addCut(h.getPoints(10).map(shift)));
+  });
+    letters.forEach(({ row, shape }, i) => {
+    const g = new THREE.ShapeGeometry(shape, 10);
+    g.translate(0, -row * LINE, 0);
+    const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: 0xf2f2ee, transparent: true, opacity: 0, depthWrite: false }));
+    m.userData.from = i / letters.length * 0.86;
+    m.userData.to = m.userData.from + 0.16;
+    title.add(m);
+    fills.push(m);
+  });
+  ready = true;
+}
+
+buildTitle(new FontLoader().parse(titleFont));
+// 縮小後固定兩行：CHRISTY / SUNG
+const splitName = !stackQ.matches;
+const splitAt = 7;
+const boxOf = (m) => { m.geometry.computeBoundingBox(); return m.geometry.boundingBox; };
+const rowWidth = splitName ? Math.max(...fills.slice(0, splitAt).map((m) => boxOf(m).max.x)) : titleW;
+const secondRowX = splitName ? boxOf(fills[splitAt]).min.x : 0;
+
+/* ---------- 能力小動畫：同一個 canvas 分區繪製，七格共用一個 WebGL 環境 ---------- */
+const FOV = 26;
+function miniScene(bg, dist = 15) {
+  const sc = new THREE.Scene();
+  sc.add(new THREE.AmbientLight(0xffffff, 2.35));
+  const d = new THREE.DirectionalLight(0xffffff, 1.5);
+  d.position.set(-4, 6, 10);
+  sc.add(d);
+  const cam = new THREE.PerspectiveCamera(FOV, 1, 0.1, 80);
+  cam.position.z = dist;
+  const root = new THREE.Group();
+  sc.add(root);
+  return { sc, cam, root, bg: new THREE.Color(bg), dist };
+}
+const flat = (shape, color, depth = 0.12) => { const m = solid(shape, color, depth); m.castShadow = m.receiveShadow = false; return m; };
+const cycle = (t, period = 6) => { const u = (t % period) / period; return ss(u, 0.04, 0.42) * (1 - ss(u, 0.86, 0.98)); };
+
+/* Logo：幾何圖形歸位 */
+const logoT = miniScene(0xffd800, 17);
+const quarter = (r) => { const q = new THREE.Shape(); q.moveTo(0, 0); q.lineTo(r, 0); q.absarc(0, 0, r, 0, Math.PI / 2); q.closePath(); return q; };
+const logoParts = [
+  { m: flat(disc(1), 0x111111), a: [-3.8, 2.6], b: [-1, 1] },
+  { m: flat(rr(2, 2, 0.01), 0x111111), a: [3.8, 2.8], b: [1, 1] },
+  { m: flat(rr(2, 2, 0.01), 0xffffff), a: [-3.6, -2.8], b: [-1, -1] },
+  { m: flat(quarter(2), 0x111111), a: [3.8, -2.6], b: [0, -2] },
+];
+logoParts.forEach((k) => logoT.root.add(k.m));
+logoT.update = (t) => {
+  const q = cycle(t);
+  logoParts.forEach((k, i) => {
+    const e = ss(q, i * 0.12, 0.6 + i * 0.12);
+    k.m.position.set(lerp(k.a[0], k.b[0], e), lerp(k.a[1], k.b[1], e), 0);
+    k.m.rotation.z = (1 - e) * (i % 2 ? 1.7 : -1.7);
+  });
+};
+
+/* 平面設計：海報圖層 */
+const graphicT = miniScene(0xb9a4ff, 16);
+const poster = flat(rr(4.2, 5.6, 0.04), 0xfffdf7, 0.08);
+graphicT.root.add(poster);
+const gLayers = [
+  { m: flat(disc(1.45), 0xff5a36, 0.05), to: [0.5, 0.9, 0.08] },
+  { m: flat(rr(3.2, 0.72, 0.02), 0x111111, 0.05), to: [0, -1.05, 0.12] },
+  { m: flat(rr(2.1, 0.22, 0.02), 0x2238ff, 0.05), to: [-0.55, -1.8, 0.12] },
+  { m: flat(rr(1.1, 1.1, 0.02), 0xffd800, 0.05), to: [-1.1, 1.6, 0.16] },
+];
+gLayers.forEach((k) => graphicT.root.add(k.m));
+graphicT.update = (t) => {
+  const q = cycle(t + 0.8);
+  graphicT.root.rotation.y = Math.sin(t * 0.6) * 0.3;
+  graphicT.root.rotation.x = -0.1;
+  gLayers.forEach((k, i) => {
+    const e = ss(q, i * 0.13, 0.55 + i * 0.13);
+    k.m.position.set(k.to[0] + (i % 2 ? 6 : -6) * (1 - e), k.to[1], k.to[2]);
+  });
+};
+
+/* 包裝：刀模摺成盒子 */
+const packT = miniScene(0xf1eee6, 16);
+const P = 2.1;
+const miniPanel = (w, h, c) => flat(rr(w, h, 0.015), c, 0.05);
+const box = new THREE.Group();
+packT.root.add(box);
+box.add(miniPanel(P, P, 0xffd800));
+const hinge = (x, y, rz) => { const h = new THREE.Group(); h.position.set(x, y, 0); h.rotation.order = 'ZXY'; h.rotation.z = rz; box.add(h); return h; };
+const sides = [hinge(0, -P / 2, 0), hinge(P / 2, 0, Math.PI / 2), hinge(0, P / 2, Math.PI), hinge(-P / 2, 0, -Math.PI / 2)];
+sides.forEach((h, i) => { const m = miniPanel(P, P, i % 2 ? 0xf3c400 : 0xffd800); m.position.y = -P / 2; h.add(m); });
+const lidHinge = new THREE.Group();
+lidHinge.position.y = -P;
+sides[0].add(lidHinge);
+const lid = miniPanel(P, P, 0x111111);
+lid.position.y = -P / 2;
+lidHinge.add(lid);
+packT.update = (t) => {
+  const q = cycle(t + 1.6, 7);
+  box.rotation.x = lerp(0, -1, ss(q, 0.05, 0.45));
+  box.rotation.z = lerp(0, 0.62, ss(q, 0.05, 0.45));
+  box.position.y = lerp(0.9, -0.5, ss(q, 0.05, 0.45));
+  sides.forEach((h, i) => { h.rotation.x = -ss(q, 0.14 + i * 0.08, 0.5 + i * 0.08) * Math.PI / 2; });
+  lidHinge.rotation.x = -ss(q, 0.7, 0.95) * Math.PI / 2;
+};
+
+/* 雷射切割：光點沿路徑切出心形 */
+const laserT = miniScene(0x15161b, 15);
+const plate = flat(rr(6.6, 4.6, 0.08), 0x24262e, 0.08);
+laserT.root.add(plate);
+const heartPts = [];
+for (let i = 0; i <= 160; i++) {
+  const a = (i / 160) * Math.PI * 2;
+  heartPts.push(new THREE.Vector3(0.095 * 16 * Math.sin(a) ** 3, 0.095 * (13 * Math.cos(a) - 5 * Math.cos(2 * a) - 2 * Math.cos(3 * a) - Math.cos(4 * a)), 0.08));
+}
+const cutLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(heartPts), new THREE.LineBasicMaterial({ color: CTA }));
+laserT.root.add(cutLine);
+const heartFill = new THREE.Mesh(new THREE.ShapeGeometry(new THREE.Shape(heartPts.map((v) => new THREE.Vector2(v.x, v.y)))), new THREE.MeshBasicMaterial({ color: CTA, transparent: true, opacity: 0 }));
+heartFill.position.z = 0.07;
+laserT.root.add(heartFill);
+const railX = flat(rr(6.9, 0.14, 0.02), 0xdfe0e5, 0.1);
+const headL = flat(rr(0.52, 0.52, 0.06), CTA, 0.22);
+const miniGlow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false }));
+miniGlow.scale.setScalar(1.05);
+laserT.root.add(railX, headL, miniGlow);
+laserT.update = (t) => {
+  const u = (t % 5) / 5, q = clamp(u / 0.72, 0, 1), i = Math.floor(q * 160);
+  cutLine.geometry.setDrawRange(0, i + 1);
+  heartFill.material.opacity = ss(u, 0.74, 0.86) * (1 - ss(u, 0.93, 1));
+  const v = heartPts[Math.min(i, 160)];
+  railX.position.set(0, v.y, 0.3);
+  headL.position.set(v.x, v.y, 0.42);
+  miniGlow.position.set(v.x, v.y, 0.65);
+  miniGlow.visible = u < 0.72;
+};
+
+/* 3D 列印：一層層長出花瓶 */
+const printT = miniScene(0x2238ff, 17);
+const printBed = flat(rr(5.4, 0.3, 0.04), 0x0b1677, 0.5);
+printBed.position.y = -2.5;
+printT.root.add(printBed);
+const posts = [-2.5, 2.5].map((x) => { const m = flat(rr(0.18, 5.4, 0.03), 0xffffff, 0.14); m.position.set(x, 0, 0); printT.root.add(m); return m; });
+const gantry = flat(rr(5.1, 0.18, 0.03), 0xffffff, 0.16);
+const headP = flat(rr(0.66, 0.84, 0.08), CTA, 0.32);
+printT.root.add(gantry, headP);
+const VASE = 30, vase = [];
+for (let i = 0; i < VASE; i++) {
+  const u = i / (VASE - 1), r = 0.82 + Math.sin(u * Math.PI * 1.25 + 0.3) * 0.5;
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.112, 40), mat(i % 2 ? 0xffffff : 0xdfe3ff));
+  m.position.set(0, -2.28 + i * 0.128, 0);
+  printT.root.add(m);
+  vase.push(m);
+}
+printT.root.rotation.x = 0.12;
+printT.update = (t) => {
+  const u = (t % 7) / 7, n = ss(u, 0.02, 0.8) * VASE * (1 - ss(u, 0.92, 0.98));
+  vase.forEach((m, i) => { m.visible = i < n; });
+  const y = -2.28 + Math.min(n, VASE - 1) * 0.128 + 0.62;
+  headP.position.set(Math.sin(t * 7) * 0.72, y, 0.2);
+  gantry.position.set(0, y + 0.42, 0.1);
+};
+
+/* 市集攤位：帳篷、桌子、商品 */
+const boothT = miniScene(0x9ff5c6, 18);
+const wedge = (r, a0, a1) => { const w = new THREE.Shape(); w.moveTo(0, 0); w.lineTo(Math.cos(a0) * r, Math.sin(a0) * r * 0.55); w.lineTo(Math.cos(a1) * r, Math.sin(a1) * r * 0.55); w.closePath(); return w; };
+const tent = new THREE.Group();
+for (let i = 0; i < 6; i++) tent.add(flat(wedge(4, (i / 6) * Math.PI, ((i + 1) / 6) * Math.PI), i % 2 ? 0xffffff : 0xff5a36, 0.08));
+tent.position.set(0, 1.25, 0.4);
+const pole = flat(rr(0.16, 3.8, 0.03), 0x111111, 0.08);
+pole.position.set(0, -0.6, 0.1);
+const table = flat(rr(6.6, 0.28, 0.05), 0x111111, 0.3);
+table.position.set(0, -1.1, 0.5);
+const cloth = flat(rr(6, 1.3, 0.03), 0xffffff, 0.08);
+cloth.position.set(0, -1.9, 0.45);
+boothT.root.add(pole, tent, table, cloth);
+const goods = [0xffd800, 0x2238ff, 0xff5a36, 0xb9a4ff, 0x111111].map((c, i) => {
+  const g = new THREE.Group();
+  g.add(flat(rr(0.76, 1, 0.05), 0xffffff, 0.05));
+  const dotM = flat(disc(0.2), c, 0.04); dotM.position.z = 0.05; g.add(dotM);
+  g.position.set(-2.1 + i * 1.05, -0.5, 0.65);
+  boothT.root.add(g);
+  return g;
+});
+boothT.update = (t) => {
+  const q = cycle(t + 2.4);
+  tent.scale.setScalar(0.2 + ss(q, 0, 0.35) * 0.8);
+  goods.forEach((g, i) => { const e = ss(q, 0.3 + i * 0.1, 0.5 + i * 0.1); g.scale.setScalar(e + 0.001); g.position.y = -0.5 + (1 - e) * 1.2; });
+};
+
+/* UX/UI：流程穿過多個畫面 */
+const uxT = miniScene(0xff5a36, 20);
+const uxPhones = [-3.05, 0, 3.05].map((x, i) => {
+  const g = new THREE.Group();
+  g.add(flat(rr(2.3, 4.6, 0.26), 0x111111, 0.1));
+  const screen = flat(rr(2, 4.2, 0.16), 0xf2f2ee, 0.02); screen.position.z = 0.07; g.add(screen);
+  const top = flat(rr(2, 0.9, 0.12), i === 1 ? 0x2238ff : 0x2c2e36, 0.02); top.position.set(0, 1.65, 0.1); g.add(top);
+  [0, 1, 2].forEach((k) => { const r = flat(rr(1.6, 0.42, 0.08), 0xc9cbd3, 0.02); r.position.set(0, 0.65 - k * 0.62, 0.1); g.add(r); });
+  const cta = flat(rr(1.4, 0.44, 0.18), CTA, 0.02); cta.position.set(0, -1.7, 0.1); g.add(cta);
+  g.position.x = x;
+  uxT.root.add(g);
+  return g;
+});
+const uxDot = new THREE.Mesh(new THREE.SphereGeometry(0.17, 20, 20), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+uxT.root.add(uxDot);
+uxT.update = (t) => {
+  const u = (t % 4) / 4;
+  uxDot.position.set(lerp(-3.05, 3.05, ss(u, 0.05, 0.9)), Math.sin(u * Math.PI * 4) * 0.5, 0.6);
+  uxPhones.forEach((g, i) => { const near = 1 - Math.min(Math.abs(uxDot.position.x - g.position.x) / 3, 1); g.position.y = near * 0.22; g.scale.setScalar(0.96 + near * 0.05); });
+};
+
+const tiles = { logo: logoT, graphic: graphicT, pack: packT, laser: laserT, print: printT, booth: boothT, ux: uxT };
+const tileEls = [...document.querySelectorAll('.tile')].map((el, i) => ({ el, mini: tiles[el.dataset.t], i }));
+const tmpColor = new THREE.Color();
+let miniTime = 0;
+function renderTiles(dt) {
+  miniTime += reduceMotion ? 0 : dt;
+  const box0 = canvas.getBoundingClientRect();
+  renderer.setScissorTest(true);
+  for (const { el, mini, i } of tileEls) {
+    const r = el.getBoundingClientRect();
+    if (r.bottom < box0.top || r.top > box0.bottom || r.right < box0.left || r.left > box0.right) continue;
+    const w = r.width, h = r.height, x = r.left - box0.left, y = box0.bottom - r.bottom;
+    renderer.setViewport(x, y, w, h);
+    renderer.setScissor(x, y, w, h);
+    const appear = reduceMotion ? 1 : ss(cutClock, 0.15 + i * 0.13, 0.75 + i * 0.13);
+    tmpColor.set(BLACK).lerp(mini.bg, appear);
+    renderer.setClearColor(tmpColor);
+    mini.update(reduceMotion ? 3 : miniTime);
+    mini.root.visible = appear > 0.3;
+    const wantStat = narrow || !hoverQ.matches || el.matches(':hover') ? 1 : 0;
+    mini.statK = damp(mini.statK ?? 0, wantStat, 8, dt);
+    mini.root.scale.setScalar((0.84 + appear * 0.16) * (1 - mini.statK * 0.2));
+    mini.root.position.y = mini.statK * 1.1;
+    mini.cam.aspect = w / h;
+    mini.cam.position.z = mini.dist * Math.max(1, 1.28 / mini.cam.aspect);
+    mini.cam.updateProjectionMatrix();
+    renderer.render(mini.sc, mini.cam);
+  }
+  renderer.setScissorTest(false);
+  renderer.setViewport(0, 0, box0.width, box0.height);
+  renderer.setClearColor(bg);
+}
+
+/* ---------- 版面 ---------- */
+let camZ = 16, titleScale = 1, narrow = false, titleY = 0, viewW = 8, viewH = 5, canvasW = 1, canvasH = 1;
+const nameSlot = document.querySelector('.name-slot');
+function resize() {
+  const w = sticky.clientWidth, h = sticky.clientHeight;
+  if (!w || !h) return;
+  renderer.setSize(w, h, false);
+  burn.resolution.set(w, h);
+  camera.aspect = w / h;
+  narrow = stackQ.matches;
+  const phone = w <= 700, short = h <= 500 && w > h;
+  const tanHalf = Math.tan(THREE.MathUtils.degToRad(17.5));
+  camZ = narrow ? 3.5 / camera.aspect / tanHalf : 16;
+  const halfH = tanHalf * camZ, halfW = halfH * camera.aspect;
+  const gutterX = halfW * ((phone ? 16 : Math.min(Math.max(24, w * 0.05), 72)) / (w / 2));
+  const fitW = (halfW - gutterX) * 2;
+  titleScale = fitW / titleW;
+  const capTop = short ? 68 : narrow ? 92 : Math.max(104, h * 0.15);   // 名字與導覽列的距離
+  const top = halfH * (1 - (2 * capTop) / h);
+  title.scale.setScalar(titleScale);
+  const pxPerUnit = h / (2 * halfH);
+  const rows = splitName ? capUnits : 1.16 + capUnits;
+  document.documentElement.style.setProperty('--content-top', `${Math.round(capTop + rows * titleScale * pxPerUnit + (narrow ? 24 : 36))}px`);
+  titleY = top - titleScale * capUnits;
+  viewW = halfW; viewH = halfH; canvasW = w; canvasH = h;
+  const slotK = (nameSlot.clientWidth * ((2 * halfW) / w)) / rowWidth;
+  const slotRows = 1.16 + capUnits;
+  nameSlot.style.height = `${Math.ceil(slotK * slotRows * ((h) / (2 * halfH)))}px`;
+  title.position.set(-halfW + gutterX, titleY, 0);
+  camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize);
+resize();
+
+/* ---------- 滑鼠 ---------- */
+const ptr = new THREE.Vector2(), ptrTarget = new THREE.Vector2();
+addEventListener('pointermove', (e) => { ptrTarget.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); });
+let visible = true;
+new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(hero);
+
+/* ---------- 時間軸 ---------- */
+const clock = new THREE.Clock();
+const CUT_DELAY = 0.25, CUT_TIME = 2.5, SETTLE_DELAY = 0.45, SETTLE_TIME = 1.35;
+let cutClock = 0, settled = false, hp = 0;
+const valueEl = document.querySelector('.value');
+const tileNodes = [...document.querySelectorAll('.tile')];
+const heroProgress = () => { const r = hero.getBoundingClientRect(); const span = r.height - sticky.clientHeight; return span > 0 ? clamp(-r.top / span, 0, 1) : 0; };
+const bg = new THREE.Color(BLACK);
+
+function tick() {
+  requestAnimationFrame(tick);
+  const raw = clock.getDelta();
+  const dt = Math.min(raw, 0.05);
+  if (!visible || !sticky.clientWidth) return;
+  hp = reduceMotion ? heroProgress() : damp(hp, heroProgress(), 9, dt);
+  if (ready) cutClock += raw * (hp > 0.02 && cutClock < CUT_DELAY + CUT_TIME + SETTLE_DELAY + SETTLE_TIME ? 5 : 1);   // 開場以實際時間計算，低幀率也準時刻完
+  ptr.x = damp(ptr.x, ptrTarget.x, 5, dt);
+  ptr.y = damp(ptr.y, ptrTarget.y, 5, dt);
+
+  const run = Math.max(cutClock - CUT_DELAY, 0);
+  const cut = reduceMotion ? 1 : clamp(run / CUT_TIME, 0, 1);
+  const settle = reduceMotion ? 1 : clamp((run - CUT_TIME - SETTLE_DELAY) / SETTLE_TIME, 0, 1);
+  const firstPass = run < CUT_TIME;
+  const tip = ready ? setCut(cut) : null;
+  const spark = cut < 1 ? tip : null;   // 刻完後關掉雷射光點
+  flare.visible = !!spark;
+  if (spark) {
+    flare.position.set(spark.x, spark.y, 0.08);
+    flare.scale.setScalar((0.55 + Math.random() * 0.3) / Math.max(titleScale, 0.4));
+  }
+  updateSparks(dt, spark);
+
+  // 雷切完成：字母逐一掉落、縮小到左側文字上方
+  if (settle > 0 && !settled) { settled = true; document.getElementById('intro').classList.add('settled'); }
+  if (settled) {
+    const box = canvas.getBoundingClientRect(), slot = nameSlot.getBoundingClientRect();
+    const unit = (2 * viewW) / canvasW;
+    const small = (slot.width * unit) / rowWidth;
+    const worldX = -viewW + (slot.left - box.left) * unit;
+    const worldY = viewH - (slot.top - box.top) * ((2 * viewH) / canvasH) - small * capUnits;
+    const relX = (worldX - title.position.x) / titleScale, relY = (worldY - title.position.y) / titleScale;
+    const relScale = small / titleScale;
+    burn.transparent = true;
+    burn.opacity = 1 - ss(settle, 0, 0.16);
+    fills.forEach((m, i) => {
+      const e = clamp((settle - (i / fills.length) * 0.34) / 0.66, 0, 1);
+      const fall = e < 0.72 ? (e / 0.72) ** 2 : 1 + Math.sin(((e - 0.72) / 0.28) * Math.PI) * 0.05;
+      const second = splitName && i >= splitAt;
+      const toX = relX + (second ? -secondRowX * relScale : 0);
+      const toY = relY + (second ? -1.16 * relScale : 0);
+      m.position.set(toX * ss(e, 0.05, 0.95), toY * fall, 0.02);
+      m.scale.setScalar(lerp(1, relScale, ss(e, 0.12, 0.86)));
+      m.rotation.z = Math.sin(e * Math.PI) * (i % 2 ? 0.1 : -0.1);
+    });
+  }
+
+  // 捲動離開第一屏：技能格分批飛出，左欄滑走
+  tileNodes.forEach((el, i) => {
+    const order = (narrow ? i * 0.6 : [0, 2, 4, 6, 1, 3, 5][i]) * 0.055;
+    const t = ss(hp, 0.03 + order, 0.58 + order);
+    el.style.transform = t > 0 ? `translate3d(0,${(-t * (118 + (narrow ? 0 : i * 5))).toFixed(2)}vh,0)` : '';
+  });
+  const leave = ss(hp, 0.12, 0.72);
+  valueEl.style.transform = leave > 0 ? `translate3d(${(-leave * (narrow ? 112 : 48)).toFixed(2)}vw,0,0)` : '';
+  statusEl.style.opacity = 1 - ss(hp, 0, 0.1);
+
+  renderer.setClearColor(bg);
+  camera.position.set(ptr.x * 0.2, ptr.y * 0.12, camZ);
+  camera.lookAt(0, 0, 0);
+  statusEl.textContent = firstPass ? `LASER ENGRAVING ${Math.round(cut * 100)}%` : 'SCROLL ↓';
+  renderer.setClearColor(BLACK, 1);
+  renderer.setScissorTest(false);
+  renderer.render(scene, camera);
+  renderTiles(dt);
+}
+tick();
+
+/* ---------- 耳環卡：落下掛好、滑鼠帶動晃動、點擊拿下放大 ---------- */
+const rack = $('rack');
+const ears = [...document.querySelectorAll('.ear')].map((el, i) => ({ el, i, angle: 0, vel: 0, yaw: 0, drop: -130, dropVel: 0, targetDrop: -130, video: el.querySelector('video') }));
+function nudge(i, force) {
+  ears.forEach((c) => { const d = Math.abs(c.i - i); if (d <= 1) c.vel += force * (d ? 0.32 : 1); });
+}
+function hangAll() {
+  rack.classList.add('live');
+  ears.forEach((c, i) => setTimeout(() => {
+    c.targetDrop = 0;
+    if (!reduceMotion) c.vel += (i % 2 ? -1 : 1) * 70;
+  }, reduceMotion ? 0 : 560 + i * 190));
+}
+new IntersectionObserver((list, io) => {
+  if (list[0].isIntersecting) { hangAll(); io.disconnect(); }
+}, { threshold: 0.12 }).observe(rack);
+new IntersectionObserver(([e]) => {
+  ears.forEach((c) => { if (!c.video || reduceMotion) return; if (e.isIntersecting) c.video.play().catch(() => {}); else c.video.pause(); });
+}).observe(rack);
+
+let lastX = 0, lastTime = 0;
+ears.forEach((c) => {
+  c.el.addEventListener('pointerenter', (e) => { lastX = e.clientX; lastTime = performance.now(); nudge(c.i, reduceMotion ? 0 : 26 * Math.sign((e.movementX || 1))); });
+  c.el.addEventListener('pointermove', (e) => {
+    const now = performance.now();
+    const v = (e.clientX - lastX) / Math.max(now - lastTime, 8);
+    lastX = e.clientX; lastTime = now;
+    if (!reduceMotion) c.vel += clamp(v, -2.4, 2.4) * 6;
+    const r = c.el.getBoundingClientRect();
+    if (e.pointerType === 'mouse') c.yawTarget = ((e.clientX - r.left) / r.width - 0.5) * 12;
+  });
+  c.el.addEventListener('pointerleave', () => { c.yawTarget = 0; });
+  c.el.addEventListener('click', (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button || reduceMotion) return;
+    e.preventDefault();
+    takeDown(c);
+  });
+});
+
+function takeDown(c) {
+  if (c.falling) return;
+  c.falling = true;
+  const sheet = c.el.querySelector('.sheet');
+  const r = sheet.getBoundingClientRect();
+  const veil = document.createElement('div'); veil.className = 'lift-veil';
+  const card = sheet.cloneNode(true);
+  card.classList.add('falling');
+  const cv = card.querySelector('video');
+  if (cv) { cv.muted = true; cv.currentTime = c.video?.currentTime || 0; cv.play().catch(() => {}); }
+  Object.assign(card.style, { left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px` });
+  document.body.append(veil, card);
+  sheet.style.visibility = 'hidden';
+  // 卡片脫鉤後，掛鉤和旁邊的卡片被帶動
+  nudge(c.i, 95 * (c.i % 2 ? -1 : 1));
+  const fallDist = innerHeight - r.top + 80;
+  const spin = c.i === 1 ? -7 : c.i === 0 ? -11 : 11;
+  const fall = card.animate([
+    { transform: 'translate3d(0,0,0) rotate(0deg)', easing: 'cubic-bezier(.2,.7,.3,1)' },
+    { transform: `translate3d(0,-14px,0) rotate(${spin * -0.12}deg)`, offset: 0.16, easing: 'cubic-bezier(.5,0,.9,.45)' },
+    { transform: `translate3d(${spin * 3}px,${fallDist}px,0) rotate(${spin}deg)` },
+  ], { duration: 720, fill: 'forwards' });
+  veil.animate([{ opacity: 0 }, { opacity: 0, offset: 0.62 }, { opacity: 1 }], { duration: 760, easing: 'ease-in', fill: 'forwards' });
+  fall.onfinish = () => setTimeout(() => { location.href = c.el.href; }, 60);
+  addEventListener('pageshow', function back() {
+    removeEventListener('pageshow', back);
+    veil.remove(); card.remove(); sheet.style.visibility = ''; c.falling = false;
+  });
+}
+
+/* 手機滑動卡片的位置指示 */
+function swipeDots(box) {
+  const items = [...box.children], dots = [...box.parentElement.querySelectorAll(':scope > .ear-dots i')];
+  box.addEventListener('scroll', () => {
+    const b = box.getBoundingClientRect(), mid = b.left + b.width / 2;
+    const dist = items.map((el) => { const r = el.getBoundingClientRect(); return Math.abs(r.left + r.width / 2 - mid); });
+    const end = box.scrollLeft + box.clientWidth >= box.scrollWidth - 4;
+    const at = end ? items.length - 1 : dist.indexOf(Math.min(...dist));
+    dots.forEach((d, i) => d.classList.toggle('on', i === at));
+  }, { passive: true });
+}
+swipeDots(document.querySelector('.ears'));
+swipeDots(document.querySelector('.about-grid'));
+
+/* ---------- About：標題逐字浮現，內容依序進場 ---------- */
+const aboutEl = $('about'), aboutTitle = aboutEl.querySelector('h2');
+aboutTitle.setAttribute('aria-label', aboutTitle.textContent);
+aboutTitle.innerHTML = aboutTitle.textContent.trim().split(/\s+/).map((w) => `<span class="w" aria-hidden="true">${w}</span>`).join(' ');
+const aboutWords = [...aboutTitle.querySelectorAll('.w')];
+function revealAbout() {
+  const r = aboutTitle.getBoundingClientRect();
+  const start = innerHeight * 0.88, end = innerHeight * 0.42;
+  const t = clamp((start - r.top) / Math.max(start - end, 1), 0, 1);
+  const lit = Math.round(t * aboutWords.length);
+  aboutWords.forEach((w, i) => w.classList.toggle('on', reduceMotion || i < lit));
+}
+addEventListener('scroll', revealAbout, { passive: true });
+addEventListener('resize', revealAbout);
+revealAbout();
+const aboutIO = new IntersectionObserver((list) => {
+  list.forEach((e) => {
+    if (!e.isIntersecting) return;
+    const group = e.target.matches('article') && innerWidth <= 700 ? [...e.target.parentElement.children] : [e.target];
+    group.forEach((el) => { el.classList.add('in'); aboutIO.unobserve(el); });
+  });
+}, { threshold: 0.18 });
+document.querySelectorAll('.who, .about-grid article').forEach((el) => aboutIO.observe(el));
+
+/* ---------- 區塊之間的連動 ---------- */
+const rackIn = rack.querySelector('.rack-in');
+const contactEl = $('contact'), mailEl = contactEl.querySelector('.mail');
+mailEl.innerHTML = [...mailEl.textContent].map((ch, i) => `<span class="ch" aria-hidden="true" style="--i:${i}">${ch}</span>`).join('');
+new IntersectionObserver((list, io) => { if (list[0].isIntersecting) { contactEl.classList.add('in'); io.disconnect(); } }, { threshold: 0.25 }).observe(contactEl);
+let lastScrollY = scrollY;
+function linkSections() {
+  const dy = scrollY - lastScrollY;
+  lastScrollY = scrollY;
+  const box = rack.getBoundingClientRect();
+  if (box.bottom > 0 && box.top < innerHeight && !reduceMotion) {
+    ears.forEach((c, i) => { c.vel += clamp(dy * 0.14, -16, 16) * (i === 1 ? -0.7 : 1); });
+  }
+  const q = reduceMotion ? 0 : clamp((innerHeight - aboutEl.getBoundingClientRect().top) / innerHeight, 0, 1);
+  rackIn.style.transform = q > 0 ? `scale(${(1 - q * 0.07).toFixed(4)}) translate3d(0,${(q * 70).toFixed(1)}px,0)` : '';
+  rackIn.style.filter = q > 0 ? `brightness(${(1 - q * 0.6).toFixed(3)})` : '';
+}
+addEventListener('scroll', linkSections, { passive: true });
+linkSections();
+
+/* ---------- 導覽列錨點：平滑捲動，沿途轉場照常播放；使用者一滑就交還控制 ---------- */
+let glide = 0;
+const stopGlide = () => { cancelAnimationFrame(glide); glide = 0; };
+['wheel', 'touchstart', 'keydown'].forEach((type) => addEventListener(type, stopGlide, { passive: true }));
+document.querySelectorAll('nav a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
+  const target = $(a.getAttribute('href').slice(1));
+  if (!target) return;
+  e.preventDefault();
+  stopGlide();
+  const from = scrollY, to = target.getBoundingClientRect().top + scrollY, dist = to - from;
+  if (reduceMotion) { scrollTo(0, to); return; }
+  const time = clamp(650 + Math.abs(dist) * 0.32, 800, 1700), start = performance.now();
+  const step = (now) => {
+    const t = clamp((now - start) / time, 0, 1);
+    const e2 = t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
+    scrollTo(0, from + dist * e2);
+    glide = t < 1 ? requestAnimationFrame(step) : 0;
+  };
+  glide = requestAnimationFrame(step);
+}));
+if (location.hash === '#about') setTimeout(() => document.querySelector('nav a[href="#about"]').click(), 450);
+
+const earClock = new THREE.Clock();
+function swing() {
+  requestAnimationFrame(swing);
+  const dt = Math.min(earClock.getDelta(), 0.033);
+  for (const c of ears) {
+    if (reduceMotion) { c.drop = c.targetDrop; }
+    else {
+      c.dropVel += (-120 * (c.drop - c.targetDrop) - 13 * c.dropVel) * dt;
+      c.drop += c.dropVel * dt;
+    }
+    c.vel += (-46 * c.angle - 2.1 * c.vel) * dt;
+    c.angle += c.vel * dt;
+    c.angle = clamp(c.angle, -13, 13);
+    c.yaw += ((c.yawTarget || 0) - c.yaw) * Math.min(dt * 7, 1);
+    c.el.style.setProperty('--tilt', `${c.angle.toFixed(3)}deg`);
+    c.el.style.setProperty('--yaw', `${c.yaw.toFixed(3)}deg`);
+    c.el.style.setProperty('--drop', `${c.drop.toFixed(2)}%`);
+  }
+}
+swing();
+</script>
+</body>
+</html>
