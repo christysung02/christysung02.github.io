@@ -93,11 +93,11 @@
   .ov p { font-size:clamp(1.3rem,2.3vw,2.1rem); line-height:1.14; letter-spacing:-.025em; font-weight:500; text-wrap:balance; }
 
   /* 01 */
-  .tests { display:grid; grid-template-columns:.75fr .75fr 1.73fr; gap:clamp(12px,2vw,28px); margin:clamp(30px,5vh,52px) 0; }
+  .tests { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(12px,2vw,28px); margin:clamp(30px,5vh,52px) 0; }
   .test { position:relative; border-radius:18px; overflow:hidden; background:#16171b; }
   .test video, .test img { width:100%; height:100%; object-fit:cover; }
   .test figcaption { position:absolute; left:12px; bottom:10px; right:12px; font-family:var(--mono); font-size:.72rem; color:#fff; text-shadow:0 1px 8px rgba(0,0,0,.8); }
-  .test.no { aspect-ratio:3/4; }
+  .test.no, .test.yes { aspect-ratio:3/4; }
   .test figcaption b { display:block; font-weight:400; opacity:.78; }
   .path { grid-column:1 / -1; position:relative; height:12px; margin-bottom:2px; }
   .path::before { content:""; position:absolute; left:0; right:0; top:5px; height:2px; background:rgba(255,255,255,.14); }
@@ -106,10 +106,14 @@
   .path u { position:absolute; left:0; top:2px; width:8px; height:8px; border-radius:50%; background:#fff; opacity:.35; transition:opacity .3s .2s; }
   .tests.in .path u { opacity:1; }
   .test.yes { transform:translate3d(0,-120%,0); }
+  .test.yes { box-shadow:0 0 0 2px var(--laser), 0 0 34px rgba(255,157,46,.32); }
+  .test .fit { position:absolute; top:12px; left:12px; z-index:2; padding:5px 9px; border-radius:999px; background:var(--laser); color:#111; font-family:var(--mono); font-size:.66rem; font-weight:500; letter-spacing:.08em; }
+  .tests.in .path u:last-of-type { background:var(--laser); box-shadow:0 0 10px var(--laser); }
+  .tn-k.fit, .tn-k.fit b { color:var(--laser); }
   .tests.in .test.yes { animation:hang 1.05s cubic-bezier(.3,.7,.3,1) 1.3s both; }
   @keyframes hang { 0% { transform:translate3d(0,-120%,0) rotate(-3deg); } 62% { transform:translate3d(0,3%,0) rotate(1.6deg); } 82% { transform:translate3d(0,-1.2%,0) rotate(-.7deg); } 100% { transform:none; } }
   .cols2 { display:grid; grid-template-columns:1fr 1fr; gap:clamp(20px,4vw,64px); }
-  .tnotes { display:grid; grid-template-columns:.75fr .75fr 1.73fr; gap:clamp(12px,2vw,28px); }
+  .tnotes { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(12px,2vw,28px); }
   .tnotes > div > p:last-child { font-size:clamp(.98rem,1.15vw,1.12rem); line-height:1.5; max-width:560px; }
   .tn-k { font-family:var(--mono); font-size:.7rem; letter-spacing:.06em; line-height:1.6; color:var(--muted); margin-bottom:10px; }
   .tn-k b { display:block; font-weight:500; color:var(--fg); }
@@ -511,12 +515,12 @@
     <div class="path" aria-hidden="true"><i></i><u></u><u style="left:50%"></u><u style="left:calc(100% - 8px)"></u></div>
     <figure class="test no"><video muted loop playsinline preload="metadata" src="assets/fr/Hjnax6RL9pVDbQJSKGDDqnZcLg.mp4"></video><figcaption><b>Test 01</b>Custom house portraits</figcaption></figure>
     <figure class="test no"><video muted loop playsinline preload="metadata" src="assets/fr/DyXto2oVgQQDyp5M6mTO3ZHaRo.mp4"></video><figcaption><b>Test 02</b>Hand-painted wall décor</figcaption></figure>
-    <figure class="test yes"><img alt="BOLISTRA earrings arranged around the logo" src="assets/bolistra/earring-collage.webp"><figcaption><b>Test 03</b>Acrylic earrings</figcaption></figure>
+    <figure class="test yes"><img alt="BOLISTRA earrings arranged around the logo" src="assets/bolistra/earring-collage.webp"><span class="fit">THE FIT</span><figcaption><b>Test 03</b>Acrylic earrings</figcaption></figure>
   </div>
   <div class="tnotes">
     <div class="fade"><p class="tn-k"><b>TEST 01 · CUSTOM HOUSE PORTRAITS</b>1.5 DAYS EACH · ~$300</p><p>I planned to sell high-end custom portraits online, since California's housing market is so active. Online promotion was slow and Etsy buyers kept comparing prices, so it became an occasional commission instead.</p></div>
     <div class="fade" style="--d:.1s"><p class="tn-k"><b>TEST 02 · HAND-PAINTED WALL DÉCOR</b>10+ A DAY · $45–55</p><p>I laser-cut cartoon designs and painted them by hand. After three markets with almost no sales, I started asking why other booths sold well.</p></div>
-    <div class="fade" style="--d:.2s"><p class="tn-k"><b>TEST 03 · ACRYLIC EARRINGS</b>MARKET RESEARCH</p><p>At big markets, I studied the busiest booths, what most vendors sold, and the margins and time behind them. Women shoppers spent more and stayed longer at jewelry booths, so earrings became my next test.</p></div>
+    <div class="fade" style="--d:.2s"><p class="tn-k fit"><b>TEST 03 · ACRYLIC EARRINGS</b>20 A DAY · $20–30 · THE FIT</p><p>At big markets, I studied the busiest booths, what most vendors sold, and the margins and time behind them. Women shoppers spent more and stayed longer at jewelry booths, so I tried earrings, and they became my core product.</p></div>
   </div>
 </div></section>
 
