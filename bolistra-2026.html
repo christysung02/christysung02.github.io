@@ -113,6 +113,16 @@
   .tests.in .test.yes { animation:hang 1.05s cubic-bezier(.3,.7,.3,1) 1.3s both; }
   @keyframes hang { 0% { transform:translate3d(0,-120%,0) rotate(-3deg); } 62% { transform:translate3d(0,3%,0) rotate(1.6deg); } 82% { transform:translate3d(0,-1.2%,0) rotate(-.7deg); } 100% { transform:none; } }
   .cols2 { display:grid; grid-template-columns:1fr 1fr; gap:clamp(20px,4vw,64px); }
+  .ptab { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); column-gap:clamp(12px,2vw,28px); }
+  .ptab-h { grid-column:1 / -1; padding:16px 0 6px; padding-left:12px; border-top:1px solid rgba(255,255,255,.12); font-family:var(--mono); font-size:.68rem; letter-spacing:.08em; color:var(--muted); }
+  .ptab .c { padding:0 12px 4px; font-size:clamp(.95rem,1.1vw,1.06rem); line-height:1.45; }
+  .ptab .c.big { font-size:clamp(1.15rem,1.6vw,1.45rem); letter-spacing:-.01em; }
+  .ptab .c.th { padding:2px 12px 12px; font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; color:var(--muted); display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .ptab .c.th .fit { padding:4px 8px; border-radius:999px; background:var(--laser); color:#111; font-size:.62rem; font-weight:500; letter-spacing:.08em; }
+  .ptab .fitc { background:rgba(255,157,46,.09); box-shadow:inset 2px 0 0 var(--laser); }
+  .ptab .c.th.fitc { color:var(--laser); }
+  .ptab .k { display:none; }
+  .ptab-end { margin-top:clamp(26px,4vh,40px); max-width:760px; }
   .tnotes { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(12px,2vw,28px); }
   .tnotes > div > p:last-child { font-size:clamp(.98rem,1.15vw,1.12rem); line-height:1.5; max-width:560px; }
   .tn-k { font-family:var(--mono); font-size:.7rem; letter-spacing:.06em; line-height:1.6; color:var(--muted); margin-bottom:10px; }
@@ -406,6 +416,11 @@
     .test.yes { grid-column:span 2; aspect-ratio:1.73; }
     .cols2 { grid-template-columns:1fr; gap:14px; }
     .tnotes { grid-template-columns:1fr; gap:26px; }
+    .ptab { grid-template-columns:1fr; }
+    .ptab-h { display:none; }
+    .ptab .c { order:var(--o); padding:6px 14px; }
+    .ptab .c.th { margin-top:18px; padding:12px 14px 6px; border-top:1px solid rgba(255,255,255,.12); }
+    .ptab .k { display:block; font-style:normal; font-family:var(--mono); font-size:.64rem; letter-spacing:.08em; color:var(--muted); margin-bottom:2px; }
     .brand-copy { left:16px; right:16px; width:auto; bottom:22px; padding-bottom:9.5em; }
     .brand-swatches { right:16px; bottom:auto; top:78px; }
     .rack { padding:0; }
@@ -517,11 +532,40 @@
     <figure class="test no"><video muted loop playsinline preload="metadata" src="assets/fr/DyXto2oVgQQDyp5M6mTO3ZHaRo.mp4"></video><figcaption><b>Test 02</b>Hand-painted wall décor</figcaption></figure>
     <figure class="test yes"><img alt="BOLISTRA earrings arranged around the logo" src="assets/bolistra/earring-collage.webp"><span class="fit">THE FIT</span><figcaption><b>Test 03</b>Acrylic earrings</figcaption></figure>
   </div>
-  <div class="tnotes">
-    <div class="fade"><p class="tn-k"><b>TEST 01 · CUSTOM HOUSE PORTRAITS</b>1.5 DAYS EACH · ~$300</p><p>I planned to sell high-end custom portraits online, since California's housing market is so active. Online promotion was slow and Etsy buyers kept comparing prices, so it became an occasional commission instead.</p></div>
-    <div class="fade" style="--d:.1s"><p class="tn-k"><b>TEST 02 · HAND-PAINTED WALL DÉCOR</b>10+ A DAY · $45–55</p><p>I laser-cut cartoon designs and painted them by hand. After three markets with almost no sales, I started asking why other booths sold well.</p></div>
-    <div class="fade" style="--d:.2s"><p class="tn-k fit"><b>TEST 03 · ACRYLIC EARRINGS</b>20 A DAY · $20–30 · THE FIT</p><p>At big markets, I studied the busiest booths, what most vendors sold, and the margins and time behind them. Women shoppers spent more and stayed longer at jewelry booths, so I tried earrings, and they became my core product.</p></div>
+  <div class="ptab fade" role="table" aria-label="Comparison of the three product tests">
+    <div class="c th" style="--o:0">TEST 01 · HOUSE PORTRAITS</div>
+    <div class="c th" style="--o:20">TEST 02 · WALL DÉCOR</div>
+    <div class="c th fitc" style="--o:40">TEST 03 · ACRYLIC EARRINGS<span class="fit">THE FIT</span></div>
+    <div class="ptab-h">WHY I TRIED IT</div>
+    <div class="c" style="--o:1"><i class="k">WHY I TRIED IT</i>High-end custom pieces for California&#x27;s busy housing market, sold online.</div>
+    <div class="c" style="--o:21"><i class="k">WHY I TRIED IT</i>Cute cartoon designs I could cut and paint in batches.</div>
+    <div class="c fitc" style="--o:41"><i class="k">WHY I TRIED IT</i>Market research: women spent more and stayed longer at jewelry booths.</div>
+    <div class="ptab-h">PRICE</div>
+    <div class="c big" style="--o:2"><i class="k">PRICE</i>~$300</div>
+    <div class="c big" style="--o:22"><i class="k">PRICE</i>$45–55</div>
+    <div class="c fitc big" style="--o:42"><i class="k">PRICE</i>$20–30</div>
+    <div class="ptab-h">MATERIAL COST</div>
+    <div class="c big" style="--o:3"><i class="k">MATERIAL COST</i>$30</div>
+    <div class="c big" style="--o:23"><i class="k">MATERIAL COST</i>$10</div>
+    <div class="c fitc big" style="--o:43"><i class="k">MATERIAL COST</i>$1</div>
+    <div class="ptab-h">MADE PER DAY</div>
+    <div class="c big" style="--o:4"><i class="k">MADE PER DAY</i>1</div>
+    <div class="c big" style="--o:24"><i class="k">MADE PER DAY</i>Up to 8</div>
+    <div class="c fitc big" style="--o:44"><i class="k">MADE PER DAY</i>Up to 20</div>
+    <div class="ptab-h">PROFIT PER DAY</div>
+    <div class="c big" style="--o:5"><i class="k">PROFIT PER DAY</i>~$270</div>
+    <div class="c big" style="--o:25"><i class="k">PROFIT PER DAY</i>$280–360</div>
+    <div class="c fitc big" style="--o:45"><i class="k">PROFIT PER DAY</i>$380–580</div>
+    <div class="ptab-h">DEMAND</div>
+    <div class="c" style="--o:6"><i class="k">DEMAND</i>Slow online promotion, and Etsy buyers compared prices.</div>
+    <div class="c" style="--o:26"><i class="k">DEMAND</i>Almost no sales after three markets.</div>
+    <div class="c fitc" style="--o:46"><i class="k">DEMAND</i>Up to 30 pairs sold in one market day.</div>
+    <div class="ptab-h">RESULT</div>
+    <div class="c" style="--o:7"><i class="k">RESULT</i>Occasional commission</div>
+    <div class="c" style="--o:27"><i class="k">RESULT</i>Stopped</div>
+    <div class="c fitc" style="--o:47"><i class="k">RESULT</i>Core product</div>
   </div>
+  <p class="lede fade ptab-end">Earrings had the lowest price but the highest profit per day, and shoppers actually bought them.</p>
 </div></section>
 
 <section class="sec dark" id="brand" data-ch="2"><div class="sec-in pin" style="height:100%">
