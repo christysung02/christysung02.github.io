@@ -129,6 +129,24 @@
   .lesson p { margin-top:10px; color:#55575e; line-height:1.5; }
   .closing { margin-top:clamp(36px,6vh,60px); max-width:860px; font-size:clamp(1.5rem,3vw,2.7rem); line-height:1.1; letter-spacing:-.03em; font-weight:500; text-wrap:balance; }
   .closing span { color:var(--muted); }
+  #tldr { position:relative; z-index:2; background:var(--black); padding:0 var(--wrap) clamp(96px,14vh,140px); margin-top:calc(-1 * clamp(40px,7vh,70px)); }
+  #tldr .moves { margin-top:0; }
+  .lessons.dk .lesson, .goals .lesson { background:#16171b; }
+  .lessons.dk .lesson p, .goals .lesson p { color:#a9abb1; }
+  .lessons.tight .lesson b { margin-top:12px; }
+  .eyebrow.sub { margin-top:clamp(40px,7vh,72px); }
+  .goals { grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .goals .lesson b { margin-top:14px; }
+  .goals .lesson p em { display:block; font-style:normal; font-family:var(--mono); font-size:.64rem; letter-spacing:.08em; color:#7d8087; margin-bottom:2px; }
+  .goals .lesson p + p { margin-top:12px; }
+  .goals .to { display:block; margin-top:16px; font-family:var(--mono); font-size:.68rem; letter-spacing:.06em; color:var(--accent); }
+  .cons { max-width:1180px; margin-top:clamp(22px,4vh,36px); }
+  .goal { display:inline-block; margin-left:10px; padding:3px 9px; border:1px solid var(--line); border-radius:999px; font-size:.64rem; color:var(--fg); vertical-align:1px; }
+  .quotes { margin-top:clamp(40px,7vh,72px); display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(18px,3vw,40px); }
+  .quotes figure { border-top:1px solid var(--line); padding-top:18px; }
+  .quotes blockquote { font-size:clamp(1.05rem,1.5vw,1.3rem); line-height:1.45; letter-spacing:-.01em; }
+  .quotes figcaption { margin-top:14px; font-family:var(--mono); font-size:.68rem; letter-spacing:.08em; color:var(--muted); }
+
 
   .more { padding:clamp(48px,8vh,76px) var(--wrap) clamp(56px,9vh,88px); }
   .more h2 { font-size:clamp(1.6rem,2.8vw,2.6rem); margin:0 0 clamp(18px,3vh,28px); }
@@ -146,6 +164,7 @@
   @media (max-width:1024px) and (orientation:portrait) {
     #hero { grid-template-columns:1fr; }
   }
+  @media (max-width:1100px) and (min-width:701px) { .goals { grid-template-columns:repeat(2,minmax(0,1fr)); } }
   @media (max-width:700px) {
     nav { padding:7px 12px; }
     nav .links { gap:18px; }
@@ -166,6 +185,11 @@
     .swap { aspect-ratio:auto; display:grid; gap:14px; background:none; overflow:visible; }
     .swap figure { position:relative; opacity:1; border-radius:16px; overflow:hidden; aspect-ratio:1868/1468; background:#eef2fa; }
     .lessons { grid-template-columns:1fr; }
+    #tldr { padding:0 16px 80px; margin-top:-40px; }
+    .goals { grid-template-columns:1fr; }
+    .quotes { grid-template-columns:1fr; }
+    .goal { margin:8px 0 0; display:table; }
+
     .lesson b { margin-top:12px; }
     .more { padding:48px 16px 56px; }
     .more-grid { grid-template-columns:repeat(3,62vw); overflow-x:auto; scroll-snap-type:x mandatory; margin-right:-16px; padding-right:16px; scrollbar-width:none; max-width:none; }
@@ -198,13 +222,18 @@
   <div class="hero-media"><video muted loop playsinline preload="auto" aria-label="The redesigned SF Fleet Week app" src="assets/fleet-week/app-new.mp4"></video></div>
 </header>
 <div id="stats">
-  <div class="num"><b data-n="15.3" data-dec="1" data-s="K+">0K+</b><span>App downloads</span></div>
-  <div class="num"><b data-n="45" data-s=" sec">0 sec</b><span>To find key info, down from 2 min</span></div>
+  <div class="num"><b data-n="15.9" data-dec="1" data-s="K">0K</b><span>App downloads</span></div>
+  <div class="num"><b data-n="1" data-p="&lt;" data-s=" min">&lt;0 min</b><span>To find a military discount, down from 7 min</span></div>
   <div class="num"><b data-n="4.1" data-dec="1" data-s="★">0★</b><span>App rating, up from 3.2</span></div>
 </div>
 <div id="ctx"><div class="sm" style="--mw:900px">
-  <div class="fig fade" style="aspect-ratio:1212/370"><img loading="lazy" alt="Fleet Week air show, parachute team, and Blue Angels over San Francisco Bay" src="assets/fleet-week/event-photos-hd.jpg"></div>
+  <div class="fig fade" style="aspect-ratio:1212/370;background:var(--black)"><img loading="lazy" alt="Fleet Week air show, parachute team, and Blue Angels over San Francisco Bay" src="assets/fleet-week/event-photos-dark.jpg"></div>
   <p class="cap">Fleet Week brings air shows, ship tours, and concerts to San Francisco every October.</p>
+</div></div>
+<div id="tldr" class="dark"><div class="moves lessons dk" aria-label="Project summary">
+  <div class="lesson" style="--d:0s"><i>THE PROBLEM</i><b>Visitors got lost in the app.</b><p>Content had piled up for years. In testing, a military visitor took almost 7 minutes to find a restaurant discount.</p></div>
+  <div class="lesson" style="--d:.12s"><i>MY ROLE</i><b>Self-initiated, end to end.</b><p>I found the problems, pitched a redesign, and got my manager's approval. Then I tested, designed, built, and shipped it myself.</p></div>
+  <div class="lesson" style="--d:.24s"><i>THE IMPACT</i><b>A discount in under a minute.</b><p>The same task now takes less than a minute. The app reached 15.9K downloads, and its rating rose from 3.2 to 4.1.</p></div>
 </div></div>
 
 <section class="sec cream"><div class="pad">
@@ -216,7 +245,7 @@
       <ul class="probs">
         <li class="fade">Nine home tiles with no clear starting point.</li>
         <li class="fade" style="--d:.08s">Mixed icons, colors, and layouts between the app and the website.</li>
-        <li class="fade" style="--d:.16s">Small text and low contrast that were hard to read outdoors.</li>
+        <li class="fade" style="--d:.16s">Small, low-contrast text that was hard to read outdoors. White text on light gray scored 1.54:1, far below the 4.5:1 WCAG minimum.</li>
       </ul>
     </div>
     <div class="sm" style="--mw:440px">
@@ -235,12 +264,18 @@
     <div>
       <p class="eyebrow">02 — RESEARCH</p>
       <h2 data-w>Find the real problems before fixing them.</h2>
-      <p class="lede fade">I combined usability tests, app store reviews, and feedback from the event team. Then I narrowed many problems down to the few that mattered most.</p>
+      <p class="lede fade">I ran usability tests with three visitors, critiqued the app screen by screen, and gathered feedback from the event team. Then I narrowed many problems down to the few that mattered most.</p>
     </div>
     <div>
       <div class="fig fade" style="aspect-ratio:1271/630"><img loading="lazy" alt="Design process: discovery of problems, framing of solutions, two iterations, and deploying the new version" src="assets/fleet-week/process-hd.png"></div>
       <p class="cap">Discover, frame, iterate twice, then ship and keep learning.</p>
     </div>
+  </div>
+  <p class="eyebrow sub">USABILITY TESTS · 3 VISITORS, 3 TASKS</p>
+  <div class="moves lessons dk tight">
+    <div class="lesson" style="--d:0s"><i>TASK 01 · MILITARY VISITOR, 54</i><b>Find a military discount.</b><p>Looking for deals during Fleet Week.</p></div>
+    <div class="lesson" style="--d:.12s"><i>TASK 02 · EVENT VISITOR, 42</i><b>Find event information.</b><p>Looking for special events to join.</p></div>
+    <div class="lesson" style="--d:.24s"><i>TASK 03 · STUDENT, 15</i><b>Apply to volunteer at the air show.</b><p>Looking for volunteer hours and credit.</p></div>
   </div>
 </div></section>
 
@@ -273,9 +308,22 @@
   </div>
 </div></section>
 
+<section class="sec dark"><div class="pad">
+  <p class="eyebrow">03 — DEFINE</p>
+  <h2 data-w>Four problems, four goals.</h2>
+  <p class="lede fade" style="max-width:760px;margin-top:clamp(18px,2.4vw,28px)">How might we help visitors find what they came for in a few taps, on a phone, outdoors? I grouped what I found into four areas and set one goal for each.</p>
+  <div class="moves goals">
+    <div class="lesson" style="--d:0s"><i>GOAL 01 · USABILITY</i><b>Make every topic easy to find.</b><p><em>Problem</em>Discounts were buried, and categories repeated.</p><p><em>Approach</em>Restructure the information architecture.</p><span class="to">→ 04 NAVIGATION</span></div>
+    <div class="lesson" style="--d:.1s"><i>GOAL 02 · DESIRABILITY</i><b>Look like one official brand.</b><p><em>Problem</em>An outdated gray scheme and inconsistent details.</p><p><em>Approach</em>One color and type system for app and web.</p><span class="to">→ 05 VISUAL SYSTEM</span></div>
+    <div class="lesson" style="--d:.2s"><i>GOAL 03 · ACCESSIBILITY</i><b>Read clearly in the sun.</b><p><em>Problem</em>Small fonts, low contrast, and a confusing hierarchy.</p><p><em>Approach</em>Bigger type, higher contrast, clearer hierarchy.</p><span class="to">→ 06 READABILITY</span></div>
+    <div class="lesson" style="--d:.3s"><i>GOAL 04 · CREDIBILITY</i><b>Keep every detail current.</b><p><em>Problem</em>Information went out of date between years.</p><p><em>Approach</em>Update every page before each event.</p><span class="to">→ 07 LAUNCH</span></div>
+  </div>
+  <div class="pair cons fade"><b>CONSTRAINTS</b><span>One person for design and development · Built in AppMachine, a template-based app builder · Had to launch before Fleet Week 2023</span></div>
+</div></section>
+
 <section class="sec dark pin" id="navs" style="--h:230vh"><div class="stick"><div class="pad two">
   <div>
-    <p class="eyebrow">03 — NAVIGATION</p>
+    <p class="eyebrow">04 — NAVIGATION <span class="goal">GOAL 01 · USABILITY</span></p>
     <h2 data-w>One home screen, clear doors.</h2>
     <p class="lede fade">I removed duplicate pages and gave every topic one clear entry on the home screen. The most-used tasks now come first.</p>
     <div class="notes">
@@ -315,9 +363,21 @@
   </div>
 </div></section>
 
+<section class="sec dark" style="margin-top:0;border-radius:0"><div class="pad" style="padding-top:clamp(40px,6vh,64px)">
+  <p class="eyebrow">ITERATION · THE DISCOUNT PATH</p>
+  <h2 data-w>Refined one screen at a time.</h2>
+  <p class="lede fade" style="max-width:760px;margin-top:clamp(18px,2.4vw,28px)">I ran several rounds of design and user testing on the path to a military discount. Each screen on that path got its own fix.</p>
+  <div class="moves goals">
+    <div class="lesson" style="--d:0s"><i>STEP 01 · HOME</i><b>Fewer, clearer tiles.</b><p>I kept the most important categories, redesigned the icons, and renamed the titles.</p></div>
+    <div class="lesson" style="--d:.1s"><i>STEP 02 · LIBERTY GUIDE</i><b>Three clear doors.</b><p>A new layout, renamed titles on larger photos, and no extra categories.</p></div>
+    <div class="lesson" style="--d:.2s"><i>STEP 03 · DISCOUNTS</i><b>Say what the page is.</b><p>A "Discounts" title now sits at the top of the page.</p></div>
+    <div class="lesson" style="--d:.3s"><i>STEP 04 · EXCLUSIVE OFFERS</i><b>Highlight what matters.</b><p>Bold store names, short bullet points, and each special offer highlighted.</p></div>
+  </div>
+</div></section>
+
 <section class="sec cream pin" id="icons" style="--h:240vh"><div class="stick"><div class="pad two wide">
   <div>
-    <p class="eyebrow">04 — VISUAL SYSTEM</p>
+    <p class="eyebrow">05 — VISUAL SYSTEM <span class="goal">GOAL 02 · DESIRABILITY</span></p>
     <h2 data-w>Three years, one visual language.</h2>
     <div class="ticks" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
     <div class="notes">
@@ -342,7 +402,7 @@
 </div></section>
 
 <section class="sec dark"><div class="pad">
-  <p class="eyebrow">05 — READABILITY</p>
+  <p class="eyebrow">06 — READABILITY <span class="goal">GOAL 03 · ACCESSIBILITY</span></p>
   <h2 data-w>Event pages you can read at a glance.</h2>
   <p class="lede fade" style="max-width:760px;margin-top:clamp(18px,2.4vw,28px)">Old event pages were long blocks of small, centered text. I left-aligned the text, added icons for Date &amp; Time, Location, and Info, and made the ticket button stand out.</p>
   <div class="duo pair2 band sm" style="--mw:960px">
@@ -354,9 +414,9 @@
 <section class="sec cream"><div class="pad">
   <div class="two">
     <div>
-      <p class="eyebrow">06 — LAUNCH</p>
+      <p class="eyebrow">07 — LAUNCH <span class="goal">GOAL 04 · CREDIBILITY</span></p>
       <h2 data-w>Designed, built, and shipped by one person.</h2>
-      <p class="lede fade">I built the new version in AppMachine with custom front-end code. It launched on iOS and Android before Fleet Week 2023.</p>
+      <p class="lede fade">I built the new version in AppMachine with custom front-end code and launched it on iOS and Android before Fleet Week 2023. I also worked with each department to update every page, so the details stay accurate.</p>
     </div>
     <div>
       <div class="fig fade" style="aspect-ratio:2684/1472"><img loading="lazy" alt="Christy with the Fleet Week team at the 2023 launch party" src="assets/fleet-week/launch-party-hd.jpg"></div>
@@ -369,14 +429,18 @@
 </div></section>
 
 <section class="sec dark"><div class="pad">
-  <p class="eyebrow">07 — WHAT I LEARNED</p>
+  <p class="eyebrow">08 — WHAT I LEARNED</p>
   <h2 data-w>Good structure beats more features.</h2>
   <div class="moves lessons">
     <div class="lesson" style="--d:0s;background:#16171b"><i>01 · INFORMATION ARCHITECTURE</i><b>Organize by task, not by department.</b><p style="color:#a9abb1">Visitors don't know how the event team is organized. They know what they want to do today.</p></div>
     <div class="lesson" style="--d:.15s;background:#16171b"><i>02 · DESIGN SYSTEM</i><b>Consistency builds trust.</b><p style="color:#a9abb1">Matching the app to the website and the brand made it feel official. Fewer one-off styles also made updates faster.</p></div>
     <div class="lesson" style="--d:.3s;background:#16171b"><i>03 · ACCESSIBILITY</i><b>Design for where it will be used.</b><p style="color:#a9abb1">People used the app outdoors, in the sun, often on the move. Bigger text, higher contrast, and labeled icons helped everyone.</p></div>
   </div>
-  <p class="closing fade">Even finding a military discount, once a <span style="color:inherit;white-space:nowrap">7-minute</span> search, <span>now takes under 45 seconds.</span></p>
+  <div class="quotes">
+    <figure class="fade"><blockquote>"Her commitment to delivering a consistent user experience, backed by meticulous user testing and design iteration, is truly remarkable."</blockquote><figcaption>BAND COORDINATOR, SF FLEET WEEK</figcaption></figure>
+    <figure class="fade" style="--d:.12s"><blockquote>"She came in with new ideas on how to improve our app, was attentive and responded in a timely manner, and always had a positive attitude."</blockquote><figcaption>OPERATIONS DIRECTOR, SF FLEET WEEK</figcaption></figure>
+  </div>
+  <p class="closing fade">Even finding a military discount, once a <span style="color:inherit;white-space:nowrap">7-minute</span> search, <span>now takes under a minute.</span></p>
 </div></section>
 
 <section class="sec dark" style="margin-top:0;border-radius:0;border-top:1px solid rgba(255,255,255,.08)"><div class="more">
