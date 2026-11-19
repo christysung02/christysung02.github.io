@@ -76,6 +76,7 @@
   .wide { grid-template-columns:minmax(0,.8fr) minmax(0,1.5fr); }
   .fig { border-radius:18px; overflow:hidden; background:#fff; }
   .fig img, .fig video { width:100%; height:100%; object-fit:cover; }
+  .fig.panel { background:transparent; border-radius:0; clip-path:inset(0 .4% .45% 0 round 8.4% / 7.6%); }
   .probs { list-style:none; padding:0; margin-top:clamp(18px,3vh,28px); max-width:560px; }
   .probs li { position:relative; padding:12px 0 12px 22px; border-top:1px solid var(--line); font-size:clamp(1rem,1.25vw,1.12rem); line-height:1.4; }
   .probs li:last-child { border-bottom:1px solid var(--line); }
@@ -124,6 +125,16 @@
   .lessons { grid-template-columns:repeat(3,minmax(0,1fr)); }
   .lesson { padding:clamp(18px,2.4vw,28px); border-radius:14px; background:#fff; opacity:0; transform:translate3d(0,14px,0); transition:opacity .5s calc(.2s + var(--d)), transform .6s cubic-bezier(.2,.7,.2,1) calc(.2s + var(--d)); }
   .moves.in .lesson { opacity:1; transform:none; }
+  .swap2 { position:relative; aspect-ratio:618/400; border-radius:18px; overflow:hidden; background:#fff; }
+  .swap2 .tagged { position:absolute; inset:0; aspect-ratio:auto; opacity:0; transition:opacity .5s; }
+  .swap2 .tagged.on { opacity:1; }
+  #read .lede { max-width:520px; margin-top:clamp(18px,2.4vw,28px); }
+  [data-steps="build"] .moves .lesson { opacity:.28; transform:none; transition:opacity .45s, box-shadow .45s; }
+  [data-steps="build"] .moves .lesson.lit { opacity:1; }
+  [data-steps="build"] .moves .lesson.on { box-shadow:inset 0 0 0 1px var(--accent); }
+  [data-steps] .ticks { max-width:520px; }
+  [data-pan] img { transform:scale(1.12); will-change:transform; }
+
   .lesson i { display:block; font-style:normal; font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; color:var(--muted); }
   .lesson b { display:block; margin-top:clamp(18px,3vh,30px); font-size:clamp(1.15rem,1.8vw,1.55rem); font-weight:500; letter-spacing:-.02em; line-height:1.15; }
   .lesson p { margin-top:10px; color:#55575e; line-height:1.5; }
@@ -187,6 +198,9 @@
     .lessons { grid-template-columns:1fr; }
     #tldr { padding:0 16px 80px; margin-top:-40px; }
     .goals { grid-template-columns:1fr; }
+    .swap2 { aspect-ratio:auto; display:grid; gap:14px; background:none; overflow:visible; }
+    .swap2 .tagged { position:relative; opacity:1; aspect-ratio:618/400; }
+
     .quotes { grid-template-columns:1fr; }
     .goal { margin:8px 0 0; display:table; }
 
@@ -249,7 +263,7 @@
       </ul>
     </div>
     <div class="sm" style="--mw:440px">
-      <div class="fig fade" style="aspect-ratio:1326/1470"><video muted loop playsinline preload="metadata" aria-label="Tapping through the 2022 app: nine equal home tiles and long pages of small text" src="assets/fleet-week/app-old.mp4"></video></div>
+      <div class="fig fade panel" style="aspect-ratio:1326/1470"><video muted loop playsinline preload="metadata" aria-label="Tapping through the 2022 app: nine equal home tiles and long pages of small text" src="assets/fleet-week/app-old.mp4"></video></div>
       <p class="cap">The 2022 app: nine equal tiles and long pages of small text.</p>
     </div>
   </div>
@@ -303,23 +317,24 @@
     <p class="lede fade">The sitemap showed the same content in several places, and pages with nothing on them. "Buy Tickets" lived in four spots and "Schedule" in three.</p>
   </div>
   <div class="sm" style="--mw:460px">
-    <div class="fig fade" style="aspect-ratio:618/400"><img loading="lazy" alt="Two sitemaps of the old app with duplicate Buy Tickets and Schedule pages, rules, and empty pages circled" src="assets/fleet-week/sitemap-hd.png"></div>
+    <div class="fig fade" data-zoom style="aspect-ratio:618/400"><img loading="lazy" alt="Two sitemaps of the old app with duplicate Buy Tickets and Schedule pages, rules, and empty pages circled" src="assets/fleet-week/sitemap-hd.png"></div>
     <p class="cap">Duplicates and empty pages, circled.</p>
   </div>
 </div></section>
 
-<section class="sec dark"><div class="pad">
+<section class="sec dark pin" id="define" data-steps="build" style="--h:260vh"><div class="stick"><div class="pad">
   <p class="eyebrow">03 — DEFINE</p>
   <h2 data-w>Four problems, four goals.</h2>
   <p class="lede fade" style="max-width:760px;margin-top:clamp(18px,2.4vw,28px)">How might we help visitors find what they came for in a few taps, on a phone, outdoors? I grouped what I found into four areas and set one goal for each.</p>
+  <div class="ticks" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
   <div class="moves goals">
-    <div class="lesson" style="--d:0s"><i>GOAL 01 · USABILITY</i><b>Make every topic easy to find.</b><p><em>Problem</em>Discounts were buried, and categories repeated.</p><p><em>Approach</em>Restructure the information architecture.</p><span class="to">→ 04 NAVIGATION</span></div>
-    <div class="lesson" style="--d:.1s"><i>GOAL 02 · DESIRABILITY</i><b>Look like one official brand.</b><p><em>Problem</em>An outdated gray scheme and inconsistent details.</p><p><em>Approach</em>One color and type system for app and web.</p><span class="to">→ 05 VISUAL SYSTEM</span></div>
-    <div class="lesson" style="--d:.2s"><i>GOAL 03 · ACCESSIBILITY</i><b>Read clearly in the sun.</b><p><em>Problem</em>Small fonts, low contrast, and a confusing hierarchy.</p><p><em>Approach</em>Bigger type, higher contrast, clearer hierarchy.</p><span class="to">→ 06 READABILITY</span></div>
-    <div class="lesson" style="--d:.3s"><i>GOAL 04 · CREDIBILITY</i><b>Keep every detail current.</b><p><em>Problem</em>Information went out of date between years.</p><p><em>Approach</em>Update every page before each event.</p><span class="to">→ 07 LAUNCH</span></div>
+    <div class="lesson" data-step="0" style="--d:0s"><i>GOAL 01 · USABILITY</i><b>Make every topic easy to find.</b><p><em>Problem</em>Discounts were buried, and categories repeated.</p><p><em>Approach</em>Restructure the information architecture.</p><span class="to">→ 04 NAVIGATION</span></div>
+    <div class="lesson" data-step="1" style="--d:.1s"><i>GOAL 02 · DESIRABILITY</i><b>Look like one official brand.</b><p><em>Problem</em>An outdated gray scheme and inconsistent details.</p><p><em>Approach</em>One color and type system for app and web.</p><span class="to">→ 05 VISUAL SYSTEM</span></div>
+    <div class="lesson" data-step="2" style="--d:.2s"><i>GOAL 03 · ACCESSIBILITY</i><b>Read clearly in the sun.</b><p><em>Problem</em>Small fonts, low contrast, and a confusing hierarchy.</p><p><em>Approach</em>Bigger type, higher contrast, clearer hierarchy.</p><span class="to">→ 06 READABILITY</span></div>
+    <div class="lesson" data-step="3" style="--d:.3s"><i>GOAL 04 · CREDIBILITY</i><b>Keep every detail current.</b><p><em>Problem</em>Information went out of date between years.</p><p><em>Approach</em>Update every page before each event.</p><span class="to">→ 07 LAUNCH</span></div>
   </div>
   <div class="pair cons fade"><b>CONSTRAINTS</b><span>One person for design and development · Built in AppMachine, a template-based app builder · Had to launch before Fleet Week 2023</span></div>
-</div></section>
+</div></div></section>
 
 <section class="sec dark pin" id="navs" style="--h:230vh"><div class="stick"><div class="pad two">
   <div>
@@ -363,17 +378,18 @@
   </div>
 </div></section>
 
-<section class="sec dark" style="margin-top:0;border-radius:0"><div class="pad" style="padding-top:clamp(40px,6vh,64px)">
+<section class="sec dark pin" id="iter" data-steps="build" style="margin-top:0;border-radius:0;--h:260vh"><div class="stick"><div class="pad">
   <p class="eyebrow">ITERATION · THE DISCOUNT PATH</p>
   <h2 data-w>Refined one screen at a time.</h2>
   <p class="lede fade" style="max-width:760px;margin-top:clamp(18px,2.4vw,28px)">I ran several rounds of design and user testing on the path to a military discount. Each screen on that path got its own fix.</p>
+  <div class="ticks" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
   <div class="moves goals">
-    <div class="lesson" style="--d:0s"><i>STEP 01 · HOME</i><b>Fewer, clearer tiles.</b><p>I kept the most important categories, redesigned the icons, and renamed the titles.</p></div>
-    <div class="lesson" style="--d:.1s"><i>STEP 02 · LIBERTY GUIDE</i><b>Three clear doors.</b><p>A new layout, renamed titles on larger photos, and no extra categories.</p></div>
-    <div class="lesson" style="--d:.2s"><i>STEP 03 · DISCOUNTS</i><b>Say what the page is.</b><p>A "Discounts" title now sits at the top of the page.</p></div>
-    <div class="lesson" style="--d:.3s"><i>STEP 04 · EXCLUSIVE OFFERS</i><b>Highlight what matters.</b><p>Bold store names, short bullet points, and each special offer highlighted.</p></div>
+    <div class="lesson" data-step="0" style="--d:0s"><i>STEP 01 · HOME</i><b>Fewer, clearer tiles.</b><p>I kept the most important categories, redesigned the icons, and renamed the titles.</p></div>
+    <div class="lesson" data-step="1" style="--d:.1s"><i>STEP 02 · LIBERTY GUIDE</i><b>Three clear doors.</b><p>A new layout, renamed titles on larger photos, and no extra categories.</p></div>
+    <div class="lesson" data-step="2" style="--d:.2s"><i>STEP 03 · DISCOUNTS</i><b>Say what the page is.</b><p>A "Discounts" title now sits at the top of the page.</p></div>
+    <div class="lesson" data-step="3" style="--d:.3s"><i>STEP 04 · EXCLUSIVE OFFERS</i><b>Highlight what matters.</b><p>Bold store names, short bullet points, and each special offer highlighted.</p></div>
   </div>
-</div></section>
+</div></div></section>
 
 <section class="sec cream pin" id="icons" style="--h:240vh"><div class="stick"><div class="pad two wide">
   <div>
@@ -396,20 +412,27 @@
     <p class="lede fade">I took the navy #00234F and red #C32D34 from the Fleet Week logo. The guide sets type, color, and components for both web and mobile.</p>
   </div>
   <div class="sm" style="--mw:560px">
-    <div class="fig fade" style="aspect-ratio:618/400"><img loading="lazy" alt="Style guide with fonts, colors, and component code for web and mobile" src="assets/fleet-week/style-guide-hd.png"></div>
+    <div class="fig fade" data-zoom style="aspect-ratio:618/400"><img loading="lazy" alt="Style guide with fonts, colors, and component code for web and mobile" src="assets/fleet-week/style-guide-hd.png"></div>
     <p class="cap">Fonts, colors, and component code in one place.</p>
   </div>
 </div></section>
 
-<section class="sec dark"><div class="pad">
-  <p class="eyebrow">06 — READABILITY <span class="goal">GOAL 03 · ACCESSIBILITY</span></p>
-  <h2 data-w>Event pages you can read at a glance.</h2>
-  <p class="lede fade" style="max-width:760px;margin-top:clamp(18px,2.4vw,28px)">Old event pages were long blocks of small, centered text. I left-aligned the text, added icons for Date &amp; Time, Location, and Info, and made the ticket button stand out.</p>
-  <div class="duo pair2 band sm" style="--mw:960px">
-    <figure class="tagged fade"><img loading="lazy" alt="Old event pages: Honor Our Fallen and Volunteers pages with long centered text" src="assets/fleet-week/page-before-hd.png"><span class="tag">BEFORE</span></figure>
-    <figure class="tagged fade" style="--d:.12s"><img loading="lazy" alt="New event page: left-aligned text, icons for Date and Time, Location, and Info, and a red ticket information button" src="assets/fleet-week/page-after-hd.png"><span class="tag r">AFTER</span></figure>
+<section class="sec dark pin" id="read" data-steps="swap" style="--h:220vh"><div class="stick"><div class="pad two">
+  <div>
+    <p class="eyebrow">06 — READABILITY <span class="goal">GOAL 03 · ACCESSIBILITY</span></p>
+    <h2 data-w>Event pages you can read at a glance.</h2>
+    <p class="lede fade">Old event pages were long blocks of small, centered text. I rebuilt them so the key details are easy to scan.</p>
+    <div class="ticks" aria-hidden="true"><i class="on"></i><i></i></div>
+    <div class="notes">
+      <div class="note on" data-step="0"><p class="eyebrow">BEFORE · 2022 APP</p><ul class="probs"><li>Small, centered text with no clear hierarchy.</li><li>Key details mixed into long paragraphs.</li></ul></div>
+      <div class="note" data-step="1"><p class="eyebrow">AFTER · 2023 APP</p><ul class="probs"><li>Left-aligned text that is easy to scan.</li><li>Icons for Date &amp; Time, Location, and Info.</li><li>A red ticket button that stands out.</li></ul></div>
+    </div>
   </div>
-</div></section>
+  <div class="swap2 fade">
+    <figure class="tagged on" data-step="0"><img alt="Old event pages: Honor Our Fallen and Volunteers pages with long centered text" src="assets/fleet-week/page-before-hd.png"><span class="tag">BEFORE</span></figure>
+    <figure class="tagged" data-step="1"><img alt="New event page: left-aligned text, icons for Date and Time, Location, and Info, and a red ticket information button" src="assets/fleet-week/page-after-hd.png"><span class="tag r">AFTER</span></figure>
+  </div>
+</div></div></section>
 
 <section class="sec cream"><div class="pad">
   <div class="two">
@@ -424,7 +447,7 @@
     </div>
   </div>
   <div class="band">
-    <div class="fig fade" style="aspect-ratio:2880/1200"><img loading="lazy" alt="Screens of the redesigned 2023 Fleet Week app: home, Liberty Guide, trips, attractions, and tickets" src="assets/fleet-week/app-collage-hd.jpg"></div>
+    <div class="fig fade" data-pan style="aspect-ratio:2880/1200"><img loading="lazy" alt="Screens of the redesigned 2023 Fleet Week app: home, Liberty Guide, trips, attractions, and tickets" src="assets/fleet-week/app-collage-hd.jpg"></div>
   </div>
 </div></section>
 
@@ -518,12 +541,50 @@ function syncNavs() {
     else if (!v.paused) v.pause();
   });
 }
+// 步驟逐一亮起（build）或前後切換（swap），依捲動進度
+const stepSecs = $$('[data-steps]').map((s) => {
+  const items = [...s.querySelectorAll('[data-step]')];
+  return { s, mode: s.dataset.steps, items, ticks: [...s.querySelectorAll('.ticks i')], n: Math.max(...items.map((el) => +el.dataset.step)) + 1, at: -2 };
+});
+function syncSteps() {
+  stepSecs.forEach((x) => {
+    const all = phone.matches || reduceMotion;
+    const at = all ? x.n : Math.min(x.n - 1, Math.floor(progress(x.s) * x.n));
+    if (at === x.at) return;
+    x.at = at;
+    x.items.forEach((el) => {
+      const i = +el.dataset.step;
+      if (x.mode === 'build') { el.classList.toggle('lit', i <= at); el.classList.toggle('on', i === at); }
+      else el.classList.toggle('on', all || i === at);
+    });
+    x.ticks.forEach((k, i) => k.classList.toggle('on', i <= at));
+  });
+}
+// 圖片進場放大、拼貼圖隨捲動橫移
+const zooms = $$('[data-zoom]'), pans = $$('[data-pan] img');
+function syncMotion() {
+  if (reduceMotion) return;
+  zooms.forEach((el) => {
+    const r = el.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    const q = clamp((innerHeight - r.top) / (innerHeight * .7), 0, 1), e = 1 - (1 - q) ** 2;
+    el.style.scale = (.84 + .16 * e).toFixed(4);
+  });
+  pans.forEach((img) => {
+    const r = img.parentElement.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    const t = clamp((innerHeight - r.top) / (innerHeight + r.height), 0, 1);
+    img.style.transform = `scale(1.12) translate3d(${((.5 - t) * 9).toFixed(2)}%,0,0)`;
+  });
+}
 function onScroll() {
   const H = document.documentElement.scrollHeight - innerHeight, p = H > 0 ? clamp(scrollY / H, 0, 1) : 0;
   beam.style.transform = `scaleX(${p.toFixed(4)})`;
   toTop.classList.toggle('on', scrollY > innerHeight);
   syncPins();
   syncNavs();
+  syncSteps();
+  syncMotion();
   secs.forEach((s, i) => {
     const n = secs[i + 1]; if (!n) return;
     const q = reduceMotion ? 0 : clamp((innerHeight - n.getBoundingClientRect().top) / innerHeight, 0, 1);
@@ -536,7 +597,7 @@ function onScroll() {
   });
 }
 addEventListener('scroll', onScroll, { passive: true });
-addEventListener('resize', () => { pins.forEach((pin) => { pin.at = -1; }); onScroll(); });
+addEventListener('resize', () => { pins.forEach((pin) => { pin.at = -1; }); stepSecs.forEach((x) => { x.at = -2; }); onScroll(); });
 onScroll();
 
 let glide = 0;
