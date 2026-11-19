@@ -89,6 +89,19 @@
   .stick { position:sticky; top:0; height:100vh; height:100svh; display:flex; align-items:center; overflow:hidden; }
   .stick > .pad { width:100%; padding-top:84px; padding-bottom:40px; }
   .stick h2 { font-size:clamp(1.8rem,3.6vw,3.2rem); }
+  .flat .stick { position:relative; height:auto; display:block; overflow:visible; }
+  .flat .stick > .pad { padding-top:clamp(80px,10vh,110px); padding-bottom:clamp(96px,12vh,130px); }
+  #navs .stick > .pad, #icons .stick > .pad { padding-bottom:40px; }
+  #iter .stick > .pad { padding-top:clamp(40px,6vh,64px); }
+  .flat h2 { font-size:clamp(2rem,4.6vw,4.4rem); }
+  .flat .spot .hole, .flat .ticks { display:none; }
+  .flat .notes { gap:22px; }
+  .flat .note { grid-area:auto; opacity:1; transform:none; pointer-events:auto; }
+  .flat .swap { aspect-ratio:auto; display:grid; gap:14px; background:none; overflow:visible; }
+  .flat .swap figure { position:relative; opacity:1; border-radius:16px; overflow:hidden; aspect-ratio:1868/1468; background:#eef2fa; }
+  .flat .swap2 { aspect-ratio:auto; display:grid; gap:14px; background:none; overflow:visible; }
+  .flat .swap2 .tagged { position:relative; opacity:1; aspect-ratio:618/400; }
+
   .spot { position:relative; border-radius:18px; overflow:hidden; background:#fff; }
   .spot img { width:100%; height:auto; }
   .spot .hole { position:absolute; left:var(--l); top:var(--t); width:var(--w); height:var(--hh); border-radius:12px; box-shadow:0 0 0 2px var(--accent), 0 0 0 200vmax rgba(8,9,11,.5); transition:left .55s cubic-bezier(.2,.7,.2,1), top .55s cubic-bezier(.2,.7,.2,1), width .55s cubic-bezier(.2,.7,.2,1), height .55s cubic-bezier(.2,.7,.2,1); pointer-events:none; }
@@ -322,7 +335,7 @@
   </div>
 </div></section>
 
-<section class="sec dark pin" id="define" data-steps="build" style="--h:260vh"><div class="stick"><div class="pad">
+<section class="sec dark flat" id="define" data-steps="build"><div class="stick"><div class="pad">
   <p class="eyebrow">03 — DEFINE</p>
   <h2 data-w>Four problems, four goals.</h2>
   <p class="lede fade" style="max-width:760px;margin-top:clamp(18px,2.4vw,28px)">How might we help visitors find what they came for in a few taps, on a phone, outdoors? I grouped what I found into four areas and set one goal for each.</p>
@@ -336,7 +349,7 @@
   <div class="pair cons fade"><b>CONSTRAINTS</b><span>One person for design and development · Built in AppMachine, a template-based app builder · Had to launch before Fleet Week 2023</span></div>
 </div></div></section>
 
-<section class="sec dark pin" id="navs" style="--h:230vh"><div class="stick"><div class="pad two">
+<section class="sec dark flat" id="navs"><div class="stick"><div class="pad two">
   <div>
     <p class="eyebrow">04 — NAVIGATION <span class="goal">GOAL 01 · USABILITY</span></p>
     <h2 data-w>One home screen, clear doors.</h2>
@@ -378,7 +391,7 @@
   </div>
 </div></section>
 
-<section class="sec dark pin" id="iter" data-steps="build" style="margin-top:0;border-radius:0;--h:260vh"><div class="stick"><div class="pad">
+<section class="sec dark flat" id="iter" data-steps="build" style="margin-top:0;border-radius:0"><div class="stick"><div class="pad">
   <p class="eyebrow">ITERATION · THE DISCOUNT PATH</p>
   <h2 data-w>Refined one screen at a time.</h2>
   <p class="lede fade" style="max-width:760px;margin-top:clamp(18px,2.4vw,28px)">I ran several rounds of design and user testing on the path to a military discount. Each screen on that path got its own fix.</p>
@@ -391,7 +404,7 @@
   </div>
 </div></div></section>
 
-<section class="sec cream pin" id="icons" style="--h:240vh"><div class="stick"><div class="pad two wide">
+<section class="sec cream flat" id="icons"><div class="stick"><div class="pad two wide">
   <div>
     <p class="eyebrow">05 — VISUAL SYSTEM <span class="goal">GOAL 02 · DESIRABILITY</span></p>
     <h2 data-w>Three years, one visual language.</h2>
@@ -417,7 +430,7 @@
   </div>
 </div></section>
 
-<section class="sec dark pin" id="read" data-steps="swap" style="--h:220vh"><div class="stick"><div class="pad two">
+<section class="sec dark flat" id="read" data-steps="swap"><div class="stick"><div class="pad two">
   <div>
     <p class="eyebrow">06 — READABILITY <span class="goal">GOAL 03 · ACCESSIBILITY</span></p>
     <h2 data-w>Event pages you can read at a glance.</h2>
@@ -533,11 +546,12 @@ function syncPins() {
 const navs = $('#navs'), navFigs = $$('#navs figure'), navVids = $$('#navs video'), navNotes = $$('#navs .note');
 function syncNavs() {
   const r = navs.getBoundingClientRect(), near = r.top < innerHeight && r.bottom > 0;
-  const at = phone.matches ? -1 : progress(navs) < .5 ? 0 : 1;
-  navNotes.forEach((n, i) => n.classList.toggle('on', phone.matches || i === at));
-  navFigs.forEach((f, i) => f.classList.toggle('on', phone.matches || i === at));
+  const all = phone.matches || navs.classList.contains('flat');
+  const at = all ? -1 : progress(navs) < .5 ? 0 : 1;
+  navNotes.forEach((n, i) => n.classList.toggle('on', all || i === at));
+  navFigs.forEach((f, i) => f.classList.toggle('on', all || i === at));
   navVids.forEach((v, i) => {
-    if (near && !reduceMotion && (phone.matches || i === at)) { if (v.paused) v.play().catch(() => {}); }
+    if (near && !reduceMotion && (all || i === at)) { if (v.paused) v.play().catch(() => {}); }
     else if (!v.paused) v.pause();
   });
 }
@@ -548,7 +562,7 @@ const stepSecs = $$('[data-steps]').map((s) => {
 });
 function syncSteps() {
   stepSecs.forEach((x) => {
-    const all = phone.matches || reduceMotion;
+    const all = phone.matches || reduceMotion || x.s.classList.contains('flat');
     const at = all ? x.n : Math.min(x.n - 1, Math.floor(progress(x.s) * x.n));
     if (at === x.at) return;
     x.at = at;
