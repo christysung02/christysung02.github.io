@@ -10,13 +10,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root { --black:#08090b; --cream:#f5f3ee; --cta:#ffd800; --accent:#c32d34; --navy:#00234f; --mono:"JetBrains Mono",ui-monospace,monospace; --gutter:clamp(24px,5vw,72px); --wrap:max(var(--gutter),calc((100% - 1776px) / 2)); }
+  :root { --black:#00234f; --card:#0b3163; --cream:#f5f3ee; --cta:#ffd800; --accent:#c32d34; --navy:#00234f; --mono:"JetBrains Mono",ui-monospace,monospace; --gutter:clamp(24px,5vw,72px); --wrap:max(var(--gutter),calc((100% - 1776px) / 2)); }
   * { box-sizing:border-box; margin:0; }
   html { background:var(--black); }
   body { background:var(--black); color:#f2f2ee; font-family:"DM Sans",system-ui,sans-serif; overflow-x:clip; }
   img, video { display:block; }
 
-  nav { position:fixed; z-index:30; top:12px; left:max(12px,calc(var(--gutter) - 14px)); right:max(12px,calc(var(--gutter) - 14px)); display:flex; justify-content:space-between; align-items:center; padding:8px 16px; color:#fff; background:rgba(16,17,21,.55); -webkit-backdrop-filter:blur(16px) saturate(160%); backdrop-filter:blur(16px) saturate(160%); border:1px solid rgba(255,255,255,.16); border-radius:14px; }
+  nav { position:fixed; z-index:30; top:12px; left:max(12px,calc(var(--gutter) - 14px)); right:max(12px,calc(var(--gutter) - 14px)); display:flex; justify-content:space-between; align-items:center; padding:8px 16px; color:#fff; background:rgba(0,26,60,.6); -webkit-backdrop-filter:blur(16px) saturate(160%); backdrop-filter:blur(16px) saturate(160%); border:1px solid rgba(255,255,255,.16); border-radius:14px; }
   nav a { color:inherit; text-decoration:none; font-size:.92rem; font-weight:500; }
   nav .links { display:flex; gap:24px; }
   nav .links a { transition:color .2s; }
@@ -33,7 +33,7 @@
     11%, 36% { transform:scaleY(.97); opacity:.94; }
   }
   #beam { position:fixed; z-index:31; left:0; top:0; height:3px; width:100%; transform:scaleX(0); transform-origin:0 50%; background:var(--accent); }
-  #toTop { position:fixed; z-index:30; right:max(16px,calc(var(--gutter) - 14px)); bottom:64px; width:46px; height:46px; display:grid; place-items:center; padding:0; color:#fff; cursor:pointer; background:rgba(16,17,21,.62); -webkit-backdrop-filter:blur(16px) saturate(160%); backdrop-filter:blur(16px) saturate(160%); border:1px solid rgba(255,255,255,.18); border-radius:50%; opacity:0; visibility:hidden; transform:translate3d(0,10px,0); transition:opacity .3s, transform .3s, visibility 0s .3s, color .2s; }
+  #toTop { position:fixed; z-index:30; right:max(16px,calc(var(--gutter) - 14px)); bottom:64px; width:46px; height:46px; display:grid; place-items:center; padding:0; color:#fff; cursor:pointer; background:rgba(0,26,60,.66); -webkit-backdrop-filter:blur(16px) saturate(160%); backdrop-filter:blur(16px) saturate(160%); border:1px solid rgba(255,255,255,.18); border-radius:50%; opacity:0; visibility:hidden; transform:translate3d(0,10px,0); transition:opacity .3s, transform .3s, visibility 0s .3s, color .2s; }
   #toTop.on { opacity:1; visibility:visible; transform:none; transition:opacity .3s, transform .3s, color .2s; }
   #toTop:hover, #toTop:focus-visible { color:var(--cta); }
 
@@ -104,7 +104,7 @@
 
   .spot { position:relative; border-radius:18px; overflow:hidden; background:#fff; }
   .spot img { width:100%; height:auto; }
-  .spot .hole { position:absolute; left:var(--l); top:var(--t); width:var(--w); height:var(--hh); border-radius:12px; box-shadow:0 0 0 2px var(--accent), 0 0 0 200vmax rgba(8,9,11,.5); transition:left .55s cubic-bezier(.2,.7,.2,1), top .55s cubic-bezier(.2,.7,.2,1), width .55s cubic-bezier(.2,.7,.2,1), height .55s cubic-bezier(.2,.7,.2,1); pointer-events:none; }
+  .spot .hole { position:absolute; left:var(--l); top:var(--t); width:var(--w); height:var(--hh); border-radius:12px; box-shadow:0 0 0 2px var(--accent), 0 0 0 200vmax rgba(0,20,48,.55); transition:left .55s cubic-bezier(.2,.7,.2,1), top .55s cubic-bezier(.2,.7,.2,1), width .55s cubic-bezier(.2,.7,.2,1), height .55s cubic-bezier(.2,.7,.2,1); pointer-events:none; }
   .ticks { display:flex; gap:6px; margin-top:12px; }
   .ticks i { flex:1; height:3px; border-radius:2px; background:var(--line); transition:background .3s; }
   .ticks i.on { background:var(--accent); }
@@ -120,7 +120,7 @@
   .swap figure { position:absolute; inset:0; margin:0; opacity:0; transition:opacity .5s; }
   .swap figure.on { opacity:1; }
   .swap video { width:100%; height:100%; object-fit:cover; }
-  .swap figcaption { position:absolute; left:12px; top:12px; padding:4px 10px; border-radius:99px; background:rgba(8,9,11,.78); color:#fff; font-family:var(--mono); font-size:.68rem; letter-spacing:.06em; }
+  .swap figcaption { position:absolute; left:12px; top:12px; padding:4px 10px; border-radius:99px; background:rgba(0,26,60,.82); color:#fff; font-family:var(--mono); font-size:.68rem; letter-spacing:.06em; }
 
   /* 04 兩張補充圖 */
   .duo { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); gap:clamp(12px,1.6vw,22px); align-items:start; }
@@ -129,7 +129,7 @@
   .pair2 { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
   .tagged { position:relative; margin:0; aspect-ratio:618/400; border-radius:18px; overflow:hidden; background:#fff; }
   .tagged img { width:100%; height:100%; object-fit:cover; }
-  .tagged .tag { position:absolute; left:12px; top:12px; padding:4px 10px; border-radius:99px; background:rgba(8,9,11,.78); color:#fff; font-family:var(--mono); font-size:.68rem; letter-spacing:.06em; }
+  .tagged .tag { position:absolute; left:12px; top:12px; padding:4px 10px; border-radius:99px; background:rgba(0,26,60,.82); color:#fff; font-family:var(--mono); font-size:.68rem; letter-spacing:.06em; }
   .tagged .tag.r { background:var(--accent); }
   .center { text-align:center; }
 
@@ -155,7 +155,7 @@
   .closing span { color:var(--muted); }
   #tldr { position:relative; z-index:2; background:var(--black); padding:0 var(--wrap) clamp(96px,14vh,140px); margin-top:calc(-1 * clamp(40px,7vh,70px)); }
   #tldr .moves { margin-top:0; }
-  .lessons.dk .lesson, .goals .lesson { background:#16171b; }
+  .lessons.dk .lesson, .goals .lesson { background:var(--card); }
   .lessons.dk .lesson p, .goals .lesson p { color:#a9abb1; }
   .lessons.tight .lesson b { margin-top:12px; }
   .eyebrow.sub { margin-top:clamp(40px,7vh,72px); }
@@ -163,7 +163,7 @@
   .goals .lesson b { margin-top:14px; }
   .goals .lesson p em { display:block; font-style:normal; font-family:var(--mono); font-size:.64rem; letter-spacing:.08em; color:#7d8087; margin-bottom:2px; }
   .goals .lesson p + p { margin-top:12px; }
-  .goals .to { display:block; margin-top:16px; font-family:var(--mono); font-size:.68rem; letter-spacing:.06em; color:var(--accent); }
+  .goals .to { display:block; margin-top:16px; font-family:var(--mono); font-size:.68rem; letter-spacing:.06em; color:#ff7a80; }
   .cons { max-width:1180px; margin-top:clamp(22px,4vh,36px); }
   .goal { display:inline-block; margin-left:10px; padding:3px 9px; border:1px solid var(--line); border-radius:999px; font-size:.64rem; color:var(--fg); vertical-align:1px; }
   .quotes { margin-top:clamp(40px,7vh,72px); display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(18px,3vw,40px); }
@@ -233,7 +233,7 @@
 <body>
 <nav aria-label="Main">
   <a class="name" href="index.html" aria-label="Christy Sung, home"><svg viewBox="-1.02 -0.6 2.04 1.2" width="48" height="28" role="img" aria-label="Christy Sung"><path fill="currentColor" fill-rule="evenodd" d="M0.468,-0.583 0.495,-0.583 0.541,-0.580 0.564,-0.576 0.607,-0.567 0.649,-0.554 0.691,-0.536 0.735,-0.514 0.771,-0.491 0.810,-0.461 0.830,-0.443 0.873,-0.398 0.907,-0.356 0.936,-0.309 0.960,-0.264 0.976,-0.224 0.986,-0.194 1.000,-0.142 1.000,-0.139 0.998,-0.137 0.932,-0.137 0.930,-0.139 0.910,-0.201 0.890,-0.247 0.864,-0.293 0.844,-0.323 0.814,-0.359 0.771,-0.402 0.738,-0.428 0.692,-0.459 0.655,-0.477 0.623,-0.491 0.580,-0.504 0.544,-0.511 0.518,-0.514 0.481,-0.516 0.445,-0.514 0.396,-0.508 0.369,-0.500 0.385,-0.477 0.955,0.273 0.943,0.299 0.930,0.322 0.904,0.361 0.866,0.407 0.830,0.444 0.794,0.474 0.751,0.504 0.718,0.523 0.699,0.533 0.649,0.553 0.610,0.566 0.564,0.576 0.514,0.582 0.465,0.583 0.416,0.579 0.376,0.572 0.337,0.562 0.275,0.539 0.241,0.523 0.192,0.493 0.156,0.467 0.118,0.434 0.083,0.398 0.047,0.351 0.017,0.305 -0.005,0.263 -0.009,0.262 -0.030,0.305 -0.051,0.338 -0.077,0.374 -0.107,0.409 -0.150,0.451 -0.183,0.477 -0.222,0.503 -0.272,0.530 -0.328,0.553 -0.360,0.563 -0.390,0.569 -0.439,0.576 -0.466,0.578 -0.544,0.576 -0.571,0.572 -0.610,0.563 -0.640,0.553 -0.673,0.540 -0.712,0.520 -0.745,0.500 -0.785,0.470 -0.808,0.451 -0.848,0.411 -0.864,0.391 -0.887,0.361 -0.907,0.332 -0.930,0.292 -0.947,0.256 -0.967,0.207 -0.976,0.177 -0.986,0.138 -0.993,0.102 -0.999,0.039 -1.000,-0.010 -0.999,-0.033 -0.993,-0.099 -0.983,-0.148 -0.970,-0.194 -0.950,-0.247 -0.930,-0.290 -0.907,-0.329 -0.881,-0.369 -0.847,-0.410 -0.814,-0.444 -0.775,-0.478 -0.742,-0.501 -0.709,-0.521 -0.669,-0.540 -0.617,-0.560 -0.591,-0.567 -0.558,-0.574 -0.502,-0.580 -0.459,-0.580 -0.403,-0.574 -0.367,-0.567 -0.344,-0.560 -0.295,-0.543 -0.245,-0.520 -0.212,-0.501 -0.179,-0.478 -0.137,-0.442 -0.113,-0.418 -0.090,-0.392 -0.057,-0.349 -0.030,-0.306 -0.009,-0.264 -0.005,-0.259 0.007,-0.283 0.031,-0.323 0.053,-0.356 0.080,-0.388 0.100,-0.411 0.133,-0.443 0.166,-0.471 0.192,-0.490 0.235,-0.517 0.268,-0.534 0.297,-0.547 0.334,-0.560 0.370,-0.570 0.403,-0.576 0.432,-0.580 0.465,-0.581Z M-0.499,-0.510 -0.495,-0.512 -0.469,-0.512 -0.443,-0.511 -0.410,-0.507 -0.380,-0.501 -0.357,-0.494 -0.314,-0.478 -0.275,-0.459 -0.229,-0.429 -0.193,-0.400 -0.152,-0.359 -0.130,-0.333 -0.113,-0.309 -0.084,-0.264 -0.067,-0.231 -0.054,-0.201 -0.033,-0.142 0.423,0.499 0.429,0.509 0.429,0.513 0.406,0.510 0.373,0.503 0.340,0.493 0.324,0.487 0.284,0.470 0.265,0.460 0.248,0.451 0.218,0.430 0.197,0.414 0.165,0.384 0.132,0.348 0.106,0.315 0.082,0.279 0.060,0.240 0.028,0.169 -0.045,0.168 -0.048,0.171 -0.049,0.174 -0.063,0.213 -0.076,0.243 -0.090,0.269 -0.116,0.312 -0.133,0.335 -0.163,0.370 -0.193,0.399 -0.216,0.418 -0.248,0.441 -0.281,0.460 -0.324,0.480 -0.350,0.490 -0.387,0.500 -0.423,0.507 -0.459,0.510 -0.489,0.511 -0.499,0.509 -0.499,-0.507Z"/></svg></a>
-  <div class="links"><a>Work</a><a href="index.html#about">About</a><a>Resume</a></div>
+  <div class="links"><a href="work.html">Work</a><a href="index.html#about">About</a><a>Resume</a></div>
 </nav>
 <div id="beam"></div>
 <button id="toTop" type="button" aria-label="Back to top"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -254,7 +254,7 @@
   <div class="num"><b data-n="4.1" data-dec="1" data-s="★">0★</b><span>App rating, up from 3.2</span></div>
 </div>
 <div id="ctx"><div class="sm" style="--mw:900px">
-  <div class="fig fade" style="aspect-ratio:1212/370;background:var(--black)"><img loading="lazy" alt="Fleet Week air show, parachute team, and Blue Angels over San Francisco Bay" src="assets/fleet-week/event-photos-dark.jpg"></div>
+  <div class="fig fade" style="aspect-ratio:1212/370;background:var(--black)"><img loading="lazy" alt="Fleet Week air show, parachute team, and Blue Angels over San Francisco Bay" src="assets/fleet-week/event-photos-navy.jpg"></div>
   <p class="cap">Fleet Week brings air shows, ship tours, and concerts to San Francisco every October.</p>
 </div></div>
 <div id="tldr" class="dark"><div class="moves lessons dk" aria-label="Project summary">
@@ -468,9 +468,9 @@
   <p class="eyebrow">08 — WHAT I LEARNED</p>
   <h2 data-w>Good structure beats more features.</h2>
   <div class="moves lessons">
-    <div class="lesson" style="--d:0s;background:#16171b"><i>01 · INFORMATION ARCHITECTURE</i><b>Organize by task, not by department.</b><p style="color:#a9abb1">Visitors don't know how the event team is organized. They know what they want to do today.</p></div>
-    <div class="lesson" style="--d:.15s;background:#16171b"><i>02 · DESIGN SYSTEM</i><b>Consistency builds trust.</b><p style="color:#a9abb1">Matching the app to the website and the brand made it feel official. Fewer one-off styles also made updates faster.</p></div>
-    <div class="lesson" style="--d:.3s;background:#16171b"><i>03 · ACCESSIBILITY</i><b>Design for where it will be used.</b><p style="color:#a9abb1">People used the app outdoors, in the sun, often on the move. Bigger text, higher contrast, and labeled icons helped everyone.</p></div>
+    <div class="lesson" style="--d:0s;background:var(--card)"><i>01 · INFORMATION ARCHITECTURE</i><b>Organize by task, not by department.</b><p style="color:#a9abb1">Visitors don't know how the event team is organized. They know what they want to do today.</p></div>
+    <div class="lesson" style="--d:.15s;background:var(--card)"><i>02 · DESIGN SYSTEM</i><b>Consistency builds trust.</b><p style="color:#a9abb1">Matching the app to the website and the brand made it feel official. Fewer one-off styles also made updates faster.</p></div>
+    <div class="lesson" style="--d:.3s;background:var(--card)"><i>03 · ACCESSIBILITY</i><b>Design for where it will be used.</b><p style="color:#a9abb1">People used the app outdoors, in the sun, often on the move. Bigger text, higher contrast, and labeled icons helped everyone.</p></div>
   </div>
   <div class="quotes">
     <figure class="fade"><blockquote>"Her commitment to delivering a consistent user experience, backed by meticulous user testing and design iteration, is truly remarkable."</blockquote><figcaption>BAND COORDINATOR, SF FLEET WEEK</figcaption></figure>
